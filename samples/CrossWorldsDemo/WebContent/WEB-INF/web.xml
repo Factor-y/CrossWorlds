@@ -28,10 +28,13 @@
 			<small-icon>icons/small.gif</small-icon>
 			<large-icon>icons/small.gif</large-icon>
 		</icon>
-		<servlet-name>org.openntf.xworlds.scratch.DominoRestApplication</servlet-name>
+		<servlet-name>org.openntf.xworlds.demo.CrossWorldsRestSampleApplication</servlet-name>
 	</servlet>
 	<servlet-mapping>
-		<servlet-name>org.openntf.xworlds.scratch.DominoRestApplication</servlet-name>
+		<servlet-name>
+			org.openntf.xworlds.demo.CrossWorldsRestSampleApplication
+		</servlet-name>
 		<url-pattern>/domrest/*</url-pattern>
+		<url-pattern>/demo/*</url-pattern>
 	</servlet-mapping>
 </web-app>
