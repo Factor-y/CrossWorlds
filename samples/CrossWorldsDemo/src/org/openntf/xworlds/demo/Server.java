@@ -1,10 +1,11 @@
 package org.openntf.xworlds.demo;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -13,16 +14,18 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import org.openntf.domino.Agent;
 import org.openntf.domino.Database;
 import org.openntf.domino.DbDirectory;
 import org.openntf.domino.Session;
 import org.openntf.domino.utils.Factory;
 import org.openntf.domino.utils.Factory.SessionType;
 
+import com.google.common.base.Preconditions;
 import com.ibm.domino.napi.c.NotesUtil;
 import com.ibm.domino.napi.c.xsp.XSPNative;
-
-import static com.google.common.base.Preconditions.*;
+import com.ibm.websphere.security.auth.WSSubject;
+import com.ibm.wsspi.security.token.SingleSignonToken;
 
 @Path("/server")
 public class Server {
@@ -31,7 +34,7 @@ public class Server {
 		private String apiPath;
 		private String replicaid;
 		private String title;
-
+		
 		public DatabaseBean(String apiPath,
 				String title,
 				String replicaId) {
@@ -70,15 +73,14 @@ public class Server {
 	@GET
 	@Path("/dbdirectory")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getDbDirectory(@QueryParam("servername") @DefaultValue("") String ServerName) {
+	public Response getDbDirectory(@QueryParam("servername") String ServerName) {
 		
-		
-		Session s = Factory.getSession(SessionType.TRUSTED);
+		Session s = Factory.getSession(SessionType.CURRENT);
 		
 		DbDirectory dbdir = s.getDbDirectory(ServerName);
 		
 		Iterator<Database> i = dbdir.iterator();
-				
+		
 		List<DatabaseBean> dbs = new ArrayList<Server.DatabaseBean>();
 		
 		while (i.hasNext()) {
@@ -112,6 +114,24 @@ public class Server {
 		}
 		
 		return Response.status(Status.INTERNAL_SERVER_ERROR).build();
+		
+	}
+
+	@GET
+	@Path("/runagent")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getDbDirectory(@QueryParam("servername") String serverName,
+			@QueryParam("dbname") String dbname, @QueryParam("agentname") String agentName) {
+		
+		Session s = Factory.getSession(SessionType.CURRENT);
+		
+		Database db = s.getDatabase(serverName, dbname);
+
+		Agent agent = db.getAgent(agentName);
+		
+		agent.run();
+		
+		return Response.status(200).type(MediaType.APPLICATION_JSON).entity(agent.getLastRun().toString()).build();
 		
 	}
 

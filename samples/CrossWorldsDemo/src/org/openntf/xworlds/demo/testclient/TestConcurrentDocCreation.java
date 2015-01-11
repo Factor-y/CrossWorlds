@@ -47,7 +47,7 @@ public class TestConcurrentDocCreation {
 	private void perform() {
 		List<Thread> Ts = new ArrayList<Thread>();
 		
-		int threads = 50;
+		int threads = 10;
 		int docsPerThread = 10000;
 		
 		for (int i = 0; i < threads; i++) {
