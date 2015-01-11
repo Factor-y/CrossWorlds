@@ -1,4 +1,4 @@
-# j2eeenabler for CrossWorlds appplications
+# j2eeenabler for CrossWorlds applications
 
 This JAR project is a Servlet 3.0 WebFragment that should be added to any application needing CrossWorlds 
 services.
