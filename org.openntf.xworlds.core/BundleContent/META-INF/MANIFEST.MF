@@ -1,0 +1,18 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: org.openntf.xworlds.core
+Bundle-SymbolicName: org.openntf.xworlds.core;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-Activator: org.openntf.xworlds.core.Activator
+Export-Package: 
+ org.openntf.xworlds.appservers.lifecycle,
+ org.openntf.xworlds.appservers.webapp,
+ org.openntf.xworlds.core
+Bundle-ClassPath: .
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Import-Package: com.google.common.base,
+ com.ibm.domino.napi.c,
+ javax.servlet;version="2.6.0",
+ lotus.domino,
+ org.openntf.domino.utils,
+ org.osgi.framework
