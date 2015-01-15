@@ -7,6 +7,8 @@ import javax.servlet.ServletContextListener;
 
 import org.openntf.domino.utils.Factory;
 import org.openntf.xworlds.appservers.lifecycle.XWorldsManager;
+import org.openntf.xworlds.appservers.webapp.config.DefaultXWorldsApplicationConfig;
+import org.openntf.xworlds.appservers.webapp.config.XWorldsApplicationConfigurator;
 
 /**
  * Application Lifecycle Listener implementation class XWorldsApplicationListener
@@ -28,29 +30,50 @@ public class XWorldsApplicationListener implements ServletContextListener {
 	/**
      * @see ServletContextListener#contextInitialized(ServletContextEvent)
      */
-    public void contextInitialized(ServletContextEvent app) {
+    public void contextInitialized(ServletContextEvent appEvent) {
 
     	XWorldsManager xwm = XWorldsManager.getInstance();
     	
-    	xwm.addApplication(app.getServletContext().getServletContextName(),
-    			app.getServletContext().getContextPath(),
-    			app.getServletContext().getMajorVersion(),
-    			app.getServletContext().getMinorVersion()
+    	xwm.addApplication(appEvent.getServletContext().getServletContextName(),
+    			appEvent.getServletContext().getContextPath(),
+    			appEvent.getServletContext().getMajorVersion(),
+    			appEvent.getServletContext().getMinorVersion()
     			);
+    	
+    	// Configure XWorlds for this application
+    	
+    	String appConfiguratorClass = null;
+    	XWorldsApplicationConfigurator configurator = null;
+    	if ((appConfiguratorClass = appEvent.getServletContext().getInitParameter("org.openntf.app.Configurator")) != null) {
+    		try {
+				configurator = (XWorldsApplicationConfigurator) Class.forName(appConfiguratorClass).newInstance();
+			} catch (IllegalAccessException e) {
+				throw new IllegalStateException("Cannot configure the XWorlds application", e);
+			} catch (InstantiationException e) {
+				throw new IllegalStateException("Cannot configure the XWorlds application", e);
+			} catch (ClassNotFoundException e) {
+				throw new IllegalStateException("Cannot configure the XWorlds application", e);
+			}
+    	} else {
+    		configurator = new DefaultXWorldsApplicationConfig();
+    	}
+    	
+		configurator.configure(appEvent.getServletContext());
+		configurator.build();
 
     }
 
 	/**
      * @see ServletContextListener#contextDestroyed(ServletContextEvent)
      */
-    public void contextDestroyed(ServletContextEvent app) {
+    public void contextDestroyed(ServletContextEvent appEvent) {
     	
     	XWorldsManager xwm = XWorldsManager.getInstance();
     	
-    	xwm.removeApplication(app.getServletContext().getServletContextName(),
-    			app.getServletContext().getContextPath(),
-    			app.getServletContext().getMajorVersion(),
-    			app.getServletContext().getMinorVersion()
+    	xwm.removeApplication(appEvent.getServletContext().getServletContextName(),
+    			appEvent.getServletContext().getContextPath(),
+    			appEvent.getServletContext().getMajorVersion(),
+    			appEvent.getServletContext().getMinorVersion()
     			);
     	        
     }

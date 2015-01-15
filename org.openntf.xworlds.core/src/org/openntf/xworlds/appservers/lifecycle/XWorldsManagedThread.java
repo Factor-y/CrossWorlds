@@ -9,7 +9,7 @@ import org.openntf.domino.utils.Factory.SessionType;
 
 public class XWorldsManagedThread {
 
-	static Logger log = Logger.getLogger(XWorldsManagedThread.class.getName());
+	private static Logger log = Logger.getLogger(XWorldsManagedThread.class.getName());
 
 	static ThreadLocal<Boolean> threadReadyForDomino = new ThreadLocal<Boolean>() {
 		
@@ -38,7 +38,7 @@ public class XWorldsManagedThread {
 			}
 		
 			if (threadReadyForDomino.get() == false) {
-				log.info("Setting up this thread for domino " + Thread.currentThread().getId() + " / " + Thread.currentThread().getName());
+				log.fine("Setting up this thread for domino " + Thread.currentThread().getId() + " / " + Thread.currentThread().getName());
 				Factory.initThread(Factory.STRICT_THREAD_CONFIG);
 				
 				// Override the default session factory.
@@ -51,7 +51,7 @@ public class XWorldsManagedThread {
 			}
 		
 		} else {
-			System.out.println("The XWorldsManager has not yet been started. Check for information at ....");
+			log.severe("The XWorldsManager has not yet been started. Check for information at ....");
 		}
 		
 	}
@@ -61,7 +61,7 @@ public class XWorldsManagedThread {
 		if (XWorldsManager.getInstance().isStarted()) {
 			
 			if (threadReadyForDomino.get() == true) {
-				log.info("Shutting down this thread for domino " + Thread.currentThread().getId() + " / " + Thread.currentThread().getName());
+				log.fine("Shutting down this thread for domino " + Thread.currentThread().getId() + " / " + Thread.currentThread().getName());
 				NotesThread.stermThread();
 				Factory.termThread();
 				threadReadyForDomino.set(false);
@@ -69,7 +69,7 @@ public class XWorldsManagedThread {
 				log.severe("ERROR: Domino wasn't setup for thread " + Thread.currentThread().getId() + " / " + Thread.currentThread().getName());
 			}
 		} else {
-			System.out.println("The XWorldsManager has not yet been started. Check for information at ....");
+			log.severe("The XWorldsManager has not yet been started. Check for information at ....");
 		}
 
 	}

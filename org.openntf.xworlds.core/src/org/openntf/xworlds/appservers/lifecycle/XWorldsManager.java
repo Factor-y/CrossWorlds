@@ -74,7 +74,7 @@ public class XWorldsManager {
 		
 		// Start OpenNTF Domino API Factory
 
-		Factory.println("XWorlds:Manager","Starting manager");
+		log.info("XWorlds:Manager - Starting manager");
 				
 		// Synchronize ODA Factory initialization
 		synchronized (Factory.class) {
@@ -85,7 +85,7 @@ public class XWorldsManager {
 				NotesThread.sinitThread();
 				
 				if (System.getProperty("xworlds.userid.password") != null) {
-					Factory.println("XWorlds:Manager","Opening UserID for this system");
+					log.info("XWorlds:Manager - Opening UserID for this system");
 					try {
 						// Open the id if the password is specified
 						NotesFactory.createSession((String)null,(String)null,System.getProperty("xworlds.userid.password"));
@@ -94,29 +94,28 @@ public class XWorldsManager {
 					}
 				}
 				
-				Factory.println("XWorlds:Manager","ODA has started for: " + Factory.getLocalServerName());
-				
-				Factory.println("XWorlds:Manager","Initializing nApi");
+				log.info("XWorlds:Manager - ODA has started for: " + Factory.getLocalServerName());
+				log.fine("XWorlds:Manager - Initializing nApi");
 				
 				if (! _napiStarted) {
 					com.ibm.domino.napi.c.C.initLibrary(null);
 					_napiStarted = true; // Ensure this is started only once
 				}
 				
-				Factory.println("XWorlds:Manager","Starting system Domino thread");
+				log.info("XWorlds:Manager - Starting system Domino thread");
 				
 				NotesLockerThread = new NotesThread(new Runnable() {
 					@Override
 					public void run() {
 						boolean stopped = false;
-						Factory.println("XWorlds:Manager","Domino thread started");
+						log.info("XWorlds:Manager - Domino thread started");
 						NotesThread.sinitThread();
 						
 						while (!stopped) {
 							try {
 								Thread.sleep(4000);
 							} catch (InterruptedException e) {
-								Factory.println("XWorlds:Manager","Interrupted, shutting dowm system Domino thread.");
+								log.info("XWorlds:Manager - Interrupted, shutting dowm system Domino thread.");
 								NotesThread.stermThread();
 								stopped = true;
 							}
@@ -170,7 +169,7 @@ public class XWorldsManager {
 		checkNotNull(servletContextName, "The servlet context name cannot be null");
 		checkNotNull(contextPath, "The servlet context path cannot be null");
 		 
-		Factory.println("XWorlds:Manager","Adding " + servletContextName + " [" + contextPath + "] " + majorVersion + "." + minorVersion);
+		log.info("XWorlds:Manager - Adding " + servletContextName + " [" + contextPath + "] " + majorVersion + "." + minorVersion);
 		
 		xwmRunningContextsCount.incrementAndGet();
 	}
@@ -181,7 +180,7 @@ public class XWorldsManager {
 		checkNotNull(servletContextName, "The servlet context name cannot be null");
 		checkNotNull(contextPath, "The servlet context path cannot be null");
 
-		Factory.println("XWorlds:Manager","Removing " + servletContextName + " / " + contextPath + " " + majorVersion + "." + minorVersion);
+		log.info("XWorlds:Manager - Removing " + servletContextName + " / " + contextPath + " " + majorVersion + "." + minorVersion);
 		xwmRunningContextsCount.decrementAndGet();
 	}
 
@@ -198,7 +197,7 @@ public class XWorldsManager {
 	    	while (NotesLockerThread.getState() != State.TERMINATED 
 	    			&& secs < 10) {
 	    		secs++;
-	    		Factory.println("XWorlds:Manager","Waiting for domino system thread to terminate [" + NotesLockerThread.getState() + "]");
+	    		log.fine("Waiting for domino system thread to terminate [" + NotesLockerThread.getState() + "]");
 	    		try {
 					Thread.sleep(2000);
 				} catch (InterruptedException e) {
@@ -207,7 +206,7 @@ public class XWorldsManager {
 	    	
 	    	log.info("Shutting down ODA Factory");
 	    	if (Factory.isStarted()) {
-	    		log.info("Shutting down ODA on thread " + Thread.currentThread().getId() + " / " + Thread.currentThread().getName());
+	    		log.fine("Shutting down ODA on thread " + Thread.currentThread().getId() + " / " + Thread.currentThread().getName());
 	    		Factory.shutdown();
 	    	}
 	    	

@@ -10,6 +10,7 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 
 import org.openntf.xworlds.appservers.lifecycle.XWorldsManagedThread;
+import org.openntf.xworlds.appservers.webapp.config.XWorldsApplicationConfigurator;
 
 /**
  * Servlet Filter implementation class XWorldsRequestsFilter
@@ -38,7 +39,14 @@ public class XWorldsRequestsFilter implements Filter {
 		
 		XWorldsManagedThread.setupAsDominoThread();
 		try {
+			
+			XWorldsApplicationConfigurator configurator = (XWorldsApplicationConfigurator) request.getServletContext().getAttribute(XWorldsApplicationConfigurator.APPCONTEXT_ATTRS_CWAPPCONFIG);
+			if (configurator != null) {
+				configurator.setupRequest(request, response);
+			}
+			
 			chain.doFilter(request, response);
+			
 		} finally {
 			XWorldsManagedThread.shutdownDominoThread();
 		}
