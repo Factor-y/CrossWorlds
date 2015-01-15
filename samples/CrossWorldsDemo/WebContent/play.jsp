@@ -72,7 +72,7 @@ import org.openntf.domino.Session;
 import org.openntf.domino.Database;
 import org.openntf.domino.Document;
 
-Session s = Factory.getSession(SessionType.NATIVE);
+Session s = Factory.getSession(SessionType.CURRENT);
 
 out.println(s.getUserName());
 
