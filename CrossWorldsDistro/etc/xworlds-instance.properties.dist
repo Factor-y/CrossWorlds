@@ -1,0 +1,14 @@
+# CrossWorlds Paths
+
+xworlds.install.root=<directory where crossworlds has been unpacked>
+
+# WebSphere Liberty related paths
+
+wlp.product.dir=<path to was liberty>
+wlp.user.dir=${wlp.product.dir}/usr 
+
+# Domino / Notes related paths
+
+domino.product.dir=<domino product binary directory>
+domino.data.dir=${domino.product.dir}/data
+
