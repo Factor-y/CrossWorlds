@@ -21,11 +21,8 @@ import org.openntf.domino.Session;
 import org.openntf.domino.utils.Factory;
 import org.openntf.domino.utils.Factory.SessionType;
 
-import com.google.common.base.Preconditions;
 import com.ibm.domino.napi.c.NotesUtil;
 import com.ibm.domino.napi.c.xsp.XSPNative;
-import com.ibm.websphere.security.auth.WSSubject;
-import com.ibm.wsspi.security.token.SingleSignonToken;
 
 @Path("/server")
 public class Server {

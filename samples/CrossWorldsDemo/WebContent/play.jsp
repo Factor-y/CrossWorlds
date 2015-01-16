@@ -14,9 +14,9 @@
 	<!-- Optional theme -->
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css">
 	
-	<link rel="stylesheet" href="codemirror-4.10/lib/codemirror.css">
-	<link rel="stylesheet" href="codemirror-4.10/addon/display/fullscreen.css">
-	<link rel="stylesheet" href="codemirror-4.10/theme/eclipse.css">
+	<link rel="stylesheet" href="webjars/codemirror/4.11/lib/codemirror.css">
+	<link rel="stylesheet" href="webjars/codemirror/4.11/addon/display/fullscreen.css">
+	<link rel="stylesheet" href="webjars/codemirror/4.11/theme/eclipse.css">
 	<link rel="stylesheet" href="css/bs-callout.css" />
 	
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
@@ -29,10 +29,10 @@
     <link rel="shortcut icon" href="<%= request.getContextPath() %>/images/favicon.ico" /> 
 
 	<!-- CodeMirror -->
-	<script src="codemirror-4.10/lib/codemirror.js"></script>
-	<script src="codemirror-4.10/addon/display/fullscreen.js"></script>
-	<script src="codemirror-4.10/addon/search/search.js"></script>
-	<script src="codemirror-4.10/mode/groovy/groovy.js"></script>
+	<script src="webjars/codemirror/4.11/lib/codemirror.js"></script>
+	<script src="webjars/codemirror/4.11/addon/display/fullscreen.js"></script>
+	<script src="webjars/codemirror/4.11/addon/search/search.js"></script>
+	<script src="webjars/codemirror/4.11/mode/groovy/groovy.js"></script>
 	
   </head>
   <body>
