@@ -12,11 +12,15 @@ public interface XWorldsApplicationConfigurator {
 	/**
 	 * This constant is the name of the ServletContext attribute holding the application configuration.
 	 */
-	public static final String APPCONTEXT_ATTRS_CWAPPCONFIG = "org.openntf.crossoworlds.appconfig";
+	public static final String CONTEXTPARAM_CWAPPCONFIG_CLASS = "org.openntf.crossoworlds.appconfigurator.class";
 	/**
-	 * 
+	 * The notes full name for the identity to be used when a "SIGNER" session is required. 
 	 */
-	public static final String APPCONTEXT_ATTRS_CWAPPIDENTITY = "org.openntf.crossoworlds.appsignername";
+	public static final String CONTEXTPARAM_CWAPPSIGNER_IDENTITY = "org.openntf.crossworlds.appsignername";
+	/**
+	 * This constant is the name of the ServletContext attribute holding the application configuration.
+	 */
+	public static final String APPCONTEXT_ATTRS_CWAPPCONFIG = "org.openntf.crossoworlds.appconfig";
 
 	/**
 	 * @param context
@@ -26,7 +30,7 @@ public interface XWorldsApplicationConfigurator {
 	/**
 	 * 
 	 */
-	public void build();
+	public XWorldsApplicationConfiguration build();
 	
 	/**
 	 * @param request

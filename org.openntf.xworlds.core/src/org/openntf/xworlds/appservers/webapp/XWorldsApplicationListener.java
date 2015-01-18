@@ -33,18 +33,12 @@ public class XWorldsApplicationListener implements ServletContextListener {
     public void contextInitialized(ServletContextEvent appEvent) {
 
     	XWorldsManager xwm = XWorldsManager.getInstance();
-    	
-    	xwm.addApplication(appEvent.getServletContext().getServletContextName(),
-    			appEvent.getServletContext().getContextPath(),
-    			appEvent.getServletContext().getMajorVersion(),
-    			appEvent.getServletContext().getMinorVersion()
-    			);
-    	
+    	    	
     	// Configure XWorlds for this application
     	
     	String appConfiguratorClass = null;
     	XWorldsApplicationConfigurator configurator = null;
-    	if ((appConfiguratorClass = appEvent.getServletContext().getInitParameter("org.openntf.app.Configurator")) != null) {
+    	if ((appConfiguratorClass = appEvent.getServletContext().getInitParameter(XWorldsApplicationConfigurator.CONTEXTPARAM_CWAPPCONFIG_CLASS)) != null) {
     		try {
 				configurator = (XWorldsApplicationConfigurator) Class.forName(appConfiguratorClass).newInstance();
 			} catch (IllegalAccessException e) {
@@ -60,6 +54,12 @@ public class XWorldsApplicationListener implements ServletContextListener {
     	
 		configurator.configure(appEvent.getServletContext());
 		configurator.build();
+
+    	xwm.addApplication(appEvent.getServletContext().getServletContextName(),
+    			appEvent.getServletContext().getContextPath(),
+    			appEvent.getServletContext().getMajorVersion(),
+    			appEvent.getServletContext().getMinorVersion()
+    			);
 
     }
 

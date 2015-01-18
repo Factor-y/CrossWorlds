@@ -24,9 +24,10 @@ import com.ibm.websphere.security.WSSecurityHelper;
  *
  */
 @Beta
-public class DefaultXWorldsApplicationConfig extends BaseXWorldsApplicationConfigurator {
+public class DefaultXWorldsApplicationConfig extends BaseXWorldsApplicationConfigurator implements XWorldsApplicationConfiguration {
 
-	private boolean isWASSecurityEnabled = false;
+	private boolean _isWASSecurityEnabled = false;
+	private String _appSignerFullName = null;
 	
 	@SuppressWarnings("serial")
 	private ISessionFactory namedSessionFactory = new ISessionFactory() {
@@ -50,12 +51,33 @@ public class DefaultXWorldsApplicationConfig extends BaseXWorldsApplicationConfi
 		
 	};
 
+	@SuppressWarnings("serial")
+	private ISessionFactory namedSignerSessionFactory = new ISessionFactory() {
+		
+		@Override
+		public Session createSession() {
+			return Factory.getNamedSession(getAppSignerFullName(), false);
+		}
+	};
+
+	@SuppressWarnings("serial")
+	private ISessionFactory namedSignerSessionFactoryFullAccess = new ISessionFactory() {
+		
+		@Override
+		public Session createSession() {
+			return Factory.getNamedSession(getAppSignerFullName(), true);
+		}
+	};
+
 	public void configure(ServletContext context) {
 
 		// Save the current application context
-		this.appContext = context;
+		this.setAppContext(context);
 		// Get from the server the current security mode
-		this.isWASSecurityEnabled = WSSecurityHelper.isServerSecurityEnabled();
+		this._isWASSecurityEnabled = WSSecurityHelper.isServerSecurityEnabled();
+
+		// Read the signer identity
+		this._appSignerFullName = context.getInitParameter(CONTEXTPARAM_CWAPPSIGNER_IDENTITY);;
 		
 	}
 
@@ -63,19 +85,38 @@ public class DefaultXWorldsApplicationConfig extends BaseXWorldsApplicationConfi
 	public void setupRequest(ServletRequest request, ServletResponse response) {
 		
 		// Set the session factories for the "CURRENT" session.
-		if (isWASSecurityEnabled) {
+		if (_isWASSecurityEnabled) {
+			// If security is enabled ("server" mode)
 			Factory.setSessionFactory(namedSessionFactory, SessionType.CURRENT);
 			Factory.setSessionFactory(namedSessionFactoryFullAccess, SessionType.CURRENT_FULL_ACCESS);
-
-			Factory.setSessionFactory(Factory.getSessionFactory(SessionType.NATIVE), SessionType.SIGNER);
-			Factory.setSessionFactory(Factory.getSessionFactory(SessionType.NATIVE), SessionType.SIGNER_FULL_ACCESS);
 		} else {
+			// If security is not enabled ("client / designer" mode)
 			Factory.setSessionFactory(Factory.getSessionFactory(SessionType.NATIVE), SessionType.CURRENT);
 			Factory.setSessionFactory(Factory.getSessionFactory(SessionType.NATIVE), SessionType.CURRENT_FULL_ACCESS);
+			
+		}
+
+		// The behaviour for asSigner session is the same with security enabled or not.
+		if (getAppSignerFullName() != null) {
+			Factory.setSessionFactory(namedSignerSessionFactory, SessionType.SIGNER);
+			Factory.setSessionFactory(namedSignerSessionFactoryFullAccess, SessionType.SIGNER_FULL_ACCESS);
+		} else {
 			Factory.setSessionFactory(Factory.getSessionFactory(SessionType.NATIVE), SessionType.SIGNER);
 			Factory.setSessionFactory(Factory.getSessionFactory(SessionType.NATIVE), SessionType.SIGNER_FULL_ACCESS);
 		}
+
 		
+	}
+
+	@Override
+	public String getAppSignerFullName() {
+		return _appSignerFullName;
+	}
+
+	@Override
+	public XWorldsApplicationConfiguration build() {
+		getAppContext().setAttribute(APPCONTEXT_ATTRS_CWAPPCONFIG, this);
+		return this;
 	}
 	
 }
