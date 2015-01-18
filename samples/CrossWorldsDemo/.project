@@ -3,7 +3,6 @@
 	<name>CrossWorldsDemo</name>
 	<comment></comment>
 	<projects>
-		<project>org.openntf.xworlds.webapp.j2eeenabler</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>
