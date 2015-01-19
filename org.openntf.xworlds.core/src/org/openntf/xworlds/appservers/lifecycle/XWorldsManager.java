@@ -84,11 +84,13 @@ public class XWorldsManager {
 				Factory.startup();				
 				NotesThread.sinitThread();
 				
-				if (System.getProperty("xworlds.userid.password") != null) {
+				String userIdPassword = System.getProperty("xworlds.userid.password");
+				
+				if (userIdPassword != null) {
 					log.info("XWorlds:Manager - Opening UserID for this system");
 					try {
 						// Open the id if the password is specified
-						NotesFactory.createSession((String)null,(String)null,System.getProperty("xworlds.userid.password"));
+						NotesFactory.createSession((String)null,(String)null,userIdPassword);
 					} catch (NotesException e) {
 						e.printStackTrace();
 					}

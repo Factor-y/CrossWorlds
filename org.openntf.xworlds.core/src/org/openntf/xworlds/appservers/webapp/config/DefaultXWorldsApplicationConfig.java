@@ -4,13 +4,19 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 
+import lotus.domino.NotesException;
+
 import org.openntf.domino.Session;
 import org.openntf.domino.session.ISessionFactory;
 import org.openntf.domino.utils.Factory;
 import org.openntf.domino.utils.Factory.SessionType;
 
 import com.google.common.annotations.Beta;
+import com.ibm.domino.napi.NException;
+import com.ibm.domino.napi.c.NotesUtil;
+import com.ibm.domino.napi.c.xsp.XSPNative;
 import com.ibm.websphere.security.WSSecurityHelper;
+
 
 /**
  * The default configuration for a CrossWorlds Application is to use as CURRENT the following defaults:
@@ -28,7 +34,36 @@ public class DefaultXWorldsApplicationConfig extends BaseXWorldsApplicationConfi
 
 	private boolean _isWASSecurityEnabled = false;
 	private String _appSignerFullName = null;
-	
+
+	@SuppressWarnings("serial")
+	private class XSPBasedNamedSessionFactory implements ISessionFactory {
+		
+		private boolean _isFullAccess = false;
+		
+		
+		public XSPBasedNamedSessionFactory(boolean fullAccess) {
+			this._isFullAccess = fullAccess;
+		}
+		
+		@Override
+		public Session createSession() {
+
+			try {
+				final String username = getAppSignerFullName();
+				final long userHandle = NotesUtil.createUserNameList(username);
+				lotus.domino.Session rawSession = XSPNative.createXPageSessionExt(username, userHandle, false, true, _isFullAccess);
+				Session sess = Factory.fromLotus(rawSession, Session.SCHEMA, null);
+				sess.setNoRecycle(false);
+				return sess;
+			} catch (NException e) {
+				throw new RuntimeException(e);
+			} catch (NotesException e) {
+				throw new RuntimeException(e);
+			}
+			
+		}
+	};
+
 	@SuppressWarnings("serial")
 	private ISessionFactory namedSessionFactory = new ISessionFactory() {
 		
@@ -50,24 +85,9 @@ public class DefaultXWorldsApplicationConfig extends BaseXWorldsApplicationConfi
 		}
 		
 	};
-
-	@SuppressWarnings("serial")
-	private ISessionFactory namedSignerSessionFactory = new ISessionFactory() {
-		
-		@Override
-		public Session createSession() {
-			return Factory.getNamedSession(getAppSignerFullName(), false);
-		}
-	};
-
-	@SuppressWarnings("serial")
-	private ISessionFactory namedSignerSessionFactoryFullAccess = new ISessionFactory() {
-		
-		@Override
-		public Session createSession() {
-			return Factory.getNamedSession(getAppSignerFullName(), true);
-		}
-	};
+	
+	private ISessionFactory namedSignerSessionFactory = new XSPBasedNamedSessionFactory(false);
+	private ISessionFactory namedSignerSessionFactoryFullAccess = new XSPBasedNamedSessionFactory(true);
 
 	public void configure(ServletContext context) {
 
@@ -90,7 +110,56 @@ public class DefaultXWorldsApplicationConfig extends BaseXWorldsApplicationConfi
 			Factory.setSessionFactory(namedSessionFactory, SessionType.CURRENT);
 			Factory.setSessionFactory(namedSessionFactoryFullAccess, SessionType.CURRENT_FULL_ACCESS);
 		} else {
-			// If security is not enabled ("client / designer" mode)
+			
+			// If security is not enabled ("client / designer" mode, use XSP api to create named sessions)
+//			Factory.setNamedFactories4XPages(new INamedSessionFactory() {
+//				
+//				@Override
+//				public Session createSession(String userName) {
+//					// TODO implement better handling / encure this doesn't create issues.
+//					
+//					try {
+//						System.out.println("Starting napi");
+//						com.ibm.domino.napi.c.C.initLibrary(null);
+//						System.out.println("Started napi");
+//
+//						final long userHandle = NotesUtil.createUserNameList(userName);
+//						lotus.domino.Session rawSession = XSPNative.createXPageSessionExt(userName, userHandle, false, true, false);
+//						
+//						System.out.println("Created session: " + rawSession.getUserName() + " / " + rawSession.getEffectiveUserName());
+//						
+//						Session sess = Factory.fromLotus(rawSession, Session.SCHEMA, null);
+//						sess.setNoRecycle(false);
+//						
+//						System.out.println("Got session: " + sess.getUserName() + " / " + sess.getEffectiveUserName() + " / ");
+//						
+//						return sess;
+//					} catch (NException e) {
+//						throw new RuntimeException(e);
+//					} catch (NotesException e) {
+//						throw new RuntimeException(e);
+//					}
+//				}
+//			}, new INamedSessionFactory() {
+//				
+//				@Override
+//				public Session createSession(String userName) {
+//					try {
+//						final long userHandle = NotesUtil.createUserNameList(userName);
+//						lotus.domino.Session rawSession = XSPNative.createXPageSessionExt(userName, userHandle, false, true, false);
+//						
+//						Session sess = Factory.fromLotus(rawSession, Session.SCHEMA, null);
+//						sess.setNoRecycle(false);
+//	
+//						return sess;
+//					} catch (NException e) {
+//						throw new RuntimeException(e);
+//					} catch (NotesException e) {
+//						throw new RuntimeException(e);
+//					}
+//				}
+//			});
+			
 			Factory.setSessionFactory(Factory.getSessionFactory(SessionType.NATIVE), SessionType.CURRENT);
 			Factory.setSessionFactory(Factory.getSessionFactory(SessionType.NATIVE), SessionType.CURRENT_FULL_ACCESS);
 			
