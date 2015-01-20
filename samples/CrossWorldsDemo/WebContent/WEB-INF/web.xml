@@ -37,4 +37,8 @@
 		<url-pattern>/domrest/*</url-pattern>
 		<url-pattern>/demo/*</url-pattern>
 	</servlet-mapping>
+	<context-param>
+		<param-name>org.openntf.crossworlds.appsignername</param-name>
+		<param-value>CN=CrossWorlds/O=Factor-y/C=IT</param-value>
+	</context-param>
 </web-app>
