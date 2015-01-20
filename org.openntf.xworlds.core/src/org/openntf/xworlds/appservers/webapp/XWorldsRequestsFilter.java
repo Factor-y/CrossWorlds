@@ -8,6 +8,8 @@ import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.openntf.xworlds.appservers.lifecycle.XWorldsManagedThread;
 import org.openntf.xworlds.appservers.webapp.config.XWorldsApplicationConfigurator;
@@ -37,12 +39,12 @@ public class XWorldsRequestsFilter implements Filter {
 	 */
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
 		
-		XWorldsManagedThread.setupAsDominoThread();
 		try {
 			
+			XWorldsManagedThread.setupAsDominoThread((HttpServletRequest) request);
 			XWorldsApplicationConfigurator configurator = (XWorldsApplicationConfigurator) request.getServletContext().getAttribute(XWorldsApplicationConfigurator.APPCONTEXT_ATTRS_CWAPPCONFIG);
 			if (configurator != null) {
-				configurator.setupRequest(request, response);
+				configurator.setupRequest((HttpServletRequest)request, (HttpServletResponse)response);
 			}
 			
 			chain.doFilter(request, response);

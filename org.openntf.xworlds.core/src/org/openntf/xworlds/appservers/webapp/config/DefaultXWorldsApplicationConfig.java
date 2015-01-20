@@ -1,12 +1,15 @@
 package org.openntf.xworlds.appservers.webapp.config;
 
+import java.util.logging.Logger;
+
 import javax.servlet.ServletContext;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import lotus.domino.NotesException;
 
 import org.openntf.domino.Session;
+import org.openntf.domino.session.INamedSessionFactory;
 import org.openntf.domino.session.ISessionFactory;
 import org.openntf.domino.utils.Factory;
 import org.openntf.domino.utils.Factory.SessionType;
@@ -32,24 +35,57 @@ import com.ibm.websphere.security.WSSecurityHelper;
 @Beta
 public class DefaultXWorldsApplicationConfig extends BaseXWorldsApplicationConfigurator implements XWorldsApplicationConfiguration {
 
+	private static final Logger log = Logger.getLogger(DefaultXWorldsApplicationConfig.class.getName());
+	
 	private boolean _isWASSecurityEnabled = false;
+	private boolean _isDeveloperMode = false;
 	private String _appSignerFullName = null;
 
+	private ThreadLocal<String> dominoFullName = new ThreadLocal<String>() {
+
+		@Override
+		protected String initialValue() {
+			return "Anonymous";
+		}
+		
+	};
+	
+	enum IdentityLocator {
+		SIGNER,
+		CURRENT
+	}
+	
 	@SuppressWarnings("serial")
-	private class XSPBasedNamedSessionFactory implements ISessionFactory {
+	private class XSPBasedNamedSessionFactory implements ISessionFactory, INamedSessionFactory {
 		
 		private boolean _isFullAccess = false;
+		private IdentityLocator _identityLocator = null;		
 		
-		
-		public XSPBasedNamedSessionFactory(boolean fullAccess) {
+		public XSPBasedNamedSessionFactory(boolean fullAccess, IdentityLocator locator) {
 			this._isFullAccess = fullAccess;
+			this._identityLocator = locator;
 		}
 		
 		@Override
 		public Session createSession() {
 
+			String username = null;
+			switch (_identityLocator) {
+				case SIGNER:
+					username = getAppSignerFullName();
+					break;
+				case CURRENT:
+					username = getDominoFullName();
+			}
+			
+			return createSession(username);
+			
+		}
+
+		@Override
+		public Session createSession(String username) {
 			try {
-				final String username = getAppSignerFullName();
+				
 				final long userHandle = NotesUtil.createUserNameList(username);
 				lotus.domino.Session rawSession = XSPNative.createXPageSessionExt(username, userHandle, false, true, _isFullAccess);
 				Session sess = Factory.fromLotus(rawSession, Session.SCHEMA, null);
@@ -59,133 +95,108 @@ public class DefaultXWorldsApplicationConfig extends BaseXWorldsApplicationConfi
 				throw new RuntimeException(e);
 			} catch (NotesException e) {
 				throw new RuntimeException(e);
-			}
-			
-		}
+			}		}
 	};
 
-	@SuppressWarnings("serial")
-	private ISessionFactory namedSessionFactory = new ISessionFactory() {
-		
-		@Override
-		public Session createSession() {
-			// TODO implement getting user identity from current thread
-			return Factory.getNamedSession("", false);
-		}
-		
-	};
-
-	@SuppressWarnings("serial")
-	private ISessionFactory namedSessionFactoryFullAccess = new ISessionFactory() {
-		
-		@Override
-		public Session createSession() {
-			// TODO implement getting user identity from current thread
-			return Factory.getNamedSession("", true);
-		}
-		
-	};
-	
-	private ISessionFactory namedSignerSessionFactory = new XSPBasedNamedSessionFactory(false);
-	private ISessionFactory namedSignerSessionFactoryFullAccess = new XSPBasedNamedSessionFactory(true);
-
-	public void configure(ServletContext context) {
-
-		// Save the current application context
-		this.setAppContext(context);
-		// Get from the server the current security mode
-		this._isWASSecurityEnabled = WSSecurityHelper.isServerSecurityEnabled();
-
-		// Read the signer identity
-		this._appSignerFullName = context.getInitParameter(CONTEXTPARAM_CWAPPSIGNER_IDENTITY);;
-		
-	}
-
-	@Override
-	public void setupRequest(ServletRequest request, ServletResponse response) {
-		
-		// Set the session factories for the "CURRENT" session.
-		if (_isWASSecurityEnabled) {
-			// If security is enabled ("server" mode)
-			Factory.setSessionFactory(namedSessionFactory, SessionType.CURRENT);
-			Factory.setSessionFactory(namedSessionFactoryFullAccess, SessionType.CURRENT_FULL_ACCESS);
-		} else {
-			
-			// If security is not enabled ("client / designer" mode, use XSP api to create named sessions)
-//			Factory.setNamedFactories4XPages(new INamedSessionFactory() {
-//				
-//				@Override
-//				public Session createSession(String userName) {
-//					// TODO implement better handling / encure this doesn't create issues.
-//					
-//					try {
-//						System.out.println("Starting napi");
-//						com.ibm.domino.napi.c.C.initLibrary(null);
-//						System.out.println("Started napi");
+//	@SuppressWarnings("serial")
+//	private ISessionFactory CurrentUserNamedSessionFactory = new ISessionFactory() {
+//		
+//		@Override
+//		public Session createSession() {
+//			log.info("Creating named session for: " + getDominoFullName());
+//			return CurrentUserSessionFactory.createSession(getDominoFullName());
+//		}
+//		
+//	};
 //
-//						final long userHandle = NotesUtil.createUserNameList(userName);
-//						lotus.domino.Session rawSession = XSPNative.createXPageSessionExt(userName, userHandle, false, true, false);
-//						
-//						System.out.println("Created session: " + rawSession.getUserName() + " / " + rawSession.getEffectiveUserName());
-//						
-//						Session sess = Factory.fromLotus(rawSession, Session.SCHEMA, null);
-//						sess.setNoRecycle(false);
-//						
-//						System.out.println("Got session: " + sess.getUserName() + " / " + sess.getEffectiveUserName() + " / ");
-//						
-//						return sess;
-//					} catch (NException e) {
-//						throw new RuntimeException(e);
-//					} catch (NotesException e) {
-//						throw new RuntimeException(e);
-//					}
-//				}
-//			}, new INamedSessionFactory() {
-//				
-//				@Override
-//				public Session createSession(String userName) {
-//					try {
-//						final long userHandle = NotesUtil.createUserNameList(userName);
-//						lotus.domino.Session rawSession = XSPNative.createXPageSessionExt(userName, userHandle, false, true, false);
-//						
-//						Session sess = Factory.fromLotus(rawSession, Session.SCHEMA, null);
-//						sess.setNoRecycle(false);
-//	
-//						return sess;
-//					} catch (NException e) {
-//						throw new RuntimeException(e);
-//					} catch (NotesException e) {
-//						throw new RuntimeException(e);
-//					}
-//				}
-//			});
-			
-			Factory.setSessionFactory(Factory.getSessionFactory(SessionType.NATIVE), SessionType.CURRENT);
-			Factory.setSessionFactory(Factory.getSessionFactory(SessionType.NATIVE), SessionType.CURRENT_FULL_ACCESS);
-			
-		}
+//	@SuppressWarnings("serial")
+//	private ISessionFactory CurrentUserNamedSessionFactoryFullAccess = new ISessionFactory() {
+//		
+//		@Override
+//		public Session createSession() {
+//			log.info("Creating named session (full access) for: " + getDominoFullName());
+//			return CurrentUserSessionFactoryFullAccess.createSession(getDominoFullName());
+//		}
+//		
+//	};
+	
+	private ISessionFactory namedSignerSessionFactory = new XSPBasedNamedSessionFactory(false,IdentityLocator.SIGNER);
+	private ISessionFactory namedSignerSessionFactoryFullAccess = new XSPBasedNamedSessionFactory(true,IdentityLocator.SIGNER);
 
-		// The behaviour for asSigner session is the same with security enabled or not.
-		if (getAppSignerFullName() != null) {
-			Factory.setSessionFactory(namedSignerSessionFactory, SessionType.SIGNER);
-			Factory.setSessionFactory(namedSignerSessionFactoryFullAccess, SessionType.SIGNER_FULL_ACCESS);
-		} else {
-			Factory.setSessionFactory(Factory.getSessionFactory(SessionType.NATIVE), SessionType.SIGNER);
-			Factory.setSessionFactory(Factory.getSessionFactory(SessionType.NATIVE), SessionType.SIGNER_FULL_ACCESS);
-		}
+	private ISessionFactory currentUserSessionFactory = new XSPBasedNamedSessionFactory(false,IdentityLocator.CURRENT);
+	private ISessionFactory currentUserSessionFactoryFullAccess = new XSPBasedNamedSessionFactory(true,IdentityLocator.CURRENT);
 
-		
-	}
-
+	
 	@Override
 	public String getAppSignerFullName() {
 		return _appSignerFullName;
 	}
 
 	@Override
+	public boolean isDeveloperMode() {
+		return _isDeveloperMode;
+	}
+
+	public void configure(ServletContext context) {
+	
+		// Save the current application context
+		this.setAppContext(context);
+		// Get from the server the current security mode
+		this._isWASSecurityEnabled = WSSecurityHelper.isServerSecurityEnabled();
+	
+		// Read the signer identity
+		this._appSignerFullName = context.getInitParameter(CONTEXTPARAM_CWAPPSIGNER_IDENTITY);
+		
+		// TODO Enable developermode discovery and log it
+		// TODO add Notes.ini developer mode configuration
+		if ("true".equals(System.getProperty("xworlds.developermode"))) {
+			this._isDeveloperMode = true;
+			log.warning("CrossWorlds development mode is enabled trough system property \"xworlds.developermode=true\"");
+		}
+		
+	}
+
+	@Override
+		public void setupRequest(HttpServletRequest request, HttpServletResponse response) {
+			
+			// Set the session factories for the "CURRENT" session.
+			if (_isWASSecurityEnabled || isDeveloperMode()) {
+				// If security is enabled ("server" mode) generate named sessions based on the logged in user.
+				Factory.setSessionFactory(currentUserSessionFactory, SessionType.CURRENT);
+				Factory.setSessionFactory(currentUserSessionFactoryFullAccess, SessionType.CURRENT_FULL_ACCESS);
+			} else {
+				// If security not enabled NATIVE session is "Current ID"
+				Factory.setSessionFactory(Factory.getSessionFactory(SessionType.NATIVE), SessionType.CURRENT);
+				Factory.setSessionFactory(Factory.getSessionFactory(SessionType.NATIVE), SessionType.CURRENT_FULL_ACCESS);
+			}
+	
+			// The behaviour for asSigner session is the same with security enabled or not.
+			if (getAppSignerFullName() != null) {
+				Factory.setSessionFactory(namedSignerSessionFactory, SessionType.SIGNER);
+				Factory.setSessionFactory(namedSignerSessionFactoryFullAccess, SessionType.SIGNER_FULL_ACCESS);
+			} else {
+				Factory.setSessionFactory(Factory.getSessionFactory(SessionType.NATIVE), SessionType.SIGNER);
+				Factory.setSessionFactory(Factory.getSessionFactory(SessionType.NATIVE), SessionType.SIGNER_FULL_ACCESS);
+			}
+						
+			if (isDeveloperMode() && request.getSession(false) != null && request.getSession(false).getAttribute("xworlds.request.username") != null) {
+				setDominoFullName((String) request.getSession(false).getAttribute("xworlds.request.username"));
+			}
+			
+		}
+
+	@Override
 	public XWorldsApplicationConfiguration build() {
 		getAppContext().setAttribute(APPCONTEXT_ATTRS_CWAPPCONFIG, this);
 		return this;
+	}
+
+	public String getDominoFullName() {
+		return dominoFullName.get();
+	}
+
+	public void setDominoFullName(String dominoFullName) {
+		this.dominoFullName.set(dominoFullName);
 	}
 	
 }

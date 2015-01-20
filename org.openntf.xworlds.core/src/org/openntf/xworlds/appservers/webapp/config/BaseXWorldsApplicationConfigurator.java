@@ -1,8 +1,8 @@
 package org.openntf.xworlds.appservers.webapp.config;
 
 import javax.servlet.ServletContext;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 public abstract class BaseXWorldsApplicationConfigurator implements XWorldsApplicationConfigurator {
 
@@ -16,7 +16,7 @@ public abstract class BaseXWorldsApplicationConfigurator implements XWorldsAppli
 	}
 
 	@Override
-	public void setupRequest(ServletRequest request, ServletResponse response) {
+	public void setupRequest(HttpServletRequest request, HttpServletResponse response) {
 		throw new IllegalStateException(ERROR_DONT_USE_DIRECTLY);
 	}
 

@@ -2,6 +2,8 @@ package org.openntf.xworlds.appservers.lifecycle;
 
 import java.util.logging.Logger;
 
+import javax.servlet.http.HttpServletRequest;
+
 import lotus.domino.NotesThread;
 
 import org.openntf.domino.utils.Factory;
@@ -11,17 +13,34 @@ public class XWorldsManagedThread {
 
 	private static Logger log = Logger.getLogger(XWorldsManagedThread.class.getName());
 
-	static ThreadLocal<Boolean> threadReadyForDomino = new ThreadLocal<Boolean>() {
+	private static class TvDominoRequest {
+				
+		private boolean ready = false;
+		
+		public void reset() {
+			ready = false;
+		}
+		
+		public boolean isReady() {
+			return ready;
+		}
+		public void setReady(boolean readyForDomino) {
+			this.ready = readyForDomino;
+		}
+		
+	}
+	
+	static ThreadLocal<TvDominoRequest> XWorldsThreadState = new ThreadLocal<TvDominoRequest>() {
 		
 		@Override
-		protected Boolean initialValue() {
-			return false;
+		protected TvDominoRequest initialValue() {
+			return new TvDominoRequest();
 		}
 		
 	};
 
-	public static void setupAsDominoThread() {
-		
+	public static void setupAsDominoThread(HttpServletRequest request) {
+				
 		if (XWorldsManager.getInstance().isStarted()) {
 
 			if (! Factory.isStarted()) { // Wait for ODA Factory to beready
@@ -37,7 +56,7 @@ public class XWorldsManagedThread {
 				}
 			}
 		
-			if (threadReadyForDomino.get() == false) {
+			if (XWorldsThreadState.get().isReady() == false) {
 				log.fine("Setting up this thread for domino " + Thread.currentThread().getId() + " / " + Thread.currentThread().getName());
 				Factory.initThread(Factory.STRICT_THREAD_CONFIG);
 				
@@ -45,7 +64,7 @@ public class XWorldsManagedThread {
 				Factory.setSessionFactory(  Factory.getSessionFactory(SessionType.NATIVE), SessionType.CURRENT);
 				
 				NotesThread.sinitThread();
-				threadReadyForDomino.set(true);
+				XWorldsThreadState.get().setReady(true);
 			} else {
 				log.severe("Domino already setup for thread " + Thread.currentThread().getId() + " / " + Thread.currentThread().getName());
 			}
@@ -60,11 +79,11 @@ public class XWorldsManagedThread {
 		
 		if (XWorldsManager.getInstance().isStarted()) {
 			
-			if (threadReadyForDomino.get() == true) {
+			if (XWorldsThreadState.get().isReady() == true) {
 				log.fine("Shutting down this thread for domino " + Thread.currentThread().getId() + " / " + Thread.currentThread().getName());
 				NotesThread.stermThread();
 				Factory.termThread();
-				threadReadyForDomino.set(false);
+				XWorldsThreadState.get().reset();
 			} else {
 				log.severe("ERROR: Domino wasn't setup for thread " + Thread.currentThread().getId() + " / " + Thread.currentThread().getName());
 			}
@@ -73,5 +92,5 @@ public class XWorldsManagedThread {
 		}
 
 	}
-
+	
 }

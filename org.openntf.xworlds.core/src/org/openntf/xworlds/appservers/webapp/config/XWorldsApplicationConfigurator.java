@@ -1,8 +1,8 @@
 package org.openntf.xworlds.appservers.webapp.config;
 
 import javax.servlet.ServletContext;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import com.google.common.annotations.Beta;
 
@@ -36,6 +36,6 @@ public interface XWorldsApplicationConfigurator {
 	 * @param request
 	 * @param response
 	 */
-	public void setupRequest(ServletRequest request, ServletResponse response);
+	public void setupRequest(HttpServletRequest request, HttpServletResponse response);
 	
 }

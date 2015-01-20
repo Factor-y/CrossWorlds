@@ -9,4 +9,26 @@ public interface XWorldsApplicationConfiguration {
 	 */
 	public String getAppSignerFullName();
 	
+	/**
+	 * CrossWorlds can run in developer mode allowing identity switching to simplify development & testing 
+	 * on a client based setup.
+	 * 
+	 * Developer mode is controlled by adding
+	 * 
+	 * CROSSWORLDSDEV=true
+	 * 
+	 * to Notes.ini
+	 * 
+	 * or by adding
+	 * 
+	 * xworlds.developermode=true
+	 * 
+	 * to bootstrap.properties
+	 * 
+	 * Notes.ini value takes precedence over bootstrap.ini setting.
+	 * 
+	 * @return true if CrossWorlds is running in developer mode.
+	 */
+	public boolean isDeveloperMode(); 
+	
 }
