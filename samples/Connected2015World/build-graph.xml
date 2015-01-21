@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- ====================================================================== 
+     21/gen/2015 20:58:11                                                        
+
+     project    
+     description
+                   
+     Daniele Vistalli                                                                
+     ====================================================================== -->
+<project name="Graph" default="default">
+    <description>
+            description
+    </description>
+
+    <!-- ================================= 
+          target: default              
+         ================================= -->
+    <target name="default" description="description">
+        
+    </target>
+
+    <!-- - - - - - - - - - - - - - - - - - 
+          target: depends                      
+         - - - - - - - - - - - - - - - - - -->
+    <target name="getcode">
+    	<copydir dest="src" src="D:\dev\gitroot\org.openntf.domino\domino\core\sample">
+    	</copydir>
+    </target>
+
+</project>

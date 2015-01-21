@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?><project-modules id="moduleCoreId" project-version="1.5.0">
+    <wb-module deploy-name="ConnectED2015World">
+        <wb-resource deploy-path="/" source-path="/WebContent" tag="defaultRootSource"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/src"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/.apt_generated"/>
+        <wb-resource deploy-path="/" source-path="/BeyondSessionsApp/build/client"/>
+        <wb-resource deploy-path="/" source-path="/BeyondSessionsApp/client"/>
+        <dependent-module archiveName="org.openntf.xworlds.webapp.j2eeenabler.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/org.openntf.xworlds.webapp.j2eeenabler/org.openntf.xworlds.webapp.j2eeenabler">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <property name="java-output-path" value="/ConnectED2015World/WebContent/WEB-INF/classes"/>
+        <property name="context-root" value="ConnectED2015World"/>
+    </wb-module>
+</project-modules>

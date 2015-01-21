@@ -1,0 +1,42 @@
+<div class="row no-gutter">
+<div class="col-sm-12 sessions">
+
+	<div style="margin-left: 15px;"><h4>Now ({{sessionsNow.length}})</h4></div>
+
+	<div ng-show="sessionsNow.length == 0" class="alert alert-info">No sessions running at this time</div>
+
+	<div ng-show="sessionsNow.length > 0">
+		<a ng-repeat="session in sessionsNow | orderBy :'startTime' track by $index" class="list-group-item"
+			ng-class="getClass(session.track)"
+			ui-sref="sessionDetails({ sessionId : session.unid })">
+
+			<div class="marker" ng-class="getBackgroundClass(session.track)"></div>
+
+			<div class="label label-warning pull-right" title="{{session.runsFor + ' minutes left'}}">{{session.runsFor}}"</div>
+			
+			<h4 class="list-group-item-heading">{{::session.title}}</h4>
+			<p class="list-group-item-text">{{::session.startTime | date : 'EEE HH:mm'}} | {{::session.room}} | {{::session.sessionId}}</p>
+		</a>
+
+	</div> 
+
+	<div style="margin-left: 15px;"><h4>Next ({{sessionsNext.length}})</h4></div>
+
+	<div ng-show="sessionsNext.length == 0" class="alert alert-info">Nothing's coming up. You're done for the day!</div>
+
+	<div ng-show="sessionsNext.length > 0">
+		<a ng-repeat="session in sessionsNext | orderBy :'startTime' track by $index" class="list-group-item"
+			ng-class="getClass(session.track)"
+			ui-sref="sessionDetails({ sessionId : session.unid })">
+
+			<div class="marker" ng-class="getBackgroundClass(session.track)"></div>
+			
+			<div class="label label-primary pull-right" title="{{'Starting in ' + session.startsIn + ' minutes'}}">{{session.startsIn}}"</div>
+		
+			<h4 class="list-group-item-heading">{{::session.title}}</h4>
+			<p class="list-group-item-text">{{::session.startTime | date : 'EEE HH:mm'}} | {{::session.room}} | {{::session.sessionId}}</p>
+		</a>
+	</div>
+
+</div>
+</div>
