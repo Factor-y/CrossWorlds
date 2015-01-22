@@ -29,6 +29,8 @@ public interface XWorldsApplicationConfiguration {
 	 * 
 	 * @return true if CrossWorlds is running in developer mode.
 	 */
-	public boolean isDeveloperMode(); 
+	public boolean isDeveloperMode();
+	
+	public String getDefaultDevelopmentUserName();
 	
 }

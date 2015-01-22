@@ -39,13 +39,14 @@ public class DefaultXWorldsApplicationConfig extends BaseXWorldsApplicationConfi
 	
 	private boolean _isWASSecurityEnabled = false;
 	private boolean _isDeveloperMode = false;
+	private String _defaultDevelopmentUserName = null;
 	private String _appSignerFullName = null;
 
 	private ThreadLocal<String> dominoFullName = new ThreadLocal<String>() {
 
 		@Override
 		protected String initialValue() {
-			return "Anonymous";
+			return getDefaultDevelopmentUserName() != null ? getDefaultDevelopmentUserName() : "Anonymous";
 		}
 		
 	};
@@ -146,12 +147,16 @@ public class DefaultXWorldsApplicationConfig extends BaseXWorldsApplicationConfi
 	
 		// Read the signer identity
 		this._appSignerFullName = context.getInitParameter(CONTEXTPARAM_CWAPPSIGNER_IDENTITY);
-		
+
+
 		// TODO Enable developermode discovery and log it
 		// TODO add Notes.ini developer mode configuration
 		if ("true".equals(System.getProperty("xworlds.developermode"))) {
 			this._isDeveloperMode = true;
 			log.warning("CrossWorlds development mode is enabled trough system property \"xworlds.developermode=true\"");
+			
+			// Read the development time identity
+			this._defaultDevelopmentUserName = context.getInitParameter(CONTEXTPARAM_CWDEFAULTDEVELOPER_IDENTITY);
 		}
 		
 	}
@@ -197,6 +202,11 @@ public class DefaultXWorldsApplicationConfig extends BaseXWorldsApplicationConfi
 
 	public void setDominoFullName(String dominoFullName) {
 		this.dominoFullName.set(dominoFullName);
+	}
+
+	@Override
+	public String getDefaultDevelopmentUserName() {
+		return _defaultDevelopmentUserName;
 	}
 	
 }
