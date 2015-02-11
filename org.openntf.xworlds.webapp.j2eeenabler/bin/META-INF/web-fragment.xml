@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-fragment id="WebFragment_ID" version="3.0" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-fragment_3_0.xsd">
+<display-name>org.openntf.xworlds.webapp.j2eeenabler</display-name> 
+ <name>org_openntf_xworlds_webapp_j2eeenabler</name>
+ <listener>
+ 	<display-name>XWorldsApplicationListener</display-name>
+ 	<listener-class>org.openntf.xworlds.appservers.webapp.XWorldsApplicationListener</listener-class>
+ </listener> 
+ <filter>
+ 	<filter-name>XWorldsRequestsFilter</filter-name>
+ 	<filter-class>
+ 		org.openntf.xworlds.appservers.webapp.XWorldsRequestsFilter
+ 	</filter-class>
+ 	<async-supported>true</async-supported>
+ </filter>
+ <filter-mapping>
+ 	<filter-name>XWorldsRequestsFilter</filter-name>
+ 	<url-pattern>/*</url-pattern>
+ 	<dispatcher>REQUEST</dispatcher>
+ </filter-mapping>
+</web-fragment>

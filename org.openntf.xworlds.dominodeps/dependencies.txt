@@ -1,0 +1,7 @@
+CrossWorlds runtiem dependencies
+
+Notes.jar 								->	com.ibm.notes.java.api_9.0.1.20140404-1000.jar
+lwpd.domino.napi.jar 					->	com.ibm.domino.napi_9.0.1.20140404-1000.jar
+com.ibm.icu.base_3.8.1.v20080530.jar	->	com.ibm.icu.base_3.8.1.v20080530.jar
+com.ibm.icu_3.8.1.v20120530.jar			->	com.ibm.icu_3.8.1.v20120530.jar
+lwpd.commons.jar						->	com.ibm.commons_9.0.1.20140404-1000.jar
