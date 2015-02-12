@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- ====================================================================== 
+     22/gen/2015 20:48:02                                                        
+
+     OpenNTF XWorlds - ODA Dependencies    
+     ODA Dependencies for CrossWorlds
+                   
+     Daniele Vistalli                                                                
+     ====================================================================== -->
+<project name="OpenNTF XWorlds - ODA Dependencies" default="getFromOda">
+    <description>
+            ODA Dependencies for CrossWorlds
+    </description>
+	
+	<property name="oda.updatesitedir" location="D:/dev/gitroot/org.openntf.domino/domino/org.openntf.domino.updatesite/target/site/plugins"></property>
+	<property name="oda.buildver" value="201502110810"></property>
+
+	<target name="getFromOda" description="Get the latest built libraries from ODA">
+		
+		<copy todir="BundleContent" overwrite="true" >
+			<fileset dir="${oda.updatesitedir}" >
+				<exclude name="rx_*"/>
+			</fileset>
+			<globmapper from="*${oda.buildver}.jar" to="*jar"/>
+		</copy>
+		
+	</target>
+
+</project>
