@@ -1,4 +1,4 @@
-package org.openntf.connected2015.world;
+package org.openntf.conferenceapp.rest;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;

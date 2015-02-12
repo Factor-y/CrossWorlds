@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>ConnectED2015World</name>
+	<name>ConferenceApp</name>
 	<comment></comment>
 	<projects>
 		<project>org.openntf.xworlds.webapp.j2eeenabler</project>

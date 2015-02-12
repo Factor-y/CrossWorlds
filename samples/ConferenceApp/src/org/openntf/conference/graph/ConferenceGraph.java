@@ -14,6 +14,7 @@ import com.tinkerpop.frames.modules.Module;
 import com.tinkerpop.frames.modules.javahandler.JavaHandlerModule;
 
 public class ConferenceGraph {
+	
 	public static final String ATTENDEE_PATH = "conference/attendees.nsf";
 	public static final String GROUP_PATH = "conference/groups.nsf";
 	public static final String EVENT_PATH = "conference/events.nsf";

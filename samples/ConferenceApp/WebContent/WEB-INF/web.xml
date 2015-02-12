@@ -11,7 +11,7 @@
 		<async-supported>false</async-supported>
 	</servlet>
 	<servlet-mapping>
-		<servlet-name>org.openntf.connected2015.world.ConnectedApplication</servlet-name>
+		<servlet-name>org.openntf.conferenceapp.rest.ConnectedApplication</servlet-name>
 		<url-pattern>/api/*</url-pattern>
 	</servlet-mapping>
 	<welcome-file-list>
@@ -32,7 +32,7 @@
 			<large-icon>icons/small.gif</large-icon>
 		</icon>
 		<servlet-name>
-			org.openntf.connected2015.world.ConnectedApplication
+			org.openntf.conferenceapp.rest.ConnectedApplication
 		</servlet-name>
 	</servlet>
 	<context-param>

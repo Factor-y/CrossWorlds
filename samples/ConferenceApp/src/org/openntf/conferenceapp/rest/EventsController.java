@@ -1,6 +1,4 @@
-package org.openntf.connected2015.world;
-
-import java.lang.reflect.Method;
+package org.openntf.conferenceapp.rest;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -9,11 +7,8 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.openntf.conference.graph.ConferenceGraph;
-import org.openntf.conference.graph.Presentation;
-import org.openntf.domino.graph2.annotations.TypedProperty;
 import org.openntf.domino.graph2.impl.DGraph;
 
-import com.google.common.reflect.Reflection;
 import com.tinkerpop.frames.FramedElement;
 import com.tinkerpop.frames.FramedTransactionalGraph;
 
@@ -42,15 +37,9 @@ public class EventsController {
 		
 		FramedTransactionalGraph<DGraph> framedGraph = graph.getFramedGraph();
 		Iterable<FramedElement> pres = framedGraph.getVertices(null, null, vertexClass);
-		
-		for (Method method : Presentation.class.getMethods())
-		{
-		    if (method.isAnnotationPresent(TypedProperty.class))
-		    {
-		        System.out.println(
-		        		method.getAnnotation(TypedProperty.class)
-		        );
-		    }
+
+		for (FramedElement framedElement : pres) {
+			System.out.println();
 		}
 				
 		return Response.ok().type(MediaType.APPLICATION_JSON_TYPE).entity("ok").build();
