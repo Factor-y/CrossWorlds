@@ -13,7 +13,7 @@ import com.tinkerpop.frames.modules.typedgraph.TypeValue;
 
 @TypeValue("Presentation")
 public interface Presentation extends Event {
-
+	@TypeValue(PresentedBy.LABEL)
 	public static interface PresentedBy extends DEdgeFrame {
 		public static final String LABEL = "PresentedBy";
 
@@ -28,7 +28,7 @@ public interface Presentation extends Event {
 	public String getSessionId();
 
 	@TypedProperty("SessionID")
-	public void setSessionId();
+	public void setSessionId(String sessionid);
 
 	@TypedProperty("Level")
 	public String getLevel();
