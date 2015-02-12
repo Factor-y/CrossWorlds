@@ -3,6 +3,8 @@
 	<name>org.openntf.xworlds.core</name>
 	<comment></comment>
 	<projects>
+		<project>org.openntf.xworlds.dominodeps</project>
+		<project>org.openntf.xworlds.oda</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

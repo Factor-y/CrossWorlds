@@ -6,13 +6,13 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import lotus.domino.NotesException;
-
 import org.openntf.domino.Session;
 import org.openntf.domino.session.INamedSessionFactory;
 import org.openntf.domino.session.ISessionFactory;
 import org.openntf.domino.utils.Factory;
 import org.openntf.domino.utils.Factory.SessionType;
+
+import lotus.domino.NotesException;
 
 import com.google.common.annotations.Beta;
 import com.ibm.domino.napi.NException;

@@ -1,8 +1,8 @@
 package org.openntf.xworlds.appservers.webapp.utils;
 
-import com.google.common.annotations.Beta;
+import org.openntf.domino.Session;
 
-import lotus.domino.Session;
+import com.google.common.annotations.Beta;
 
 @Beta
 public class XWorldsFactory {

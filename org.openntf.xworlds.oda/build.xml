@@ -11,8 +11,11 @@
     <description>
             ODA Dependencies for CrossWorlds
     </description>
+
+	<property file="build-local.properties" />
+	<property file="build.properties" />
 	
-	<property name="oda.updatesitedir" location="D:/dev/gitroot/org.openntf.domino/domino/org.openntf.domino.updatesite/target/site/plugins"></property>
+	<property name="oda.updatesitedir" location="C:/temp/oda" />
 	<property name="oda.buildver" value="201502110810"></property>
 
 	<target name="getFromOda" description="Get the latest built libraries from ODA">
