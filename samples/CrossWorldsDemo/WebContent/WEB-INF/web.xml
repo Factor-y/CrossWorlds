@@ -39,6 +39,6 @@
 	</servlet-mapping>
 	<context-param>
 		<param-name>org.openntf.crossworlds.appsignername</param-name>
-		<param-value>CN=CrossWorlds/O=Factor-y/C=IT</param-value>
+		<param-value>CN=CrossWorlds/O=OpenNTF.org</param-value>
 	</context-param>
 </web-app>

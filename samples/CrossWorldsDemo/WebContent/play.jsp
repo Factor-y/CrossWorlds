@@ -9,10 +9,10 @@
     <title>CrossWorlds Demo</title>
 
 	<!-- Latest compiled and minified CSS -->
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
+	<link rel="stylesheet" href="webjars/bootstrap/3.3.2/css/bootstrap.min.css">
 	
 	<!-- Optional theme -->
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css">
+	<link rel="stylesheet" href="webjars/bootstrap/3.3.2/css/bootstrap-theme.min.css">
 	
 	<link rel="stylesheet" href="webjars/codemirror/4.11/lib/codemirror.css">
 	<link rel="stylesheet" href="webjars/codemirror/4.11/addon/display/fullscreen.css">
@@ -75,6 +75,7 @@ import org.openntf.domino.Document;
 Session s = Factory.getSession(SessionType.CURRENT);
 
 out.println(s.getUserName());
+out.println(s.getEffectiveUserName());
 
 return s.getUserName();
 
@@ -82,6 +83,9 @@ return s.getUserName();
 				</div>
 				<div class="form-group">
 					<input type="submit" id="btnRunScript" class="btn btn-submit" value="Run &gt;&gt;">
+					|
+					<a href="setDeveloperIdentity.jsp" target="_new" id="btnSetIdentity" class="btn btn-submit" >Set my session identity</a>
+					<!-- <input type="submit" id="btnSaveScript" class="btn btn-submit" value="Save"> -->
 				</div>
 			</form>
 			
@@ -109,18 +113,15 @@ return s.getUserName();
 			</div>
 			
 			</div>
-<!-- 			<div class="col-sm-3 col-sm-offset-1"> -->
-<!-- 			<h2>Info</h2> -->
-<!-- 			</div> -->
-		</div>
+ 		</div>
 	</div>
 	<footer>
 	</footer>
 	
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="webjars/jquery/1.11.2/jquery.min.js"></script>
 	<!-- Latest compiled and minified JavaScript -->
-	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+	<script src="webjars/bootstrap/3.3.2/js/bootstrap.min.js"></script>
 
 	<script>
 		var cwplay = {
@@ -179,7 +180,7 @@ return s.getUserName();
 				},
 				
 				showFailure : function(data) {
-					$("#fail-error").html(data.errormessage.split('\n').join('<br/>'));
+					$("#fail-error").html(data.errormessage ? data.errormessage.split('\n').join('<br/>') : "");
 					$("#fail-stack").html(data.exceptionStack.split('\n').join('<br/>'));
 					$("#script-success").hide();
 					$("#script-failure").show();
