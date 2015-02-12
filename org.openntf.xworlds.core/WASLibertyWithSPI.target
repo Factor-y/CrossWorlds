@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<?pde version="3.8"?><target name="WebSphere Application Server Liberty Profile with SPI" sequenceNumber="194">
+<?pde version="3.8"?>
+<target name="WebSphere Application Server Liberty Profile with SPI" sequenceNumber="195">
 <locations>
-<location path="D:/dev/liberty_8554/wlp/dev/api/spec" type="Directory"/>
-<location path="D:/dev/liberty_8554/wlp/dev/api/ibm" type="Directory"/>
-<location path="D:/dev/liberty_8554/wlp/dev/api/third-party" type="Directory"/>
-<location path="D:/dev/liberty_8554/wlp/dev/spi/spec" type="Directory"/>
-<location path="D:/dev/liberty_8554/wlp/dev/spi/ibm" type="Directory"/>
-<location path="D:/dev/liberty_8554/wlp/dev/spi/third-party" type="Directory"/>
-<location path="D:/dev/workspaces/CrossWorlds/.metadata/.plugins/com.ibm.etools.aries.core/system/" type="Directory"/>
-<location path="D:/dev/liberty_8554/wlp/usr/extension/lib" type="Directory"/>
-<location path="D:/dev/liberty_8554/wlp/dev/spi/spec" type="Directory"/>
-<location path="D:/dev/liberty_8554/wlp/dev/spi/ibm" type="Directory"/>
-<location path="D:/dev/liberty_8554/wlp/dev/spi/third-party" type="Directory"/>
+<location path="${was_liberty_root}/dev/api/spec" type="Directory"/>
+<location path="${was_liberty_root}/dev/api/third-party" type="Directory"/>
+<location path="${was_liberty_root}/dev/spi/spec" type="Directory"/>
+<location path="${was_liberty_root}/dev/spi/ibm" type="Directory"/>
+<location path="${was_liberty_root}/dev/spi/third-party" type="Directory"/>
+<location path="${was_liberty_root}/usr/extension/lib" type="Directory"/>
+<location path="${was_liberty_root}/dev/spi/spec" type="Directory"/>
+<location path="${was_liberty_root}/dev/spi/ibm" type="Directory"/>
+<location path="${was_liberty_root}/dev/spi/third-party" type="Directory"/>
+<location path="${was_liberty_root}/dev/api/ibm" type="Directory"/>
 </locations>
 </target>
