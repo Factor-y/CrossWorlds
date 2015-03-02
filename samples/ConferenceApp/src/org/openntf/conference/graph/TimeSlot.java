@@ -1,5 +1,6 @@
 package org.openntf.conference.graph;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 import org.openntf.conference.graph.Event.HappeningOn;
@@ -27,6 +28,18 @@ public interface TimeSlot extends DVertexFrame {
 				result = Integer.valueOf(Long.valueOf(msDifference / 60000).intValue());
 			} catch (Throwable t) {
 				//TODO what?
+			}
+			return result;
+		}
+		
+		public String getDay() {
+			String result = "";
+			try {
+				Calendar start = getStartTime();
+				SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd mmm");
+				result = DATE_FORMAT.format(start.getTime());
+			} catch (Exception e) {
+				// TODO: handle exception
 			}
 			return result;
 		}

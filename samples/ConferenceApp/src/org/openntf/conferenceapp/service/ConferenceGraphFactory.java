@@ -9,6 +9,7 @@ import org.openntf.conference.graph.ConferenceGraph;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
+import com.tinkerpop.frames.FramedGraph;
 
 public class ConferenceGraphFactory {
 
@@ -33,5 +34,22 @@ public class ConferenceGraphFactory {
 		return null;
 	}
 	
+	static ConferenceGraph getConference(final String key) {
+		ConferenceGraph retVal_ = null;
+		try {
+			if (!registeredGraphs.containsKey(key)) {
+				retVal_ = new ConferenceGraph();
+				registerConference(key, retVal_);
+			} else {
+				retVal_ = registeredGraphs.get(key);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return retVal_;
+	}
 	
+	static FramedGraph getGraph(final String confName) {
+		return getConference(confName).getFramedGraph();
+	}
 }
