@@ -14,7 +14,7 @@ import com.tinkerpop.frames.FramedGraph;
 public class ConferenceGraphFactory {
 
 	private static Map<String, ConferenceGraph> registeredGraphs = new HashMap<String, ConferenceGraph>();
-	
+	public static String ENGAGE_KEY = "engage";
 	
 	static void registerConference(String conferenceKey, ConferenceGraph graph) {
 		Preconditions.checkNotNull(conferenceKey,"The conference name/key cannot be null");
@@ -51,5 +51,21 @@ public class ConferenceGraphFactory {
 	
 	static FramedGraph getGraph(final String confName) {
 		return getConference(confName).getFramedGraph();
+	}
+	
+	/**
+	 * Gets FramedGraph for graph with key "engage", else creates new ConferenceGraph
+	 * 
+	 * @return FramedGraph for Engage
+	 */
+	static FramedGraph getEngageGraph() {
+		ConferenceGraph graph = null;
+		if (!registeredGraphs.containsKey(ENGAGE_KEY)) {
+			graph = new ConferenceGraph();
+			registerConference(ENGAGE_KEY, graph);
+		} else {
+			graph = registeredGraphs.get(ENGAGE_KEY);
+		}
+		return getConference(ENGAGE_KEY).getFramedGraph();
 	}
 }
