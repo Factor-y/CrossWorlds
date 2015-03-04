@@ -6,6 +6,7 @@ import org.openntf.conference.graph.Track;
 import org.openntf.domino.graph2.builtin.DVertexFrameComparator;
 
 import com.google.common.collect.Ordering;
+import com.ibm.commons.util.StringUtil;
 import com.tinkerpop.frames.FramedGraph;
 
 public class TrackFactory {
@@ -15,6 +16,9 @@ public class TrackFactory {
 		try {
 			FramedGraph graph = ConferenceGraphFactory.getGraph("engage");
 			Iterable<Track> tracks = graph.getVertices(null, null, Track.class);
+			if (StringUtil.isEmpty(property)) {
+				property = "Title";
+			}
 			Ordering ord = Ordering.from(new DVertexFrameComparator(property));
 			retVal_ = ord.sortedCopy(tracks);
 		} catch (Exception e) {
