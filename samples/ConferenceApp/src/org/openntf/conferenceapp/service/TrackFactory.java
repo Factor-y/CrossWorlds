@@ -6,9 +6,18 @@ import java.util.List;
 import org.openntf.conference.graph.Track;
 import org.openntf.domino.graph2.builtin.DVertexFrameComparator;
 
+import com.google.common.collect.Lists;
 import com.google.common.collect.Ordering;
 import com.ibm.commons.util.StringUtil;
+import com.tinkerpop.blueprints.Element;
 import com.tinkerpop.frames.FramedGraph;
+import com.tinkerpop.gremlin.Tokens;
+import com.tinkerpop.gremlin.java.GremlinPipeline;
+import com.tinkerpop.pipes.PipeFunction;
+import com.tinkerpop.pipes.transform.OrderPipe;
+import com.tinkerpop.pipes.transform.TransformPipe;
+import com.tinkerpop.pipes.transform.TransformPipe.Order;
+import com.tinkerpop.pipes.util.structures.Pair;
 
 public class TrackFactory {
 
@@ -28,6 +37,49 @@ public class TrackFactory {
 			}
 			Ordering ord = Ordering.from(new DVertexFrameComparator(property));
 			retVal_ = ord.sortedCopy(tracks);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return retVal_;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public static List<Track> getTracksGremlinBeforeK() {
+		List<Track> retVal_ = new ArrayList<Track>();
+		try {
+			FramedGraph graph = ConferenceGraphFactory.getEngageGraph();
+			List<Track> tracks = Lists.newArrayList(graph.getVertices(null, null, Track.class));
+			// Can't seem to get the compare to work, but here it is
+			PipeFunction<Pair<Track,Track>, Integer> strCompare = new PipeFunction<Pair<Track,Track>, Integer>() {
+
+				@Override
+				public Integer compute(Pair<Track, Track> arg0) {
+					System.out.println("Comparing...");
+					System.out.println("**Comparing " + arg0.getA().getTitle() + " with " + arg0.getB().getTitle());
+					String elem1 = arg0.getA().getTitle();
+					String elem2 = arg0.getB().getTitle();
+					Integer ord = elem1.compareToIgnoreCase(elem2);
+					System.out.println(ord);
+					return ord;
+				}
+				
+			};
+			PipeFunction<Track, Boolean> strFilter = new PipeFunction<Track, Boolean>() {
+
+				@Override
+				public Boolean compute(Track t) {
+					Integer beforeK = t.getTitle().compareToIgnoreCase("K");
+					if (beforeK < 0) {
+						return true;
+					} else {
+						return false;
+					}
+				}
+				
+			};
+			//GremlinPipeline pipe = new GremlinPipeline(tracks).add(new OrderPipe(strCompare)).back(1);
+			GremlinPipeline pipe = new GremlinPipeline(tracks).filter(strFilter).back(1);
+			retVal_ = pipe.toList();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
