@@ -37,7 +37,8 @@ public class EventTester implements Runnable {
 			System.out.println("******************");
 			
 			System.out.println("Outputting speakers for Dev track...");
-			List<Attendee> speakers = Lists.newArrayList(EventFactory.getSpeakers("Dev"));
+			// Gives us duplicates, need to prevent, Can't see to work it out
+			List<Attendee> speakers = Lists.newArrayList(EventFactory.getSpeakersWithDuplicates(""));
 			for (Attendee speaker : speakers) {
 				System.out.println(speaker.getFirstName() + " " + speaker.getLastName() + " - " + speaker.getTwitterId());
 			}
