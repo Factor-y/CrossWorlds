@@ -49,7 +49,7 @@ public class ConferenceGraphFactory {
 		return retVal_;
 	}
 	
-	static FramedGraph getGraph(final String confName) {
+	public static FramedGraph getGraph(final String confName) {
 		return getConference(confName).getFramedGraph();
 	}
 	

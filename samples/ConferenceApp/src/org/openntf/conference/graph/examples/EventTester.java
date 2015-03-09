@@ -6,6 +6,8 @@ import java.util.List;
 
 import org.openntf.conference.graph.Attendee;
 import org.openntf.conference.graph.Presentation;
+import org.openntf.conferenceapp.service.ConferenceGraphFactory;
+import org.openntf.conferenceapp.service.ConferenceManager;
 import org.openntf.conferenceapp.service.EventFactory;
 
 import com.google.common.collect.Lists;
@@ -36,13 +38,15 @@ public class EventTester implements Runnable {
 			}
 			System.out.println("******************");
 			
-			System.out.println("Outputting speakers for Dev track...");
+			System.out.println("Outputting speakers for tracks...");
 			// Gives us duplicates, need to prevent, Can't see to work it out
 			List<Attendee> speakers = Lists.newArrayList(EventFactory.getSpeakersWithDuplicates(""));
 			for (Attendee speaker : speakers) {
 				System.out.println(speaker.getFirstName() + " " + speaker.getLastName() + " - " + speaker.getTwitterId());
 			}
 			System.out.println("******************");
+			Iterable<Attendee> theos = (Iterable<Attendee>) ConferenceGraphFactory.getGraph(ConferenceGraphFactory.ENGAGE_KEY).getVertices("FirstName", "Theo", Attendee.class);
+			System.out.println(Lists.newArrayList(theos).size());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

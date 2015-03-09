@@ -1,9 +1,15 @@
 package org.openntf.conferenceapp.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.TreeSet;
+
+import javolution.util.FastCollection;
+import javolution.util.FastMap;
+import javolution.util.FastSet;
 
 import org.openntf.conference.graph.Attendee;
 import org.openntf.conference.graph.Presentation;
@@ -22,7 +28,7 @@ import com.tinkerpop.gremlin.java.GremlinPipeline;
 
 public class EventFactory {
 
-	static boolean debug = true;
+	static boolean debug = false;
 
 	public static List<Presentation> getPresentationsSortedByProperty(String property) {
 		List<Presentation> retVal_ = null;
@@ -40,12 +46,12 @@ public class EventFactory {
 		return retVal_;
 	}
 
-	public static HashSet<Attendee> getSpeakersWithDuplicates(String trackKey) {
-		HashSet<Attendee> retVal_ = null;
+	public static FastSet<Attendee> getSpeakersWithDuplicates(String trackKey) {
+		FastSet<Attendee> retVal_ = null;
 		try {
 			FramedGraph graph = ConferenceGraphFactory.getGraph("engage");
 			List<Presentation> presentations = new ArrayList<Presentation>();
-			HashSet<Attendee> speakers = new HashSet<Attendee>();
+			FastSet<Attendee> speakers = new FastSet<Attendee>();
 			int count = 0;
 			if (Strings.isBlankString(trackKey)) {
 				presentations = Lists.newArrayList(graph.getVertices(null, null, Presentation.class));

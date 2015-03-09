@@ -170,7 +170,7 @@ public class DataInitializerEngage implements Runnable {
 					}
 					String speakerName = speaker;
 					String organization = obj.getAsString("speaker_org" + suffix);
-					Attendee att = framedGraph.addVertex(null, Attendee.class);
+					Attendee att = framedGraph.addVertex(speakerName, Attendee.class);
 					System.out.println(speaker);
 					int sep = speakerName.indexOf(" ");
 					if (sep > -1) {
