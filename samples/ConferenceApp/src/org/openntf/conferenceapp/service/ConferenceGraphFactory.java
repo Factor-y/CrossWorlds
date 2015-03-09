@@ -34,7 +34,7 @@ public class ConferenceGraphFactory {
 		return null;
 	}
 	
-	static ConferenceGraph getConference(final String key) {
+	public static ConferenceGraph getConference(final String key) {
 		ConferenceGraph retVal_ = null;
 		try {
 			if (!registeredGraphs.containsKey(key)) {

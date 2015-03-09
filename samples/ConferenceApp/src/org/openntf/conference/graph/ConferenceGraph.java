@@ -1,5 +1,7 @@
 package org.openntf.conference.graph;
 
+import java.util.List;
+
 import org.openntf.domino.graph2.builtin.social.Comment;
 import org.openntf.domino.graph2.builtin.social.Likes;
 import org.openntf.domino.graph2.builtin.social.Mentions;
@@ -10,6 +12,7 @@ import org.openntf.domino.graph2.impl.DFramedGraphFactory;
 import org.openntf.domino.graph2.impl.DFramedTransactionalGraph;
 import org.openntf.domino.graph2.impl.DGraph;
 
+import com.google.common.collect.Lists;
 import com.tinkerpop.frames.modules.Module;
 import com.tinkerpop.frames.modules.javahandler.JavaHandlerModule;
 
@@ -87,6 +90,17 @@ public class ConferenceGraph {
 
 	public Attendee getAttendee(final Object key, final boolean create) {
 		Attendee result = getAttendee(key);
+		if (result == null) {
+			List<Attendee> verts = Lists.newArrayList(getFramedGraph().getVertices("Twitter", key, Attendee.class));
+			if (!verts.isEmpty()) {
+				result = verts.get(0);
+			} else {
+				verts = Lists.newArrayList(getFramedGraph().getVertices("Email", key, Attendee.class));
+				if (!verts.isEmpty()) {
+					verts.get(0);
+				}
+			}
+		}
 		if (result == null && create) {
 			result = getFramedGraph().addVertex(key, Attendee.class);
 		}
@@ -94,7 +108,11 @@ public class ConferenceGraph {
 	}
 
 	public Attendee getAttendee(final Object key) {
-		return getFramedGraph().getVertex(key, Attendee.class);
+		try {
+			return getFramedGraph().getVertex(key, Attendee.class);
+		} catch (Exception e) {
+			return null;
+		}
 	}
 
 	public Group getGroup(final Object key, final boolean create) {
