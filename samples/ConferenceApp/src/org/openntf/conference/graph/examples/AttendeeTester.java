@@ -21,6 +21,7 @@ import com.google.common.collect.Lists;
 import com.tinkerpop.blueprints.Direction;
 import com.tinkerpop.blueprints.Graph;
 import com.tinkerpop.frames.FramedGraph;
+import com.tinkerpop.frames.FramedTransactionalGraph;
 
 public class AttendeeTester implements Runnable {
 	private long marktime;
@@ -34,13 +35,13 @@ public class AttendeeTester implements Runnable {
 		long testStartTime = System.nanoTime();
 		marktime = System.nanoTime();
 		try {
-			FramedGraph graph = ConferenceGraphFactory.getGraph("engage");
+			FramedTransactionalGraph graph = (FramedTransactionalGraph) ConferenceGraphFactory.getGraph("engage");
 			Iterable<Attendee> atts = (Iterable<Attendee>) graph.getVertices("Twitter", "paulswithers", Attendee.class);
 			Attendee paulwithers = atts.iterator().next();
 			Map<CharSequence, Object> props = paulwithers.asMap();
 			System.out.println("Outputting properties for Paul Withers");
 			for (CharSequence key : props.keySet()) {
-				System.out.println(key);
+				System.out.println(key + " - " + props.get(key));
 			}
 			System.out.println("***************");
 			DVertex vert = (DVertex) paulwithers.asVertex();
@@ -54,6 +55,9 @@ public class AttendeeTester implements Runnable {
 			} else {
 				System.out.println("Couldn't find me");
 			}
+			
+			paulwithers.setEmail("pwithers@intec.co.uk");
+			graph.commit();
 			
 //			System.out.println("Changing key to pwithers@intec.co.uk");
 //			vert.setProperty("$$Key", "pwithers@intec.co.uk");
