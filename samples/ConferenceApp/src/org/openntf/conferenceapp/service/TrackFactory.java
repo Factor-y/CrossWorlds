@@ -86,6 +86,48 @@ public class TrackFactory {
 		return retVal_;
 	}
 	
+	@SuppressWarnings("unchecked")
+	public static List<Track> getTracksGremlinForThreeLetterTracks() {
+		List<Track> retVal_ = new ArrayList<Track>();
+		try {
+			FramedGraph graph = ConferenceGraphFactory.getEngageGraph();
+			List<Track> tracks = Lists.newArrayList(graph.getVertices(null, null, Track.class));
+			// Can't seem to get the compare to work, but here it is
+			PipeFunction<Pair<Track,Track>, Integer> strCompare = new PipeFunction<Pair<Track,Track>, Integer>() {
+
+				@Override
+				public Integer compute(Pair<Track, Track> arg0) {
+					System.out.println("Comparing...");
+					System.out.println("**Comparing " + arg0.getA().getTitle() + " with " + arg0.getB().getTitle());
+					String elem1 = arg0.getA().getTitle();
+					String elem2 = arg0.getB().getTitle();
+					Integer ord = elem1.compareToIgnoreCase(elem2);
+					System.out.println(ord);
+					return ord;
+				}
+				
+			};
+			PipeFunction<String, Boolean> strFilter = new PipeFunction<String, Boolean>() {
+
+				@Override
+				public Boolean compute(String t) {
+					if (t.length() == 3) {
+						return true;
+					} else {
+						return false;
+					}
+				}
+				
+			};
+			//GremlinPipeline pipe = new GremlinPipeline(tracks).add(new OrderPipe(strCompare)).back(1);
+			GremlinPipeline pipe = new GremlinPipeline(tracks).property("Title").filter(strFilter).back(2);
+			retVal_ = pipe.toList();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return retVal_;
+	}
+	
 	/**
 	 * Gets a track for the relevant key
 	 * 

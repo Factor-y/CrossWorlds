@@ -42,6 +42,15 @@ public class TrackTester implements Runnable {
 				System.out.println("Track " + t.getTitle() + ": " + t.getDescription());
 			}
 			System.out.println("************************");
+			System.out.println("Getting Three Letter Tracks using Gremlin");
+			tracks = TrackFactory.getTracksGremlinForThreeLetterTracks();
+			for (Track t : tracks) {
+				if ("".equals(trackTitle)) {
+					trackTitle = t.getTitle();
+				}
+				System.out.println("Track " + t.getTitle() + ": " + t.getDescription());
+			}
+			System.out.println("************************");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

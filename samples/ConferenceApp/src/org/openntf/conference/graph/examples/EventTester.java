@@ -39,14 +39,18 @@ public class EventTester implements Runnable {
 			System.out.println("******************");
 			
 			System.out.println("Outputting speakers for tracks...");
-			// Gives us duplicates, need to prevent, Can't see to work it out
-			List<Attendee> speakers = Lists.newArrayList(EventFactory.getSpeakersWithDuplicates(""));
+			List<Attendee> speakers = Lists.newArrayList(EventFactory.getSpeakersDomino(""));
 			for (Attendee speaker : speakers) {
 				System.out.println(speaker.getFirstName() + " " + speaker.getLastName() + " - " + speaker.getTwitterId());
 			}
 			System.out.println("******************");
-			Iterable<Attendee> theos = (Iterable<Attendee>) ConferenceGraphFactory.getGraph(ConferenceGraphFactory.ENGAGE_KEY).getVertices("FirstName", "Theo", Attendee.class);
-			System.out.println(Lists.newArrayList(theos).size());
+
+			System.out.println("Outputting speakers for tracks from Gremlin...");
+			List<Attendee> speakersGremlin = Lists.newArrayList(EventFactory.getSpeakers("Dev"));
+			for (Attendee speaker : speakersGremlin) {
+				System.out.println(speaker.getFirstName() + " " + speaker.getLastName() + " - " + speaker.getTwitterId());
+			}
+			System.out.println("******************");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

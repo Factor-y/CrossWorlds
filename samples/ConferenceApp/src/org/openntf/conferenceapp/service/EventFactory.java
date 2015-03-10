@@ -46,7 +46,7 @@ public class EventFactory {
 		return retVal_;
 	}
 
-	public static FastSet<Attendee> getSpeakersWithDuplicates(String trackKey) {
+	public static FastSet<Attendee> getSpeakersDomino(String trackKey) {
 		FastSet<Attendee> retVal_ = null;
 		try {
 			FramedGraph graph = ConferenceGraphFactory.getGraph("engage");
@@ -80,6 +80,8 @@ public class EventFactory {
 	}
 
 	// This throws a ClassCastException currently
+	// java.lang.ClassCastException: com.sun.proxy.$Proxy11 incompatible with com.tinkerpop.blueprints.Vertex
+	// Because outV returns a FramedVertex and needs to return .asVertex()
 	public static List<Attendee> getSpeakers(String trackKey) {
 		List<Attendee> retVal_ = null;
 		try {
@@ -87,11 +89,11 @@ public class EventFactory {
 			List presentations = Lists.newArrayList(graph.getVertices(null, null, Presentation.class));
 
 			//GremlinPipeline pipe = new GremlinPipeline(presentations).outE("PresentedBy").outV().dedup();
-			GremlinPipeline pipe = new GremlinPipeline(presentations).outE("PresentedBy");
-			List<DEdge> edges = pipe.toList();
-			for (DEdge edge : edges) {
-				System.out.println(edge.getVertex(Direction.OUT).getId());
-			}
+			GremlinPipeline pipe = new GremlinPipeline(presentations).outE("PresentedBy").outV();
+//			List<DEdge> edges = pipe.toList();
+//			for (DEdge edge : edges) {
+//				System.out.println(edge.getVertex(Direction.OUT).getId());
+//			}
 			retVal_ = pipe.toList();
 		} catch (Exception e) {
 			e.printStackTrace();
