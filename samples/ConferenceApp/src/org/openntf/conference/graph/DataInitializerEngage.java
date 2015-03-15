@@ -183,6 +183,7 @@ public class DataInitializerEngage implements Runnable {
 					}
 					att.setTwitterId(obj.getAsString("speaker_twitter" + suffix));
 					att.setUrl(obj.getAsString("speaker_photourl" + suffix));
+					att.setProfile(obj.getAsString("speaker_profile"));
 
 					if (!"".equals(organization)) {
 						Group org = framedGraph.addVertex(organization, Group.class);
