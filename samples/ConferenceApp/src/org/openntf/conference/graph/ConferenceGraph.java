@@ -40,6 +40,7 @@ public class ConferenceGraph {
 		DElementStore groupStore = new DElementStore();
 		groupStore.setStoreKey(GROUP_PATH);
 		groupStore.addType(Group.class);
+		groupStore.addType(Sponsor.class);
 		DElementStore eventStore = new DElementStore();
 		eventStore.setStoreKey(EVENT_PATH);
 		eventStore.addType(Event.class);
@@ -90,17 +91,6 @@ public class ConferenceGraph {
 
 	public Attendee getAttendee(final Object key, final boolean create) {
 		Attendee result = getAttendee(key);
-		if (result == null) {
-			List<Attendee> verts = Lists.newArrayList(getFramedGraph().getVertices("Twitter", key, Attendee.class));
-			if (!verts.isEmpty()) {
-				result = verts.get(0);
-			} else {
-				verts = Lists.newArrayList(getFramedGraph().getVertices("Email", key, Attendee.class));
-				if (!verts.isEmpty()) {
-					verts.get(0);
-				}
-			}
-		}
 		if (result == null && create) {
 			result = getFramedGraph().addVertex(key, Attendee.class);
 		}
@@ -108,8 +98,21 @@ public class ConferenceGraph {
 	}
 
 	public Attendee getAttendee(final Object key) {
+		Attendee result = null;
 		try {
-			return getFramedGraph().getVertex(key, Attendee.class);
+			result = getFramedGraph().getVertex(key, Attendee.class);
+			if (result == null) {
+				List<Attendee> verts = Lists.newArrayList(getFramedGraph().getVertices("Twitter", key, Attendee.class));
+				if (!verts.isEmpty()) {
+					result = verts.get(0);
+				} else {
+					verts = Lists.newArrayList(getFramedGraph().getVertices("Email", key, Attendee.class));
+					if (!verts.isEmpty()) {
+						verts.get(0);
+					}
+				}
+			}
+			return result;
 		} catch (Exception e) {
 			return null;
 		}
