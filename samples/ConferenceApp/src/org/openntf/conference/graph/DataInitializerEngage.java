@@ -170,7 +170,7 @@ public class DataInitializerEngage implements Runnable {
 					}
 					String speakerName = speaker;
 					String organization = obj.getAsString("speaker_org" + suffix);
-					Attendee att = framedGraph.addVertex(null, Attendee.class);
+					Attendee att = framedGraph.addVertex(speakerName, Attendee.class);
 					System.out.println(speaker);
 					int sep = speakerName.indexOf(" ");
 					if (sep > -1) {
@@ -183,6 +183,7 @@ public class DataInitializerEngage implements Runnable {
 					}
 					att.setTwitterId(obj.getAsString("speaker_twitter" + suffix));
 					att.setUrl(obj.getAsString("speaker_photourl" + suffix));
+					att.setProfile(obj.getAsString("speaker_profile"));
 
 					if (!"".equals(organization)) {
 						Group org = framedGraph.addVertex(organization, Group.class);

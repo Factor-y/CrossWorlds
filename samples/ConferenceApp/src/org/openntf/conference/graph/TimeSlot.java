@@ -1,5 +1,6 @@
 package org.openntf.conference.graph;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 import org.openntf.conference.graph.Event.HappeningOn;
@@ -30,6 +31,19 @@ public interface TimeSlot extends DVertexFrame {
 			}
 			return result;
 		}
+		
+		@Override
+		public String getDay() {
+			String result = "";
+			try {
+				Calendar start = getStartTime();
+				SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd MMM");
+				result = DATE_FORMAT.format(start.getTime());
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
+			return result;
+		}
 	}
 
 	@TypedProperty("Starttime")
@@ -46,6 +60,9 @@ public interface TimeSlot extends DVertexFrame {
 
 	@JavaHandler
 	public Integer getDuration();	//in minutes
+	
+	@JavaHandler
+	public String getDay(); // in dd MMM format
 
 	@AdjacencyUnique(label = HappeningOn.LABEL, direction = Direction.IN)
 	public Iterable<Event> getEvents();

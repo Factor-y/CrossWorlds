@@ -3,6 +3,7 @@ package org.openntf.conference.graph;
 import org.openntf.conference.graph.Invite.InvitedTo;
 import org.openntf.conference.graph.Invite.Invites;
 import org.openntf.conference.graph.Presentation.PresentedBy;
+import org.openntf.conference.graph.Sponsor.ContactFor;
 import org.openntf.domino.graph2.annotations.AdjacencyUnique;
 import org.openntf.domino.graph2.annotations.IncidenceUnique;
 import org.openntf.domino.graph2.annotations.TypedProperty;
@@ -113,6 +114,12 @@ public interface Attendee extends Socializer {
 	@TypedProperty("Role")
 	public void setRole(String role);
 
+	@TypedProperty("Profile")
+	public String getProfile();
+
+	@TypedProperty("Profile")
+	public void setProfile(String profile);
+
 	@TypedProperty(value = "Firstname + \" \" + Lastname", derived = true)
 	public String getFullname();
 
@@ -205,4 +212,10 @@ public interface Attendee extends Socializer {
 
 	@IncidenceUnique(label = MemberOf.LABEL)
 	public void removeMemberOf(MemberOf memberOf);
+
+	@AdjacencyUnique(label = ContactFor.LABEL)
+	public MemberOf addContactForSponsor(Sponsor sponsor);
+
+	@AdjacencyUnique(label = ContactFor.LABEL)
+	public void removeContactForSponsor(Sponsor sponsor);
 }
