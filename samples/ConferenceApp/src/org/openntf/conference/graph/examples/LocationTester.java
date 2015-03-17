@@ -2,8 +2,13 @@ package org.openntf.conference.graph.examples;
 
 import java.util.List;
 
-import org.openntf.conference.graph.Track;
-import org.openntf.conferenceapp.service.TrackFactory;
+import javolution.util.FastSet;
+
+import org.openntf.conference.graph.Location;
+import org.openntf.conference.graph.Presentation;
+import org.openntf.conference.graph.TimeSlot;
+import org.openntf.conferenceapp.service.EventFactory;
+import org.openntf.conferenceapp.service.LocationFactory;
 import org.openntf.domino.junit.TestRunnerUtil;
 
 public class LocationTester implements Runnable {
@@ -18,36 +23,22 @@ public class LocationTester implements Runnable {
 		long testStartTime = System.nanoTime();
 		marktime = System.nanoTime();
 		try {
-			List<Track> tracks = TrackFactory.getTracksSortedByProperty("Title");
-			String trackTitle = "";
-			System.out.println("Logging tracks.....");
-			for (Track t : tracks) {
-				if ("".equals(trackTitle)) {
-					trackTitle = t.getTitle();
+			System.out.println("Getting Locations...");
+			List<Location> locs = LocationFactory.getLocationsSortedByProperty("");
+			Location location = null;
+			for (Location loc : locs) {
+				if (null == location) {
+					location = loc;
 				}
-				System.out.println("Track " + t.getTitle() + ": " + t.getDescription());
+				System.out.println(loc.getName());
 			}
 			System.out.println("************************");
-			System.out.println("Outputting track for " + trackTitle);
-			Track track = TrackFactory.getTrack(trackTitle);
-			System.out.println("Track " + track.getTitle() + ": " + track.getDescription());
-			System.out.println("************************");
-			System.out.println("Getting Tracks using Gremlin");
-			tracks = TrackFactory.getTracksGremlinBeforeK();
-			for (Track t : tracks) {
-				if ("".equals(trackTitle)) {
-					trackTitle = t.getTitle();
-				}
-				System.out.println("Track " + t.getTitle() + ": " + t.getDescription());
-			}
-			System.out.println("************************");
-			System.out.println("Getting Three Letter Tracks using Gremlin");
-			tracks = TrackFactory.getTracksGremlinForThreeLetterTracks();
-			for (Track t : tracks) {
-				if ("".equals(trackTitle)) {
-					trackTitle = t.getTitle();
-				}
-				System.out.println("Track " + t.getTitle() + ": " + t.getDescription());
+
+			System.out.println("Getting presentations for " + location.getName());
+			FastSet<Presentation> presentations = EventFactory.getPresentationsByLocation(location);
+			for (Presentation pres : presentations) {
+				TimeSlot ts = pres.getTimes().iterator().next();
+				System.out.println(pres.getTitle() + ": " + ts.getStartTime().getTime() + "-" + ts.getEndTime().getTime());
 			}
 			System.out.println("************************");
 		} catch (Exception e) {

@@ -8,6 +8,7 @@ import javolution.util.FastSet;
 
 import org.openntf.conference.graph.Attendee;
 import org.openntf.conference.graph.Event;
+import org.openntf.conference.graph.Location;
 import org.openntf.conference.graph.Presentation;
 import org.openntf.conference.graph.TimeSlot;
 import org.openntf.domino.graph2.builtin.DVertexFrameComparator;
@@ -39,7 +40,7 @@ public class EventFactory {
 	}
 
 	public static FastSet<Presentation> getPresentationsByTimeSlot(Object ts) {
-		FastSet<Presentation> retVal_ = null;
+		FastSet<Presentation> retVal_ = new FastSet();
 		List<TimeSlot> times = new ArrayList<TimeSlot>();
 		if (null == ts) {
 			times = TimeSlotFactory.getTimeSlotsSorted();
@@ -52,6 +53,29 @@ public class EventFactory {
 		}
 		for (TimeSlot time : times) {
 			Iterable<Event> presentations = time.getEvents();
+			for (Event evt : presentations) {
+				if (evt instanceof Presentation) {
+					retVal_.add((Presentation) evt);
+				}
+
+			}
+
+		}
+		return retVal_;
+	}
+
+	public static FastSet<Presentation> getPresentationsByLocation(Object loc) {
+		FastSet<Presentation> retVal_ = new FastSet();
+		List<Location> locations = new ArrayList<Location>();
+		if (null == loc) {
+			locations = LocationFactory.getLocationsSortedByProperty("");
+		} else if (loc instanceof Location) {
+			locations.add((Location) loc);
+		} else if (loc instanceof List) {
+			locations = (List<Location>) loc;
+		}
+		for (Location location : locations) {
+			Iterable<Event> presentations = location.getEvents();
 			for (Event evt : presentations) {
 				if (evt instanceof Presentation) {
 					retVal_.add((Presentation) evt);
