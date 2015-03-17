@@ -21,11 +21,11 @@ import org.openntf.domino.utils.Strings;
 
 import com.tinkerpop.frames.FramedTransactionalGraph;
 
-public class DataInitializer implements Runnable {
+public class DataInitializerConnectED implements Runnable {
 	private long marktime;
 	private static final String SRC_DATA_PATH = "OpenNTF Downloads/sphere2015.nsf";
 
-	public DataInitializer() {
+	public DataInitializerConnectED() {
 
 	}
 
@@ -188,7 +188,7 @@ public class DataInitializer implements Runnable {
 	}
 
 	public static void main(final String[] args) {
-		TestRunnerUtil.runAsDominoThread(new DataInitializer(), TestRunnerUtil.NATIVE_SESSION);
+		TestRunnerUtil.runAsDominoThread(new DataInitializerConnectED(), TestRunnerUtil.NATIVE_SESSION);
 	}
 
 	public void timelog(final String message) {
