@@ -6,10 +6,10 @@ import org.openntf.conference.graph.Track;
 import org.openntf.conferenceapp.service.TrackFactory;
 import org.openntf.domino.junit.TestRunnerUtil;
 
-public class TrackTester implements Runnable {
+public class LocationTester implements Runnable {
 	private long marktime;
 
-	public TrackTester() {
+	public LocationTester() {
 
 	}
 
@@ -65,7 +65,7 @@ public class TrackTester implements Runnable {
 	}
 
 	public static void main(final String[] args) {
-		TestRunnerUtil.runAsDominoThread(new TrackTester(), TestRunnerUtil.NATIVE_SESSION);
+		TestRunnerUtil.runAsDominoThread(new LocationTester(), TestRunnerUtil.NATIVE_SESSION);
 	}
 
 }

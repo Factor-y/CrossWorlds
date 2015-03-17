@@ -1,12 +1,19 @@
 package org.openntf.conferenceapp.service;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
+import javolution.util.FastSet;
+
 import org.openntf.conference.graph.Attendee;
+import org.openntf.conference.graph.Presentation;
+import org.openntf.conference.graph.Track;
 import org.openntf.domino.graph2.DGraph;
 import org.openntf.domino.utils.Strings;
 
+import com.google.common.collect.Lists;
+import com.tinkerpop.frames.FramedGraph;
 import com.tinkerpop.frames.FramedTransactionalGraph;
 
 public class AttendeeFactory {
@@ -74,6 +81,31 @@ public class AttendeeFactory {
 		if (!props.containsKey(check)) {
 			missingProps.add(check);
 		}
+	}
+
+	public static FastSet<Attendee> getSpeakers(String trackKey) {
+		FastSet<Attendee> retVal_ = null;
+		try {
+			FramedGraph graph = ConferenceGraphFactory.getGraph("engage");
+			List<Presentation> presentations = new ArrayList<Presentation>();
+			FastSet<Attendee> speakers = new FastSet<Attendee>();
+			int count = 0;
+			if (Strings.isBlankString(trackKey)) {
+				presentations = Lists.newArrayList(graph.getVertices(null, null, Presentation.class));
+			} else {
+				Track track = TrackFactory.getTrack(trackKey);
+				presentations = Lists.newArrayList(track.getIncludesSessions());
+			}
+			for (Presentation pres : presentations) {
+				List<Attendee> presSpeakers = Lists.newArrayList(pres.getPresentingAttendees());
+				speakers.addAll(presSpeakers);
+			}
+			return speakers;
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return retVal_;
 	}
 
 }
