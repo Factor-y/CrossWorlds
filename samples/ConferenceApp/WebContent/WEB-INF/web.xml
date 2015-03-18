@@ -39,4 +39,10 @@
 		<param-name>org.openntf.crossworlds.devtimename</param-name>
 		<param-value>CN=Daniele Vistalli/O=Factor-y/C=IT</param-value>
 	</context-param>
+	<listener>
+		<display-name>org.atmosphere.cpr.SessionSupport</display-name>
+		<listener-class>
+			org.atmosphere.cpr.SessionSupport
+		</listener-class>
+	</listener>
 </web-app>
