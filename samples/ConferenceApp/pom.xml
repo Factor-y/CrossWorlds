@@ -6,6 +6,11 @@
   <packaging>war</packaging>
   <dependencies>
     <dependency>
+    	<groupId>org.openntf.xworlds.webapp</groupId>
+    	<artifactId>j2eeenabler</artifactId>
+    	<version>0.0.1-SNAPSHOT</version>
+    </dependency>
+    <dependency>
       <groupId>com.ibm.tools.target</groupId>
       <artifactId>was-liberty</artifactId>
       <version>LATEST</version>
