@@ -49,7 +49,7 @@ public class EventFactory {
 		} else if (ts instanceof List) {
 			times = (List<TimeSlot>) ts;
 		} else if (ts instanceof Date) {
-			times = TimeSlotFactory.getTimeSlotsForDate((Date) ts);
+			times = TimeSlotFactory.getOfficialTimeSlotsForDate((Date) ts);
 		}
 		for (TimeSlot time : times) {
 			Iterable<Event> presentations = time.getEvents();

@@ -16,7 +16,7 @@ import com.ibm.icu.util.Calendar;
 
 public class TimeSlotFactory {
 
-	public static List<TimeSlot> getTimeSlotsForDate(Date dt) {
+	public static List<TimeSlot> getOfficialTimeSlotsForDate(Date dt) {
 		List<TimeSlot> retVal_ = new ArrayList<TimeSlot>();
 		// Get date as dd MMM
 		if (null == dt) {
@@ -33,7 +33,7 @@ public class TimeSlotFactory {
 		Iterator it = times.iterator();
 		while (it.hasNext()) {
 			TimeSlot ts = (TimeSlot) it.next();
-			if (day.equals(ts.getDay())) {
+			if (day.equals(ts.getDay()) && ts.isOfficial()) {
 				retVal_.add(ts);
 			}
 		}
@@ -96,15 +96,17 @@ public class TimeSlotFactory {
 			TimeSlot ts = (TimeSlot) it.next();
 			// Ignore, TimeSlot already ended
 			// Ignore if StartTime more than one hour after now, remove
-			if (dt.before(ts.getEndTime().getTime())) {
-				Calendar check = Calendar.getInstance();
-				check.setTime(ts.getStartTime().getTime());
-				check.add(Calendar.MINUTE, -1);
-				if (dt.after(check.getTime())) {
-					// Currently running
-					retVal_.add(ts);
-				} else {
-					nextTimes.add(ts);
+			if (ts.isOfficial()) {
+				if (dt.before(ts.getEndTime().getTime())) {
+					Calendar check = Calendar.getInstance();
+					check.setTime(ts.getStartTime().getTime());
+					check.add(Calendar.MINUTE, -1);
+					if (dt.after(check.getTime())) {
+						// Currently running
+						retVal_.add(ts);
+					} else {
+						nextTimes.add(ts);
+					}
 				}
 			}
 		}

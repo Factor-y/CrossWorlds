@@ -27,11 +27,11 @@ public interface TimeSlot extends DVertexFrame {
 				long msDifference = end.getTime().getTime() - start.getTime().getTime();
 				result = Integer.valueOf(Long.valueOf(msDifference / 60000).intValue());
 			} catch (Throwable t) {
-				//TODO what?
+				// TODO what?
 			}
 			return result;
 		}
-		
+
 		@Override
 		public String getDay() {
 			String result = "";
@@ -58,9 +58,15 @@ public interface TimeSlot extends DVertexFrame {
 	@TypedProperty("Endtime")
 	public void setEndTime(Calendar endTime);
 
+	@TypedProperty("Official")
+	public boolean isOfficial();
+
+	@TypedProperty("Official")
+	public void setOfficial(boolean official);
+
 	@JavaHandler
-	public Integer getDuration();	//in minutes
-	
+	public Integer getDuration(); // in minutes
+
 	@JavaHandler
 	public String getDay(); // in dd MMM format
 

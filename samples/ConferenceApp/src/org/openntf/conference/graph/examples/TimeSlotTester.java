@@ -35,7 +35,7 @@ public class TimeSlotTester implements Runnable {
 			System.out.println("***************");
 
 			SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd MMM");
-			times = TimeSlotFactory.getTimeSlotsForDate(dt);
+			times = TimeSlotFactory.getOfficialTimeSlotsForDate(dt);
 			System.out.println("Outputting all timeslots sorted on same day as " + DATE_FORMAT.format(dt));
 			for (TimeSlot ts : times) {
 				System.out.println(ts.getStartTime().getTime() + " - " + ts.getEndTime().getTime());
