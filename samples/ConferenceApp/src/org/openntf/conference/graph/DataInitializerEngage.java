@@ -130,14 +130,14 @@ public class DataInitializerEngage implements Runnable {
 				String endTime = obj.getAsString("session_time2");
 				Calendar startCal = Calendar.getInstance();
 				startCal.setTime(startDate);
-				startCal.set(Calendar.HOUR_OF_DAY, Integer.parseInt(startTime.substring(0, 2)));
-				startCal.set(Calendar.MINUTE, Integer.parseInt(startTime.substring(3, 5)));
+				startCal.set(Calendar.HOUR_OF_DAY, Integer.parseInt(Strings.left(startTime, ":")));
+				startCal.set(Calendar.MINUTE, Integer.parseInt(Strings.right(startTime, ":")));
 				startCal.set(Calendar.SECOND, 0);
 				startCal.set(Calendar.MILLISECOND, 0);
 				Calendar endCal = Calendar.getInstance();
 				endCal.setTime(startDate);
-				endCal.set(Calendar.HOUR_OF_DAY, Integer.parseInt(endTime.substring(0, 2)));
-				endCal.set(Calendar.MINUTE, Integer.parseInt(endTime.substring(3, 5)));
+				endCal.set(Calendar.HOUR_OF_DAY, Integer.parseInt(Strings.left(endTime, ":")));
+				endCal.set(Calendar.MINUTE, Integer.parseInt(Strings.right(endTime, ":")));
 				endCal.set(Calendar.SECOND, 0);
 				endCal.set(Calendar.MILLISECOND, 0);
 
