@@ -23,7 +23,7 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.renderers.DateRenderer;
 
 @SuppressWarnings("serial")
-@Theme("valo")
+@Theme("conferenceApp")
 public class ConferenceUI extends UI {
 
 	@Override
@@ -111,9 +111,9 @@ public class ConferenceUI extends UI {
 		col = grid.getColumn("Title");
 		col.setSortable(true);
 		col.setWidth(200);
-		col = grid.getColumn("Description");
-		col.setSortable(true);
-		col.setWidth(300);
+		// col = grid.getColumn("Description");
+		// col.setSortable(true);
+		// col.setWidth(300);
 		col = grid.getColumn("Speakers");
 		col = grid.getColumn("StartTime");
 		col.setHeaderCaption("Start Time");
@@ -126,7 +126,7 @@ public class ConferenceUI extends UI {
 		col = grid.getColumn("Location");
 		col.setSortable(true);
 		grid.setFrozenColumnCount(2);
-		grid.setColumnOrder("SessionID", "Title", "Description", "Speakers", "StartTime", "EndTime", "Location");
+		grid.setColumnOrder("SessionID", "Title", "Speakers", "StartTime", "EndTime", "Location");
 		grid.setWidth(100, Unit.PERCENTAGE);
 		vert.addComponent(grid);
 
