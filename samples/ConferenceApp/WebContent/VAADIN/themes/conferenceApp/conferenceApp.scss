@@ -341,8 +341,10 @@ $v-layout-spacing-horizontal: round($v-unit-size / 1.8) !default;
   	text-align: right;
   }
   
-  .v-grid-cell {
-    white-space: normal;
-  }
+.v-grid-cell {
+   height: 65px;
+   word-wrap: break-word;
+   white-space: normal;
+}
 
 }

@@ -110,11 +110,12 @@ public class ConferenceUI extends UI {
 		col.setSortable(true);
 		col = grid.getColumn("Title");
 		col.setSortable(true);
-		col.setWidth(200);
+		col.setWidth(300);
 		// col = grid.getColumn("Description");
 		// col.setSortable(true);
 		// col.setWidth(300);
 		col = grid.getColumn("Speakers");
+		col.setWidth(200);
 		col = grid.getColumn("StartTime");
 		col.setHeaderCaption("Start Time");
 		col.setSortable(true);
@@ -128,6 +129,8 @@ public class ConferenceUI extends UI {
 		grid.setFrozenColumnCount(2);
 		grid.setColumnOrder("SessionID", "Title", "Speakers", "StartTime", "EndTime", "Location");
 		grid.setWidth(100, Unit.PERCENTAGE);
+		grid.setSizeFull();
+
 		vert.addComponent(grid);
 
 		vert.setSizeFull();
