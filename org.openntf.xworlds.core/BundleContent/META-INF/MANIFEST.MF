@@ -8,6 +8,7 @@ Export-Package:
  org.openntf.xworlds.appservers.lifecycle,
  org.openntf.xworlds.appservers.webapp,
  org.openntf.xworlds.appservers.webapp.config,
+ org.openntf.xworlds.appservers.webapp.security,
  org.openntf.xworlds.appservers.webapp.utils,
  org.openntf.xworlds.core
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
