@@ -341,10 +341,34 @@ $v-layout-spacing-horizontal: round($v-unit-size / 1.8) !default;
   	text-align: right;
   }
   
+  .v-grid-header th {
+  	color: #fff;
+  }
+  
+  .v-grid-header .v-grid-cell {
+    background-image: none;
+  	background-color: #60a0ea;
+  }
+  
 .v-grid-cell {
    height: 65px;
    word-wrap: break-word;
    white-space: normal;
+}
+
+.v-slot-menuArea {
+	background-color: #3b3f42;
+	background-image: linear-gradient(to left, #313537 0%, #3b3f42 8px);
+}
+
+.v-menubar .v-menubar-menuitem {
+	background-color: #3b3f42;
+	background-image: linear-gradient(to left, #313537 0%, #3b3f42 8px);
+	color: #9b9fa3;
+}
+
+.v-menubar-menuitem-highlight {
+	background: none repeat scroll 0 0 #34373a;
 }
 
 }
