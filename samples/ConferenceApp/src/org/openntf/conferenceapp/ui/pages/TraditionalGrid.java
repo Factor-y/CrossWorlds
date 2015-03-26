@@ -77,6 +77,7 @@ public class TraditionalGrid extends Grid {
 		col.setSortable(true);
 		col.setRenderer(new DateRenderer(new SimpleDateFormat("hh:mm")));
 		col = getColumn("Location");
+		col.setWidth(80);
 		col.setSortable(true);
 		setFrozenColumnCount(2);
 		setColumnOrder("SessionID", "Title", "Speakers", "StartTime", "EndTime", "Location");
