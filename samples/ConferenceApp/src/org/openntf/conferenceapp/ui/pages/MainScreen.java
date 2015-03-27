@@ -41,6 +41,9 @@ public class MainScreen extends VerticalLayout {
 		navigator.addView(NowAndNext.VIEW_NAME, new NowAndNext());
 		menu.addView(NowAndNext.VIEW_NAME, NowAndNext.VIEW_DESC, null);
 
+		navigator.addView(SessionsFilter.VIEW_NAME, new SessionsFilter());
+		menu.addView(SessionsFilter.VIEW_NAME, SessionsFilter.VIEW_DESC, null);
+
 		addComponent(viewContainer);
 		setExpandRatio(viewContainer, 1);
 		setSizeFull();
