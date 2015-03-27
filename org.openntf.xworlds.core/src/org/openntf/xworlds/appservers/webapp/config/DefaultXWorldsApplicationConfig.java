@@ -6,13 +6,13 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import lotus.domino.NotesException;
+
 import org.openntf.domino.Session;
 import org.openntf.domino.session.INamedSessionFactory;
 import org.openntf.domino.session.ISessionFactory;
 import org.openntf.domino.utils.Factory;
 import org.openntf.domino.utils.Factory.SessionType;
-
-import lotus.domino.NotesException;
 
 import com.google.common.annotations.Beta;
 import com.ibm.domino.napi.NException;
@@ -42,14 +42,7 @@ public class DefaultXWorldsApplicationConfig extends BaseXWorldsApplicationConfi
 	private String _defaultDevelopmentUserName = null;
 	private String _appSignerFullName = null;
 
-	private ThreadLocal<String> dominoFullName = new ThreadLocal<String>() {
-
-		@Override
-		protected String initialValue() {
-			return getDefaultDevelopmentUserName() != null ? getDefaultDevelopmentUserName() : "Anonymous";
-		}
-		
-	};
+	private static ThreadLocal<String> dominoFullName = new ThreadLocal<String>() {};
 	
 	enum IdentityLocator {
 		SIGNER,
@@ -98,28 +91,6 @@ public class DefaultXWorldsApplicationConfig extends BaseXWorldsApplicationConfi
 				throw new RuntimeException(e);
 			}		}
 	};
-
-//	@SuppressWarnings("serial")
-//	private ISessionFactory CurrentUserNamedSessionFactory = new ISessionFactory() {
-//		
-//		@Override
-//		public Session createSession() {
-//			log.info("Creating named session for: " + getDominoFullName());
-//			return CurrentUserSessionFactory.createSession(getDominoFullName());
-//		}
-//		
-//	};
-//
-//	@SuppressWarnings("serial")
-//	private ISessionFactory CurrentUserNamedSessionFactoryFullAccess = new ISessionFactory() {
-//		
-//		@Override
-//		public Session createSession() {
-//			log.info("Creating named session (full access) for: " + getDominoFullName());
-//			return CurrentUserSessionFactoryFullAccess.createSession(getDominoFullName());
-//		}
-//		
-//	};
 	
 	private ISessionFactory namedSignerSessionFactory = new XSPBasedNamedSessionFactory(false,IdentityLocator.SIGNER);
 	private ISessionFactory namedSignerSessionFactoryFullAccess = new XSPBasedNamedSessionFactory(true,IdentityLocator.SIGNER);
@@ -157,6 +128,9 @@ public class DefaultXWorldsApplicationConfig extends BaseXWorldsApplicationConfi
 			
 			// Read the development time identity
 			this._defaultDevelopmentUserName = context.getInitParameter(CONTEXTPARAM_CWDEFAULTDEVELOPER_IDENTITY);
+			if (_defaultDevelopmentUserName == null) {
+				_defaultDevelopmentUserName = "Anonymous";
+			}
 		}
 		
 	}
@@ -165,15 +139,17 @@ public class DefaultXWorldsApplicationConfig extends BaseXWorldsApplicationConfi
 		public void setupRequest(HttpServletRequest request, HttpServletResponse response) {
 			
 			// Set the session factories for the "CURRENT" session.
-			if (_isWASSecurityEnabled || isDeveloperMode()) {
-				// If security is enabled ("server" mode) generate named sessions based on the logged in user.
-				Factory.setSessionFactory(currentUserSessionFactory, SessionType.CURRENT);
-				Factory.setSessionFactory(currentUserSessionFactoryFullAccess, SessionType.CURRENT_FULL_ACCESS);
-			} else {
-				// If security not enabled NATIVE session is "Current ID"
-				Factory.setSessionFactory(Factory.getSessionFactory(SessionType.NATIVE), SessionType.CURRENT);
-				Factory.setSessionFactory(Factory.getSessionFactory(SessionType.NATIVE), SessionType.CURRENT_FULL_ACCESS);
-			}
+//			if (_isWASSecurityEnabled || isDeveloperMode()) {
+//				// If security is enabled ("server" mode) generate named sessions based on the logged in user.
+//				Factory.setSessionFactory(currentUserSessionFactory, SessionType.CURRENT);
+//				Factory.setSessionFactory(currentUserSessionFactoryFullAccess, SessionType.CURRENT_FULL_ACCESS);
+//			} else {
+//				// If security not enabled NATIVE session is "Current ID"
+//				Factory.setSessionFactory(Factory.getSessionFactory(SessionType.NATIVE), SessionType.CURRENT);
+//				Factory.setSessionFactory(Factory.getSessionFactory(SessionType.NATIVE), SessionType.CURRENT_FULL_ACCESS);
+//			}
+			Factory.setSessionFactory(currentUserSessionFactory, SessionType.CURRENT);
+			Factory.setSessionFactory(currentUserSessionFactoryFullAccess, SessionType.CURRENT_FULL_ACCESS);
 	
 			// The behaviour for asSigner session is the same with security enabled or not.
 			if (getAppSignerFullName() != null) {
@@ -186,8 +162,14 @@ public class DefaultXWorldsApplicationConfig extends BaseXWorldsApplicationConfi
 						
 			if (isDeveloperMode() && request.getSession(false) != null && request.getSession(false).getAttribute("xworlds.request.username") != null) {
 				setDominoFullName((String) request.getSession(false).getAttribute("xworlds.request.username"));
+			} else if (request.getSession(false) != null && request.getSession(false).getAttribute("xworlds.request.username") != null) {
+				// TODO - Need to specify a different behaviour for developer mode and production to provide better security and avoid bad developer behaviour 
+				setDominoFullName((String) request.getSession(false).getAttribute("xworlds.request.username"));
+			} else if (isDeveloperMode()) {
+				// If developer mode is enabled and no other override applies we fallback to the default development user name
+				setDominoFullName(_defaultDevelopmentUserName);
 			}
-			
+						
 		}
 
 	@Override
@@ -196,12 +178,12 @@ public class DefaultXWorldsApplicationConfig extends BaseXWorldsApplicationConfi
 		return this;
 	}
 
-	public String getDominoFullName() {
+	public static String getDominoFullName() {
 		return dominoFullName.get();
 	}
 
-	public void setDominoFullName(String dominoFullName) {
-		this.dominoFullName.set(dominoFullName);
+	public static void setDominoFullName(String newDominoFullName) {
+		dominoFullName.set(newDominoFullName);
 	}
 
 	@Override

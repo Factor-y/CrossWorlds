@@ -1,5 +1,9 @@
 package org.openntf.conferenceapp.ui.pages;
 
+import org.openntf.domino.Session;
+import org.openntf.domino.utils.Factory;
+import org.openntf.domino.utils.Factory.SessionType;
+
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.ui.Alignment;
@@ -36,8 +40,12 @@ public class TraditionalView extends CssLayout implements View {
 		Label gap = new Label();
 		gap.setHeight("1em");
 		addComponent(gap);
-		grid = new TraditionalGrid();
-		addComponent(grid);
+
+//		grid = new TraditionalGrid();
+//		addComponent(grid);
+		
+		Session s = Factory.getSession(SessionType.CURRENT);
+		System.out.println(s.getEffectiveUserName());
 
 	}
 
@@ -48,6 +56,10 @@ public class TraditionalView extends CssLayout implements View {
 	@Override
 	public void enter(ViewChangeEvent event) {
 		// viewLogic.enter(event.getParameters());
+		if (null == grid) {
+			   grid = new TraditionalGrid();
+			   addComponent(grid);
+		}
 	}
 
 }

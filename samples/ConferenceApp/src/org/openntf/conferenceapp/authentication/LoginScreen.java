@@ -12,16 +12,17 @@ import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Notification;
-import com.vaadin.ui.PasswordField;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 
 public class LoginScreen extends CssLayout {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -1486180911093854206L;
 	private TextField username;
-	private PasswordField password;
 	private Button login;
-	private Button forgotPassword;
 	private LoginListener loginListener;
 	private AccessControl accessControl;
 
@@ -59,18 +60,17 @@ public class LoginScreen extends CssLayout {
 		loginForm.addStyleName("login-form");
 		loginForm.setSizeUndefined();
 		loginForm.setMargin(false);
-
-		loginForm.addComponent(username = new TextField("Username", "Anonymous"));
+		
+		loginForm.setHeight("160px");
+		
+		loginForm.addComponent(username = new TextField("Email address", "Anonymous"));
 		username.setWidth(15, Unit.EM);
-		username.setDescription("Leave as Anonymous to continue anonymously, but with login you'll be able to mark attending, see related attendees, add meetings etc.");
-		loginForm.addComponent(password = new PasswordField("Password"));
-		password.setWidth(15, Unit.EM);
-		password.setDescription("Leave blank to continue anonymously, but with login you'll be able to mark attending, see related attendees, add meetings etc.");
+		username.setDescription("Leave as Anonymous to continue anonymously or user your email address to get a personal profile.");
 		CssLayout buttons = new CssLayout();
 		buttons.setStyleName("buttons");
 		loginForm.addComponent(buttons);
 
-		buttons.addComponent(login = new Button("Login"));
+		buttons.addComponent(login = new Button("Enter the conference"));
 		login.setDisableOnClick(true);
 		login.addClickListener(new Button.ClickListener() {
 			@Override
@@ -84,30 +84,25 @@ public class LoginScreen extends CssLayout {
 		});
 		login.setClickShortcut(ShortcutAction.KeyCode.ENTER);
 		login.addStyleName(ValoTheme.BUTTON_FRIENDLY);
-
-		buttons.addComponent(forgotPassword = new Button("Forgot password?"));
-		forgotPassword.addClickListener(new Button.ClickListener() {
-			@Override
-			public void buttonClick(Button.ClickEvent event) {
-				// TODO: @Daniele, this needs to send an email with link
-				showNotification(new Notification("Hint: Try anything"));
-			}
-		});
-		forgotPassword.addStyleName(ValoTheme.BUTTON_LINK);
+		
 		return loginForm;
 	}
 
 	private CssLayout buildLoginInformation() {
 		CssLayout loginInformation = new CssLayout();
 		loginInformation.setStyleName("login-information");
-		Label loginInfoText = new Label("<h1>Login Information</h1>"
-				+ "Log in to get full functionality. Just continue to access the application anonymously", ContentMode.HTML);
+		Label loginInfoText = new Label("<h1>Engage.UG 2015</h1>"
+				+ "You can access conference information as <strong>anonymous</strong> or <strong>get a personal profile</strong>.<br/>"
+				+ "<br/>"
+				+ "Visit the app as anonymous or provide your email to <string>get an access link</string>.<br/>"
+				+ "<br/>"
+				+ "The access link will set a cookie for you to easily (no password needed) access the app", ContentMode.HTML);
 		loginInformation.addComponent(loginInfoText);
 		return loginInformation;
 	}
 
 	private void login() {
-		if (accessControl.signIn(username.getValue(), password.getValue())) {
+		if (accessControl.signIn(username.getValue(), null)) {
 			loginListener.loginSuccessful();
 		} else {
 			showNotification(new Notification("Login failed", "Please check your username and password and try again.",

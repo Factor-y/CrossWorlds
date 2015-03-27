@@ -1,7 +1,10 @@
 package org.openntf.conferenceapp.authentication;
 
+import org.openntf.xworlds.appservers.webapp.security.SecurityManager;
+
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinService;
+import com.vaadin.server.VaadinServletRequest;
 
 public final class CurrentUser {
 	/**
@@ -38,8 +41,14 @@ public final class CurrentUser {
 	public static void set(String currentUser) {
 		if (currentUser == null) {
 			getCurrentRequest().getWrappedSession().removeAttribute(CURRENT_USER_SESSION_ATTRIBUTE_KEY);
+			// Set domino application identity
+			VaadinServletRequest s = (VaadinServletRequest) getCurrentRequest();
+			SecurityManager.setDominoFullName(s.getHttpServletRequest(), null);
 		} else {
 			getCurrentRequest().getWrappedSession().setAttribute(CURRENT_USER_SESSION_ATTRIBUTE_KEY, currentUser);
+			// Set domino application identity
+			VaadinServletRequest s = (VaadinServletRequest) getCurrentRequest();
+			SecurityManager.setDominoFullName(s.getHttpServletRequest(), currentUser);
 		}
 	}
 
