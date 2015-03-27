@@ -1,5 +1,7 @@
 package org.openntf.conferenceapp.ui;
 
+import java.text.SimpleDateFormat;
+
 import org.openntf.conferenceapp.authentication.AccessControl;
 import org.openntf.conferenceapp.authentication.BasicAccessControl;
 import org.openntf.conferenceapp.authentication.LoginScreen;
@@ -14,12 +16,13 @@ import com.vaadin.server.VaadinRequest;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.themes.ValoTheme;
 
-
 @Viewport("user-scalable=no,initial-scale=1.0")
 @SuppressWarnings("serial")
 @Theme("conferenceApp")
 public class ConferenceUI extends UI {
 
+	public static SimpleDateFormat TIME_FORMAT = new SimpleDateFormat("hh:mm");
+	public static SimpleDateFormat NICE_DAY_TIME = new SimpleDateFormat("ddd hh:mm");
 	private AccessControl accessControl = new BasicAccessControl();
 
 	@Override

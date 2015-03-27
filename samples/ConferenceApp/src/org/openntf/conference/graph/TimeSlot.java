@@ -59,10 +59,10 @@ public interface TimeSlot extends DVertexFrame {
 	public void setEndTime(Calendar endTime);
 
 	@TypedProperty("Official")
-	public boolean isOfficial();
+	public int getOfficial();
 
 	@TypedProperty("Official")
-	public void setOfficial(boolean official);
+	public void setOfficial(int official);
 
 	@JavaHandler
 	public Integer getDuration(); // in minutes

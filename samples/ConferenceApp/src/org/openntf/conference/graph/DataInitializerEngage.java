@@ -145,7 +145,7 @@ public class DataInitializerEngage implements Runnable {
 				TimeSlot ts = framedGraph.addVertex(tsKey, TimeSlot.class);
 				ts.setStartTime(startCal);
 				ts.setEndTime(endCal);
-				ts.isOfficial();
+				ts.setOfficial(1);
 
 				String code = obj.getAsString("session_nr");
 

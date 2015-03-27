@@ -33,7 +33,7 @@ public class TimeSlotFactory {
 		Iterator it = times.iterator();
 		while (it.hasNext()) {
 			TimeSlot ts = (TimeSlot) it.next();
-			if (day.equals(ts.getDay()) && ts.isOfficial()) {
+			if (day.equals(ts.getDay()) && ts.getOfficial() == 1) {
 				retVal_.add(ts);
 			}
 		}
@@ -96,7 +96,7 @@ public class TimeSlotFactory {
 			TimeSlot ts = (TimeSlot) it.next();
 			// Ignore, TimeSlot already ended
 			// Ignore if StartTime more than one hour after now, remove
-			if (ts.isOfficial()) {
+			if (ts.getOfficial() == 1) {
 				if (dt.before(ts.getEndTime().getTime())) {
 					Calendar check = Calendar.getInstance();
 					check.setTime(ts.getStartTime().getTime());
@@ -112,9 +112,11 @@ public class TimeSlotFactory {
 		}
 
 		// Now sort on time
-		Ordering ord = Ordering.from(new DVertexFrameComparator("Starttime"));
-		nextTimes = ord.sortedCopy(nextTimes);
-		retVal_.add(nextTimes.get(0));
+		if (!nextTimes.isEmpty()) {
+			Ordering ord = Ordering.from(new DVertexFrameComparator("Starttime"));
+			nextTimes = ord.sortedCopy(nextTimes);
+			retVal_.add(nextTimes.get(0));
+		}
 
 		return retVal_;
 	}
