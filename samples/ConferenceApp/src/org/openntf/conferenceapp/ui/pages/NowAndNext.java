@@ -1,5 +1,6 @@
 package org.openntf.conferenceapp.ui.pages;
 
+import java.text.DateFormatSymbols;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -21,6 +22,7 @@ import com.vaadin.ui.Alignment;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 
@@ -135,7 +137,9 @@ public class NowAndNext extends CssLayout implements View {
 			VerticalLayout sessionDetails = new VerticalLayout();
 			sessionDetails.setWidth(100, Unit.PERCENTAGE);
 			sessionDetails.addComponent(new Label(pres.getSessionId() + " - " + pres.getTitle()));
-			String dayTime = ConferenceUI.NICE_DAY_TIME.format(ts.getStartTime().getTime()) + "-"
+			DateFormatSymbols s = new DateFormatSymbols(UI.getCurrent().getLocale());
+			String[] days = s.getShortWeekdays();
+			String dayTime = days[ts.getStartTime().get(Calendar.DAY_OF_WEEK)] + ConferenceUI.TIME_FORMAT.format(ts.getStartTime().getTime()) + "-"
 					+ ConferenceUI.TIME_FORMAT.format(ts.getEndTime().getTime());
 			Location loc = pres.getLocations().iterator().next();
 			sessionDetails.addComponent(new Label(dayTime + "|" + loc.getName()));

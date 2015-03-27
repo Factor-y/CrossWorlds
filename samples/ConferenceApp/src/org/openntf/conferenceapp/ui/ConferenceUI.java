@@ -22,7 +22,6 @@ import com.vaadin.ui.themes.ValoTheme;
 public class ConferenceUI extends UI {
 
 	public static SimpleDateFormat TIME_FORMAT = new SimpleDateFormat("hh:mm");
-	public static SimpleDateFormat NICE_DAY_TIME = new SimpleDateFormat("ddd hh:mm");
 	private AccessControl accessControl = new BasicAccessControl();
 
 	@Override
