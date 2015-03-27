@@ -8,11 +8,14 @@ import org.openntf.conferenceapp.ui.pages.MainScreen;
 import org.openntf.conferenceapp.ui.pages.TraditionalView;
 
 import com.vaadin.annotations.Theme;
+import com.vaadin.annotations.Viewport;
 import com.vaadin.server.Responsive;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.themes.ValoTheme;
 
+
+@Viewport("user-scalable=no,initial-scale=1.0")
 @SuppressWarnings("serial")
 @Theme("conferenceApp")
 public class ConferenceUI extends UI {
@@ -23,7 +26,7 @@ public class ConferenceUI extends UI {
 	protected void init(VaadinRequest request) {
 		Responsive.makeResponsive(this);
 
-		getPage().setTitle("[OpenNTF] Conferences");
+		getPage().setTitle("[OpenNTF] Engage.ug 2015");
 
 		if (!accessControl.isUserSignedIn()) {
 			setContent(new LoginScreen(accessControl, new LoginListener() {

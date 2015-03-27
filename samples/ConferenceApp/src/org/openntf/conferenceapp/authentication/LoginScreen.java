@@ -12,7 +12,6 @@ import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Notification;
-import com.vaadin.ui.PasswordField;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
@@ -23,9 +22,7 @@ public class LoginScreen extends CssLayout {
 	 */
 	private static final long serialVersionUID = -1486180911093854206L;
 	private TextField username;
-//	private PasswordField password;
 	private Button login;
-//	private Button forgotPassword;
 	private LoginListener loginListener;
 	private AccessControl accessControl;
 
@@ -69,9 +66,6 @@ public class LoginScreen extends CssLayout {
 		loginForm.addComponent(username = new TextField("Email address", "Anonymous"));
 		username.setWidth(15, Unit.EM);
 		username.setDescription("Leave as Anonymous to continue anonymously or user your email address to get a personal profile.");
-//		loginForm.addComponent(password = new PasswordField("Password"));
-//		password.setWidth(15, Unit.EM);
-//		password.setDescription("Leave blank to continue anonymously, but with login you'll be able to mark attending, see related attendees, add meetings etc.");
 		CssLayout buttons = new CssLayout();
 		buttons.setStyleName("buttons");
 		loginForm.addComponent(buttons);
@@ -90,16 +84,6 @@ public class LoginScreen extends CssLayout {
 		});
 		login.setClickShortcut(ShortcutAction.KeyCode.ENTER);
 		login.addStyleName(ValoTheme.BUTTON_FRIENDLY);
-
-//		buttons.addComponent(forgotPassword = new Button("Forgot password?"));
-//		forgotPassword.addClickListener(new Button.ClickListener() {
-//			@Override
-//			public void buttonClick(Button.ClickEvent event) {
-//				// TODO: @Daniele, this needs to send an email with link
-//				showNotification(new Notification("Hint: Try anything"));
-//			}
-//		});
-//		forgotPassword.addStyleName(ValoTheme.BUTTON_LINK);
 		
 		return loginForm;
 	}
