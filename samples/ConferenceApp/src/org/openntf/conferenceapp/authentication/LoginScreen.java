@@ -2,6 +2,8 @@ package org.openntf.conferenceapp.authentication;
 
 import java.io.Serializable;
 
+import com.vaadin.event.FieldEvents.FocusEvent;
+import com.vaadin.event.FieldEvents.FocusListener;
 import com.vaadin.event.ShortcutAction;
 import com.vaadin.server.Page;
 import com.vaadin.shared.ui.label.ContentMode;
@@ -30,7 +32,6 @@ public class LoginScreen extends CssLayout {
 		this.loginListener = loginListener;
 		this.accessControl = accessControl;
 		buildUI();
-		username.focus();
 	}
 
 	private void buildUI() {
@@ -60,10 +61,19 @@ public class LoginScreen extends CssLayout {
 		loginForm.addStyleName("login-form");
 		loginForm.setSizeUndefined();
 		loginForm.setMargin(false);
-		
+
 		loginForm.setHeight("160px");
-		
-		loginForm.addComponent(username = new TextField("Email address", "Anonymous"));
+
+		TextField username = new TextField("Email address", "Anonymous");
+		username.addFocusListener(new FocusListener() {
+
+			@Override
+			public void focus(FocusEvent event) {
+				TextField parent = (TextField) event.getComponent();
+				parent.setValue("");
+			}
+		});
+		loginForm.addComponent(username);
 		username.setWidth(15, Unit.EM);
 		username.setDescription("Leave as Anonymous to continue anonymously or user your email address to get a personal profile.");
 		CssLayout buttons = new CssLayout();
@@ -84,7 +94,7 @@ public class LoginScreen extends CssLayout {
 		});
 		login.setClickShortcut(ShortcutAction.KeyCode.ENTER);
 		login.addStyleName(ValoTheme.BUTTON_FRIENDLY);
-		
+
 		return loginForm;
 	}
 
@@ -92,10 +102,8 @@ public class LoginScreen extends CssLayout {
 		CssLayout loginInformation = new CssLayout();
 		loginInformation.setStyleName("login-information");
 		Label loginInfoText = new Label("<h1>Engage.UG 2015</h1>"
-				+ "You can access conference information as <strong>anonymous</strong> or <strong>get a personal profile</strong>.<br/>"
-				+ "<br/>"
-				+ "Visit the app as anonymous or provide your email to <string>get an access link</string>.<br/>"
-				+ "<br/>"
+				+ "You can access conference information as <strong>anonymous</strong> or <strong>get a personal profile</strong>.<br/>" + "<br/>"
+				+ "Visit the app as anonymous or provide your email to <string>get an access link</string>.<br/>" + "<br/>"
 				+ "The access link will set a cookie for you to easily (no password needed) access the app", ContentMode.HTML);
 		loginInformation.addComponent(loginInfoText);
 		return loginInformation;
