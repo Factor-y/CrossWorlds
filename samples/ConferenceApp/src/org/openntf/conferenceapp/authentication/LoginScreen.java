@@ -64,7 +64,7 @@ public class LoginScreen extends CssLayout {
 
 		loginForm.setHeight("160px");
 
-		TextField username = new TextField("Email address", "Anonymous");
+		username = new TextField("Email address", "Anonymous");
 		username.addFocusListener(new FocusListener() {
 
 			@Override
