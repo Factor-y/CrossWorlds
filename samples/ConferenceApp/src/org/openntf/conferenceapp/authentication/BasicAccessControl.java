@@ -1,6 +1,7 @@
 package org.openntf.conferenceapp.authentication;
 
 public class BasicAccessControl implements AccessControl {
+
 	@Override
 	public boolean signIn(String username, String password) {
 		if (username == null || username.isEmpty())
