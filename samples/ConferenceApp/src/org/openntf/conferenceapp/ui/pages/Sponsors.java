@@ -1,10 +1,10 @@
 package org.openntf.conferenceapp.ui.pages;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.openntf.conference.graph.Sponsor;
 import org.openntf.conference.graph.Sponsor.Level;
-import org.openntf.conference.graph.TimeSlot;
 import org.openntf.conferenceapp.service.SponsorFactory;
 
 import com.vaadin.navigator.View;
@@ -17,16 +17,17 @@ import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Link;
+import com.vaadin.ui.MenuBar;
+import com.vaadin.ui.MenuBar.MenuItem;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 
 public class Sponsors extends CssLayout implements View {
 
 	private static final long serialVersionUID = 1L;
-	private boolean RUN_SIMULATED = true;
 	public static final String VIEW_NAME = "Sponsors";
 	public static final String VIEW_DESC = "Sponsors";
-	List<TimeSlot> times;
+	private List<VerticalLayout> panels = new ArrayList<VerticalLayout>();
 
 	public Sponsors() {
 
@@ -43,12 +44,41 @@ public class Sponsors extends CssLayout implements View {
 			VerticalLayout main = new VerticalLayout();
 			main.setSpacing(true);
 
+			MenuBar menubar = new MenuBar();
+			menubar.addStyleName(ValoTheme.MENU_SUBTITLE);
+			menubar.setWidth(100, Unit.PERCENTAGE);
+			menubar.addItem(Level.STRATEGIC.name(), filterSponsorsCommand);
+			menubar.addItem(Level.PLATINUM.name(), filterSponsorsCommand);
+			menubar.addItem(Level.GOLD.name(), filterSponsorsCommand);
+			menubar.addItem(Level.SILVER.name(), filterSponsorsCommand);
+			menubar.addItem(Level.BRONZE.name(), filterSponsorsCommand);
+			addComponent(menubar);
+
 			// Get time and number of sessions occurring then
-			loadSponsorsForLevel(Level.STRATEGIC, main);
-			loadSponsorsForLevel(Level.PLATINUM, main);
-			loadSponsorsForLevel(Level.GOLD, main);
-			loadSponsorsForLevel(Level.SILVER, main);
-			loadSponsorsForLevel(Level.BRONZE, main);
+			VerticalLayout stratDetails = loadSponsorsForLevel(Level.STRATEGIC, main);
+			stratDetails.setDescription(Level.STRATEGIC.name());
+			main.addComponent(stratDetails);
+			panels.add(stratDetails);
+			VerticalLayout platDetails = loadSponsorsForLevel(Level.PLATINUM, main);
+			platDetails.setVisible(false);
+			platDetails.setDescription(Level.PLATINUM.name());
+			main.addComponent(platDetails);
+			panels.add(platDetails);
+			VerticalLayout goldDetails = loadSponsorsForLevel(Level.GOLD, main);
+			goldDetails.setVisible(false);
+			goldDetails.setDescription(Level.GOLD.name());
+			main.addComponent(goldDetails);
+			panels.add(goldDetails);
+			VerticalLayout silverDetails = loadSponsorsForLevel(Level.SILVER, main);
+			silverDetails.setVisible(false);
+			silverDetails.setDescription(Level.SILVER.name());
+			main.addComponent(silverDetails);
+			panels.add(silverDetails);
+			VerticalLayout bronzeDetails = loadSponsorsForLevel(Level.BRONZE, main);
+			bronzeDetails.setVisible(false);
+			bronzeDetails.setDescription(Level.BRONZE.name());
+			main.addComponent(bronzeDetails);
+			panels.add(bronzeDetails);
 			addComponent(main);
 
 		} catch (Exception e) {
@@ -56,7 +86,20 @@ public class Sponsors extends CssLayout implements View {
 		}
 	}
 
-	private void loadSponsorsForLevel(Level level, VerticalLayout container) {
+	MenuBar.Command filterSponsorsCommand = new MenuBar.Command() {
+		public void menuSelected(MenuItem selectedItem) {
+			for (VerticalLayout l : panels) {
+				if (l.getDescription().equals(selectedItem.getText())) {
+					l.setVisible(true);
+				} else {
+					l.setVisible(false);
+				}
+			}
+		}
+	};
+
+	private VerticalLayout loadSponsorsForLevel(Level level, VerticalLayout container) {
+		VerticalLayout retVal_ = new VerticalLayout();
 		final HorizontalLayout top = new HorizontalLayout();
 		top.setDefaultComponentAlignment(Alignment.TOP_LEFT);
 		top.addStyleName(ValoTheme.MENU_TITLE);
@@ -66,7 +109,7 @@ public class Sponsors extends CssLayout implements View {
 		title.setContentMode(ContentMode.HTML);
 		title.setSizeUndefined();
 		top.addComponent(title);
-		container.addComponent(top);
+		retVal_.addComponent(top);
 
 		for (Sponsor s : sponsors) {
 			HorizontalLayout sessionRow = new HorizontalLayout();
@@ -84,9 +127,10 @@ public class Sponsors extends CssLayout implements View {
 			sessionRow.addComponent(sponsorDetails);
 			sessionRow.setExpandRatio(url, 1);
 			sessionRow.setExpandRatio(sponsorDetails, 4);
-			container.addComponent(sessionRow);
-			container.setComponentAlignment(sessionRow, Alignment.TOP_CENTER);
+			retVal_.addComponent(sessionRow);
+			retVal_.setComponentAlignment(sessionRow, Alignment.TOP_CENTER);
 		}
+		return retVal_;
 	}
 
 	public String getLevelHtml(Level level) {

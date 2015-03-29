@@ -371,4 +371,13 @@ $v-layout-spacing-horizontal: round($v-unit-size / 1.8) !default;
 	background: none repeat scroll 0 0 #34373a;
 }
 
+.valo-menu-subtitle {
+	margin: 0px;
+	box-sizing: none;
+	border: 0px;
+	background-color: #3b3f42;
+	background-image: none;
+	box-shadow: none;
+}
+
 }
