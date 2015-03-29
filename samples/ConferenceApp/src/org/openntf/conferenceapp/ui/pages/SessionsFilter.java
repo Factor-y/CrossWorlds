@@ -17,6 +17,7 @@ import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.server.Resource;
 import com.vaadin.shared.ui.label.ContentMode;
+import com.vaadin.ui.Alignment;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.MenuBar;
@@ -45,6 +46,9 @@ public class SessionsFilter extends VerticalLayout implements View {
 	public void loadContent() {
 		try {
 
+			VerticalLayout main = new VerticalLayout();
+			main.setSpacing(true);
+
 			MenuBar menubar = new MenuBar();
 			menubar.setStyleName(ValoTheme.MENU_SUBTITLE);
 			menubar.setWidth(100, Unit.PERCENTAGE);
@@ -69,17 +73,21 @@ public class SessionsFilter extends VerticalLayout implements View {
 			addComponent(menubar);
 
 			loadData();
+			main.addComponent(details);
+			main.setComponentAlignment(details, Alignment.TOP_CENTER);
+			addComponent(main);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
-	public void loadData() {
+	public VerticalLayout loadData() {
 		String catLabel = "";
 		DateFormatSymbols s = new DateFormatSymbols(UI.getCurrent().getLocale());
 		String[] days = s.getShortWeekdays();
 
 		details = new VerticalLayout();
+		details.setWidth(95, Unit.PERCENTAGE);
 		IndexedContainer table = presentations.getContainer();
 		table.sort(new Object[] { "StartTime" }, new boolean[] { true });
 
@@ -119,10 +127,11 @@ public class SessionsFilter extends VerticalLayout implements View {
 			sessionSummary.addComponent(new Label(item.getItemProperty("Speakers").getValue() + " (" + item.getItemProperty("Location").getValue()
 					+ ")"));
 			sessionDetails.addComponent(sessionSummary);
+			sessionDetails.setExpandRatio(sessionSummary, 1);
 			details.addComponent(sessionDetails);
 		}
 
-		addComponent(details);
+		return details;
 	}
 
 	public String getTrackHtml(String trackCode) {
