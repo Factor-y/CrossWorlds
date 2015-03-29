@@ -2,10 +2,15 @@ package org.openntf.conferenceapp.authentication;
 
 import java.io.Serializable;
 
-import com.vaadin.event.FieldEvents.FocusEvent;
-import com.vaadin.event.FieldEvents.FocusListener;
+import org.openntf.conference.graph.Attendee;
+import org.openntf.conferenceapp.service.AttendeeFactory;
+import org.openntf.xworlds.appservers.webapp.security.SecurityManager;
+
+import com.vaadin.data.validator.EmailValidator;
 import com.vaadin.event.ShortcutAction;
 import com.vaadin.server.Page;
+import com.vaadin.server.VaadinService;
+import com.vaadin.server.VaadinServletRequest;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
@@ -27,10 +32,13 @@ public class LoginScreen extends CssLayout {
 	private Button login;
 	private LoginListener loginListener;
 	private AccessControl accessControl;
-
+	private ConferenceAuthenticationService conferenceAuthentication;
+	
 	public LoginScreen(AccessControl accessControl, LoginListener loginListener) {
 		this.loginListener = loginListener;
 		this.accessControl = accessControl;
+		this.conferenceAuthentication = new ConferenceAuthenticationService();
+		
 		buildUI();
 	}
 
@@ -61,21 +69,26 @@ public class LoginScreen extends CssLayout {
 		loginForm.addStyleName("login-form");
 		loginForm.setSizeUndefined();
 		loginForm.setMargin(false);
-
 		loginForm.setHeight("160px");
 
-		username = new TextField("Email address", "Anonymous");
-		username.addFocusListener(new FocusListener() {
-
-			@Override
-			public void focus(FocusEvent event) {
-				TextField parent = (TextField) event.getComponent();
-				parent.setValue("");
-			}
-		});
+		username = new TextField("Email address");
+//		username.addFocusListener(new FocusListener() {
+//
+//			@Override
+//			public void focus(FocusEvent event) {
+//				TextField parent = (TextField) event.getComponent();
+//				parent.setValue("");
+//			}
+//		});
 		loginForm.addComponent(username);
 		username.setWidth(15, Unit.EM);
-		username.setDescription("Leave as Anonymous to continue anonymously or user your email address to get a personal profile.");
+		username.setInputPrompt("Your email here");
+		username.setDescription("Use your email address to get a personal profile.");
+		username.setRequired(true);
+		username.setRequiredError("Email must be provided to get a profile");
+		username.addValidator(new EmailValidator("The user id can only be email"));
+		username.setId("username");
+		
 		CssLayout buttons = new CssLayout();
 		buttons.setStyleName("buttons");
 		loginForm.addComponent(buttons);
@@ -86,7 +99,7 @@ public class LoginScreen extends CssLayout {
 			@Override
 			public void buttonClick(Button.ClickEvent event) {
 				try {
-					login();
+					performAccessWithEmail();
 				} finally {
 					login.setEnabled(true);
 				}
@@ -109,14 +122,47 @@ public class LoginScreen extends CssLayout {
 		return loginInformation;
 	}
 
-	private void login() {
-		if (accessControl.signIn(username.getValue(), null)) {
-			loginListener.loginSuccessful();
+	private void performAccessWithEmail() {
+		
+		if (! username.isValid()) {
+			return;
+		}
+		
+		String userEmail = username.getValue().toLowerCase();
+		String fullname = "CN=" + userEmail + "/OU=Engage2015/O=ConferenceAPP";
+
+		Attendee attendee = null;
+		
+		VaadinServletRequest req =  (VaadinServletRequest) VaadinService.getCurrentRequest();
+		System.out.println("Getting session for " + SecurityManager.getDominoFullName(req.getHttpServletRequest()));
+		
+//		FramedGraph graph = ConferenceGraphFactory.getGraph("engage");
+		attendee = AttendeeFactory.getAttendeeByEmail(userEmail);
+		// TODO get the actual attendee vertex for the current user if it exists
+		
+		if (attendee != null) {
+			System.out.println("User profile FOUND, accessing application " + attendee.asDocument().getUniversalID());
+			// Profile exits, login is succesfull
+			if (accessControl.signIn(fullname)) {
+				loginListener.loginSuccessful();
+			} else {
+				showNotification(new Notification("Something is wrong", "We got your profile but login failed, something is definitely wrong",
+						Notification.Type.HUMANIZED_MESSAGE));
+			}
 		} else {
-			showNotification(new Notification("Login failed", "Please check your username and password and try again.",
+			// Send email for creating the user profile
+			
+			System.out.println("User profile not found, sending invitation");
+			
+			showNotification(new Notification("Almost there", "<strong>Great !!!</strong><br><br>Check your email, a message is on it's way to help you setup a profile",
 					Notification.Type.HUMANIZED_MESSAGE));
 			username.focus();
+
+			String userIdentityToken = conferenceAuthentication.generateAccessToken(username.getValue());
+			System.out.println("Token: " + userIdentityToken);
+			conferenceAuthentication.sendInvitationEmail(userEmail, userIdentityToken);
 		}
+		
 	}
 
 	private void showNotification(Notification notification) {
@@ -124,6 +170,7 @@ public class LoginScreen extends CssLayout {
 		// mouse, or until clicked
 		notification.setDelayMsec(2000);
 		notification.show(Page.getCurrent());
+		notification.setHtmlContentAllowed(true);
 	}
 
 	public interface LoginListener extends Serializable {

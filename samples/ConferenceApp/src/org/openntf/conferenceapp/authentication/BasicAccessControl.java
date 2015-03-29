@@ -3,7 +3,7 @@ package org.openntf.conferenceapp.authentication;
 public class BasicAccessControl implements AccessControl {
 
 	@Override
-	public boolean signIn(String username, String password) {
+	public boolean signIn(String username) {
 		if (username == null || username.isEmpty())
 			// TODO: @Daniele, this needs to continue as Anonymous
 			return false;
@@ -15,7 +15,7 @@ public class BasicAccessControl implements AccessControl {
 
 	@Override
 	public boolean isUserSignedIn() {
-		return !CurrentUser.get().isEmpty();
+		return ! CurrentUser.get().isEmpty();
 	}
 
 	@Override
@@ -32,6 +32,11 @@ public class BasicAccessControl implements AccessControl {
 	@Override
 	public String getPrincipalName() {
 		return CurrentUser.get();
+	}
+
+	@Override
+	public void logout() {
+		CurrentUser.set(null);
 	}
 
 }
