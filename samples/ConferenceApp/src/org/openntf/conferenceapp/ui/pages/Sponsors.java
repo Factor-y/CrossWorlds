@@ -28,6 +28,7 @@ public class Sponsors extends CssLayout implements View {
 	public static final String VIEW_NAME = "Sponsors";
 	public static final String VIEW_DESC = "Sponsors";
 	private List<VerticalLayout> panels = new ArrayList<VerticalLayout>();
+	boolean contentLoaded = false;
 
 	public Sponsors() {
 
@@ -35,12 +36,14 @@ public class Sponsors extends CssLayout implements View {
 
 	@Override
 	public void enter(ViewChangeEvent event) {
-		loadContent();
+		if (!contentLoaded) {
+			loadContent();
+		}
+		contentLoaded = true;
 	}
 
 	public void loadContent() {
 		try {
-
 			VerticalLayout main = new VerticalLayout();
 			main.setSpacing(true);
 

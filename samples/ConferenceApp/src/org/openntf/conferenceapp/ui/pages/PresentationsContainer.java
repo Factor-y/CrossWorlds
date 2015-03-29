@@ -66,6 +66,7 @@ public class PresentationsContainer {
 		if ("All".equals(value)) {
 			container.removeContainerFilters(type);
 		} else {
+			container.removeContainerFilters(type);
 			container.addContainerFilter(type, value, false, false);
 		}
 	}
