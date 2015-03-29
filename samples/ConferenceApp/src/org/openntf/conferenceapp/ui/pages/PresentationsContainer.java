@@ -1,33 +1,36 @@
 package org.openntf.conferenceapp.ui.pages;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import org.openntf.conference.graph.Attendee;
 import org.openntf.conference.graph.Location;
 import org.openntf.conference.graph.Presentation;
 import org.openntf.conference.graph.TimeSlot;
+import org.openntf.conference.graph.Track;
 import org.openntf.conferenceapp.service.ConferenceGraphFactory;
 
 import com.tinkerpop.frames.FramedGraph;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.IndexedContainer;
-import com.vaadin.ui.Grid;
-import com.vaadin.ui.renderers.DateRenderer;
 
-public class TraditionalGrid extends Grid {
+public class PresentationsContainer {
 
-	public TraditionalGrid() {
-		setSizeFull();
+	// Create the container
+	public IndexedContainer container;
 
-		// Create the container
-		IndexedContainer container = new IndexedContainer();
+	public PresentationsContainer() {
 
+		loadData();
+	}
+
+	private void loadData() {
 		// Define the properties (columns)
+		container = new IndexedContainer();
 		container.addContainerProperty("SessionID", String.class, "");
 		container.addContainerProperty("Title", String.class, "");
-		container.addContainerProperty("Description", String.class, "");
+		container.addContainerProperty("Track", String.class, "");
 		container.addContainerProperty("Speakers", String.class, "");
+		container.addContainerProperty("Day", String.class, "");
 		container.addContainerProperty("StartTime", Date.class, "");
 		container.addContainerProperty("EndTime", Date.class, "");
 		container.addContainerProperty("Location", String.class, "");
@@ -38,7 +41,8 @@ public class TraditionalGrid extends Grid {
 			Item newItem = container.getItem(container.addItem());
 			newItem.getItemProperty("SessionID").setValue(pres.getSessionId());
 			newItem.getItemProperty("Title").setValue(pres.getTitle());
-			newItem.getItemProperty("Description").setValue(pres.getDescription());
+			Track track = pres.getIncludedInTracks().iterator().next();
+			newItem.getItemProperty("Track").setValue(track.getTitle());
 			Iterable<Attendee> speakers = pres.getPresentingAttendees();
 			String speakerNames = "";
 			for (Attendee att : speakers) {
@@ -50,38 +54,28 @@ public class TraditionalGrid extends Grid {
 			}
 			newItem.getItemProperty("Speakers").setValue(speakerNames);
 			TimeSlot ts = pres.getTimes().iterator().next();
+			newItem.getItemProperty("Day").setValue(ts.getDay());
 			newItem.getItemProperty("StartTime").setValue(ts.getStartTime().getTime());
 			newItem.getItemProperty("EndTime").setValue(ts.getEndTime().getTime());
 			Location loc = pres.getLocations().iterator().next();
 			newItem.getItemProperty("Location").setValue(loc.getName());
 		}
-
-		setContainerDataSource(container);
-		Grid.Column col = getColumn("SessionID");
-		col.setHeaderCaption("Session ID");
-		col.setSortable(true);
-		col = getColumn("Title");
-		col.setSortable(true);
-		col.setWidth(300);
-		// col = grid.getColumn("Description");
-		// col.setSortable(true);
-		// col.setWidth(300);
-		col = getColumn("Speakers");
-		col.setWidth(200);
-		col = getColumn("StartTime");
-		col.setHeaderCaption("Start Time");
-		col.setSortable(true);
-		col.setRenderer(new DateRenderer(new SimpleDateFormat("hh:mm")));
-		col = getColumn("EndTime");
-		col.setHeaderCaption("End Time");
-		col.setSortable(true);
-		col.setRenderer(new DateRenderer(new SimpleDateFormat("hh:mm")));
-		col = getColumn("Location");
-		col.setWidth(80);
-		col.setSortable(true);
-		setFrozenColumnCount(2);
-		setColumnOrder("SessionID", "Title", "Speakers", "StartTime", "EndTime", "Location");
-		setWidth(100, Unit.PERCENTAGE);
-		setSizeFull();
 	}
+
+	public void filterGrid(String type, String value) {
+		if ("All".equals(value)) {
+			container.removeContainerFilters(type);
+		} else {
+			container.addContainerFilter(type, value, false, false);
+		}
+	}
+
+	public IndexedContainer getContainer() {
+		return container;
+	}
+
+	public void setContainer(IndexedContainer container) {
+		this.container = container;
+	}
+
 }

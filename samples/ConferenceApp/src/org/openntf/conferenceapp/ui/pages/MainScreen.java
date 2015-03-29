@@ -7,8 +7,8 @@ import org.openntf.conferenceapp.ui.ConferenceUI;
 import com.vaadin.navigator.Navigator;
 import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.server.Resource;
-import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.MenuBar;
+import com.vaadin.ui.Panel;
 import com.vaadin.ui.VerticalLayout;
 
 /**
@@ -23,7 +23,7 @@ public class MainScreen extends VerticalLayout {
 
 		setStyleName("main-screen");
 
-		CssLayout viewContainer = new CssLayout();
+		Panel viewContainer = new Panel();
 		viewContainer.addStyleName("valo-content");
 		viewContainer.setSizeFull();
 
@@ -43,6 +43,9 @@ public class MainScreen extends VerticalLayout {
 
 		navigator.addView(SessionsFilter.VIEW_NAME, new SessionsFilter());
 		menu.addView(SessionsFilter.VIEW_NAME, SessionsFilter.VIEW_DESC, null);
+
+		navigator.addView(Sponsors.VIEW_NAME, new Sponsors());
+		menu.addView(Sponsors.VIEW_NAME, Sponsors.VIEW_DESC, null);
 
 		addComponent(viewContainer);
 		setExpandRatio(viewContainer, 1);
