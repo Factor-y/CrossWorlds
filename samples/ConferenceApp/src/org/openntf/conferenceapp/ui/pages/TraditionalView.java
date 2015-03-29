@@ -59,6 +59,8 @@ public class TraditionalView extends CssLayout implements View {
 		col = tradGrid.getColumn("Title");
 		col.setSortable(true);
 		col.setWidth(400);
+		col = tradGrid.getColumn("Track");
+		col.setSortable(true);
 		// col = grid.getColumn("Description");
 		// col.setSortable(true);
 		// col.setWidth(300);
@@ -79,7 +81,7 @@ public class TraditionalView extends CssLayout implements View {
 		col.setWidth(80);
 		col.setSortable(true);
 		tradGrid.setFrozenColumnCount(2);
-		tradGrid.setColumnOrder("SessionID", "Title", "Speakers", "Day", "StartTime", "EndTime", "Location");
+		tradGrid.setColumnOrder("SessionID", "Title", "Track", "Speakers", "Day", "StartTime", "EndTime", "Location");
 		setWidth(100, Unit.PERCENTAGE);
 		setSizeFull();
 

@@ -114,7 +114,7 @@ public class Sponsors extends CssLayout implements View {
 		for (Sponsor s : sponsors) {
 			HorizontalLayout sessionRow = new HorizontalLayout();
 			sessionRow.setWidth(95, Unit.PERCENTAGE);
-			Link url = new Link(s.getName(), new ExternalResource(s.getUrl()));
+			Link url = new Link("", new ExternalResource(s.getUrl()));
 			url.setIcon(new ExternalResource(s.getPhotoUrl()));
 			url.setTargetName("_blank");
 			sessionRow.addComponent(url);

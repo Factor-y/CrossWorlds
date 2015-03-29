@@ -16,6 +16,8 @@ import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.server.Resource;
+import com.vaadin.shared.ui.label.ContentMode;
+import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.MenuBar;
 import com.vaadin.ui.MenuBar.MenuItem;
@@ -100,18 +102,51 @@ public class SessionsFilter extends VerticalLayout implements View {
 				catLabel = tmpCatLabel;
 			}
 
-			// Add track!
+			HorizontalLayout sessionDetails = new HorizontalLayout();
 
-			VerticalLayout sessionDetails = new VerticalLayout();
-			sessionDetails.setWidth(100, Unit.PERCENTAGE);
+			// Add track
+			Label trackLabel = new Label();
+			trackLabel.setDescription((String) item.getItemProperty("Track").getValue());
+			trackLabel.setValue(getTrackHtml((String) item.getItemProperty("Track").getValue()));
+			trackLabel.setWidth(25, Unit.PIXELS);
+			trackLabel.setContentMode(ContentMode.HTML);
+			sessionDetails.addComponent(trackLabel);
+
+			VerticalLayout sessionSummary = new VerticalLayout();
+			sessionSummary.setWidth(100, Unit.PERCENTAGE);
 			Label title = new Label(item.getItemProperty("SessionID").getValue() + " - " + item.getItemProperty("Title").getValue());
-			sessionDetails.addComponent(title);
-			sessionDetails.addComponent(new Label(item.getItemProperty("Speakers").getValue() + " (" + item.getItemProperty("Location").getValue()
+			sessionSummary.addComponent(title);
+			sessionSummary.addComponent(new Label(item.getItemProperty("Speakers").getValue() + " (" + item.getItemProperty("Location").getValue()
 					+ ")"));
+			sessionDetails.addComponent(sessionSummary);
 			details.addComponent(sessionDetails);
 		}
 
 		addComponent(details);
+	}
+
+	public String getTrackHtml(String trackCode) {
+		String iconCode;
+		if ("Sp".equals(trackCode)) {
+			iconCode = "<span class=\"v-icon\" style=\"font-family: " + FontAwesome.STAR.getFontFamily() + ";font-size:20px;color:#FFE118\">&#x"
+					+ Integer.toHexString(FontAwesome.STAR.getCodepoint()) + ";</span>";
+		} else if ("Str".equals(trackCode)) {
+			iconCode = "<span class=\"v-icon\" style=\"font-family: " + FontAwesome.QUESTION_CIRCLE.getFontFamily()
+					+ ";font-size:20px;color:#B8CCE4\">&#x" + Integer.toHexString(FontAwesome.QUESTION_CIRCLE.getCodepoint()) + ";</span>";
+		} else if ("Bus".equals(trackCode)) {
+			iconCode = "<span class=\"v-icon\" style=\"font-family: " + FontAwesome.BRIEFCASE.getFontFamily() + ";font-size:20px;color:#FFC7CE\">&#x"
+					+ Integer.toHexString(FontAwesome.BRIEFCASE.getCodepoint()) + ";</span>";
+		} else if ("Adm".equals(trackCode)) {
+			iconCode = "<span class=\"v-icon\" style=\"font-family: " + FontAwesome.TERMINAL.getFontFamily() + ";font-size:20px;color:#C6EFCE\">&#x"
+					+ Integer.toHexString(FontAwesome.TERMINAL.getCodepoint()) + ";</span>";
+		} else if ("Dev".equals(trackCode)) {
+			iconCode = "<span class=\"v-icon\" style=\"font-family: " + FontAwesome.STACK_OVERFLOW.getFontFamily()
+					+ ";font-size:20px;color:#FFEB9C\">&#x" + Integer.toHexString(FontAwesome.STACK_OVERFLOW.getCodepoint()) + ";</span>";
+		} else {
+			iconCode = "<span class=\"v-icon\" style=\"font-family: " + FontAwesome.CIRCLE.getFontFamily() + ";font-size:20px;color:#FFFFFF\">&#x"
+					+ Integer.toHexString(FontAwesome.CIRCLE.getCodepoint()) + ";</span>";
+		}
+		return iconCode;
 	}
 
 	public Resource getIcon(String trackCode) {

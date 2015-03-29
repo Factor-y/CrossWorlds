@@ -6,6 +6,7 @@ import org.openntf.conference.graph.Attendee;
 import org.openntf.conference.graph.Location;
 import org.openntf.conference.graph.Presentation;
 import org.openntf.conference.graph.TimeSlot;
+import org.openntf.conference.graph.Track;
 import org.openntf.conferenceapp.service.ConferenceGraphFactory;
 
 import com.tinkerpop.frames.FramedGraph;
@@ -27,6 +28,7 @@ public class PresentationsContainer {
 		container = new IndexedContainer();
 		container.addContainerProperty("SessionID", String.class, "");
 		container.addContainerProperty("Title", String.class, "");
+		container.addContainerProperty("Track", String.class, "");
 		container.addContainerProperty("Speakers", String.class, "");
 		container.addContainerProperty("Day", String.class, "");
 		container.addContainerProperty("StartTime", Date.class, "");
@@ -39,6 +41,8 @@ public class PresentationsContainer {
 			Item newItem = container.getItem(container.addItem());
 			newItem.getItemProperty("SessionID").setValue(pres.getSessionId());
 			newItem.getItemProperty("Title").setValue(pres.getTitle());
+			Track track = pres.getIncludedInTracks().iterator().next();
+			newItem.getItemProperty("Track").setValue(track.getTitle());
 			Iterable<Attendee> speakers = pres.getPresentingAttendees();
 			String speakerNames = "";
 			for (Attendee att : speakers) {
