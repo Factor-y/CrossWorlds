@@ -1,5 +1,7 @@
 package org.openntf.conferenceapp.authentication;
 
+import java.util.logging.Logger;
+
 import org.openntf.xworlds.appservers.webapp.security.SecurityManager;
 
 import com.vaadin.server.VaadinRequest;
@@ -7,12 +9,16 @@ import com.vaadin.server.VaadinService;
 import com.vaadin.server.VaadinServletRequest;
 
 public final class CurrentUser {
+
+	private static Logger log = Logger.getLogger(CurrentUser.class.getName());
+
 	/**
 	 * The attribute key used to store the username in the session.
 	 */
 	public static final String CURRENT_USER_SESSION_ATTRIBUTE_KEY = CurrentUser.class.getCanonicalName();
 
-	private CurrentUser() {
+	private static String getUserFullName(String userEmail) {
+		return "CN=" + userEmail + "/OU=Engage2015/O=ConferenceApp";	
 	}
 
 	/**
@@ -38,17 +44,20 @@ public final class CurrentUser {
 	 * @throws IllegalStateException
 	 *             if the current session cannot be accessed.
 	 */
-	public static void set(String currentUser) {
-		if (currentUser == null) {
+	public static void set(String currentUserEmail) {
+		
+		if (currentUserEmail == null) {
 			getCurrentRequest().getWrappedSession().removeAttribute(CURRENT_USER_SESSION_ATTRIBUTE_KEY);
 			// Set domino application identity
 			VaadinServletRequest s = (VaadinServletRequest) getCurrentRequest();
-			SecurityManager.setDominoFullName(s.getHttpServletRequest(), null);
+			SecurityManager.setDominoFullName(s.getHttpServletRequest(), "Anonymous");
+			log.info("Identity set to anoymous");
 		} else {
-			getCurrentRequest().getWrappedSession().setAttribute(CURRENT_USER_SESSION_ATTRIBUTE_KEY, currentUser);
+			getCurrentRequest().getWrappedSession().setAttribute(CURRENT_USER_SESSION_ATTRIBUTE_KEY, currentUserEmail);
 			// Set domino application identity
 			VaadinServletRequest s = (VaadinServletRequest) getCurrentRequest();
-			SecurityManager.setDominoFullName(s.getHttpServletRequest(), currentUser);
+			SecurityManager.setDominoFullName(s.getHttpServletRequest(), getUserFullName(currentUserEmail));
+			log.info("Identity set to: " + SecurityManager.getDominoFullName(s.getHttpServletRequest()));
 		}
 	}
 

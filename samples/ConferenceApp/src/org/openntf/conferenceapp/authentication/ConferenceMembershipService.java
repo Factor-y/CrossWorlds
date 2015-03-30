@@ -5,11 +5,13 @@ import java.util.logging.Logger;
 import org.apache.commons.mail.Email;
 import org.apache.commons.mail.EmailException;
 import org.apache.commons.mail.SimpleEmail;
+import org.openntf.conference.graph.Attendee;
+import org.openntf.conferenceapp.service.AttendeeFactory;
 
 import com.factor_y.util.crypto.DesEncrypter;
 import com.factor_y.util.crypto.DesEncrypter.DesEncrypterException;
 
-public class ConferenceAuthenticationService {
+public class ConferenceMembershipService {
 
 	static DesEncrypter crypter = null;
 	
@@ -23,9 +25,9 @@ public class ConferenceAuthenticationService {
 	}
 	
 	
-	Logger log = Logger.getLogger(ConferenceAuthenticationService.class.getName());
+	Logger log = Logger.getLogger(ConferenceMembershipService.class.getName());
 	
-	public String generateAccessToken(String email) {
+	public static String generateAccessToken(String email) {
 		
 		String result = null;
 		
@@ -43,7 +45,7 @@ public class ConferenceAuthenticationService {
 	 * @param accessToken
 	 * @return the Attendee Key form an access token
 	 */
-	public String getAttendeeKeyFromAccesTokenAccessToken(String accessToken) {
+	public static String getAttendeeEmailFromAccesTokenAccessToken(String accessToken) {
 		String result = null;
 		
 //		try {
@@ -56,7 +58,7 @@ public class ConferenceAuthenticationService {
 		return accessToken;
 	}
 	
-	public void sendInvitationEmail(String emailAddress, String token) {
+	public static void sendInvitationEmail(String emailAddress, String token) {
 
 		System.out.println("Sending invitation to: " + emailAddress + " url: http://engageapp.factor-y.com/ConferenceApp/app?accesstoken=" + token);
 		
@@ -73,6 +75,10 @@ public class ConferenceAuthenticationService {
 		} catch (EmailException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public static Attendee findUserProfileByEmail(String email) {
+		return AttendeeFactory.getAttendeeByEmail(email);
 	}
 	
 }

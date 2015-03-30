@@ -1,10 +1,14 @@
-package org.openntf.conferenceapp.authentication;
+package org.openntf.conferenceapp.ui.pages.login;
 
 import java.io.Serializable;
+import java.util.logging.Logger;
 
 import org.openntf.conference.graph.Attendee;
+import org.openntf.conferenceapp.authentication.AccessControl;
+import org.openntf.conferenceapp.authentication.ConferenceMembershipService;
 import org.openntf.conferenceapp.service.AttendeeFactory;
-import org.openntf.xworlds.appservers.webapp.security.SecurityManager;
+import org.openntf.domino.utils.Factory;
+import org.openntf.domino.utils.Factory.SessionType;
 
 import com.vaadin.data.validator.EmailValidator;
 import com.vaadin.event.ShortcutAction;
@@ -24,20 +28,22 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 
 public class LoginScreen extends CssLayout {
+	
+	private static Logger log = Logger.getLogger(LoginScreen.class.getName());
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -1486180911093854206L;
-	private TextField username;
+	private TextField userEmailField;
 	private Button login;
 	private LoginListener loginListener;
 	private AccessControl accessControl;
-	private ConferenceAuthenticationService conferenceAuthentication;
+	private ConferenceMembershipService membershipService;
 	
 	public LoginScreen(AccessControl accessControl, LoginListener loginListener) {
 		this.loginListener = loginListener;
 		this.accessControl = accessControl;
-		this.conferenceAuthentication = new ConferenceAuthenticationService();
+		this.membershipService = new ConferenceMembershipService();
 		
 		buildUI();
 	}
@@ -71,7 +77,7 @@ public class LoginScreen extends CssLayout {
 		loginForm.setMargin(false);
 		loginForm.setHeight("160px");
 
-		username = new TextField("Email address");
+		userEmailField = new TextField("Email address");
 //		username.addFocusListener(new FocusListener() {
 //
 //			@Override
@@ -80,14 +86,14 @@ public class LoginScreen extends CssLayout {
 //				parent.setValue("");
 //			}
 //		});
-		loginForm.addComponent(username);
-		username.setWidth(15, Unit.EM);
-		username.setInputPrompt("Your email here");
-		username.setDescription("Use your email address to get a personal profile.");
-		username.setRequired(true);
-		username.setRequiredError("Email must be provided to get a profile");
-		username.addValidator(new EmailValidator("The user id can only be email"));
-		username.setId("username");
+		loginForm.addComponent(userEmailField);
+		userEmailField.setWidth(15, Unit.EM);
+		userEmailField.setInputPrompt("Your email here");
+		userEmailField.setDescription("Use your email address to get a personal profile.");
+		userEmailField.setRequired(true);
+		userEmailField.setRequiredError("Email must be provided to get a profile");
+		userEmailField.addValidator(new EmailValidator("The user id can only be email"));
+		userEmailField.setId("username");
 		
 		CssLayout buttons = new CssLayout();
 		buttons.setStyleName("buttons");
@@ -124,43 +130,40 @@ public class LoginScreen extends CssLayout {
 
 	private void performAccessWithEmail() {
 		
-		if (! username.isValid()) {
+		if (! userEmailField.isValid()) {
 			return;
 		}
 		
-		String userEmail = username.getValue().toLowerCase();
-		String fullname = "CN=" + userEmail + "/OU=Engage2015/O=ConferenceAPP";
+		String userEmail = userEmailField.getValue().toLowerCase();
 
 		Attendee attendee = null;
 		
 		VaadinServletRequest req =  (VaadinServletRequest) VaadinService.getCurrentRequest();
-		System.out.println("Getting session for " + SecurityManager.getDominoFullName(req.getHttpServletRequest()));
 		
-//		FramedGraph graph = ConferenceGraphFactory.getGraph("engage");
+		log.warning(Factory.getSession(SessionType.CURRENT).getEffectiveUserName());
+		Factory.getSession(SessionType.CURRENT).clearIdentity();
+		
 		attendee = AttendeeFactory.getAttendeeByEmail(userEmail);
-		// TODO get the actual attendee vertex for the current user if it exists
 		
 		if (attendee != null) {
-			System.out.println("User profile FOUND, accessing application " + attendee.asDocument().getUniversalID());
-			// Profile exits, login is succesfull
-			if (accessControl.signIn(fullname)) {
-				loginListener.loginSuccessful();
-			} else {
-				showNotification(new Notification("Something is wrong", "We got your profile but login failed, something is definitely wrong",
-						Notification.Type.HUMANIZED_MESSAGE));
-			}
+			showNotification(new Notification("Great, you have a profile", "Check your email for the link to access the app",
+					Notification.Type.HUMANIZED_MESSAGE));
+
+			log.info("User profile exists for: " + userEmailField.getValue() + ", sending reminder invitation");
+			
+			String userIdentityToken = membershipService.generateAccessToken(userEmailField.getValue());
+			membershipService.sendInvitationEmail(userEmail, userIdentityToken);
 		} else {
 			// Send email for creating the user profile
 			
-			System.out.println("User profile not found, sending invitation");
+			log.info("User profile not found for: " + userEmailField.getValue() + ", sending invitation");
 			
 			showNotification(new Notification("Almost there", "<strong>Great !!!</strong><br><br>Check your email, a message is on it's way to help you setup a profile",
 					Notification.Type.HUMANIZED_MESSAGE));
-			username.focus();
+			userEmailField.focus();
 
-			String userIdentityToken = conferenceAuthentication.generateAccessToken(username.getValue());
-			System.out.println("Token: " + userIdentityToken);
-			conferenceAuthentication.sendInvitationEmail(userEmail, userIdentityToken);
+			String userIdentityToken = membershipService.generateAccessToken(userEmailField.getValue());
+			membershipService.sendInvitationEmail(userEmail, userIdentityToken);
 		}
 		
 	}

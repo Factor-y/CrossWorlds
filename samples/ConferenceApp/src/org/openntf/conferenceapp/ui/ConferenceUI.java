@@ -1,17 +1,20 @@
 package org.openntf.conferenceapp.ui;
 
 import java.text.SimpleDateFormat;
+import java.util.logging.Logger;
 
 import javax.servlet.http.Cookie;
 
+import org.openntf.conference.graph.Attendee;
 import org.openntf.conferenceapp.authentication.AccessControl;
-import org.openntf.conferenceapp.authentication.BasicAccessControl;
-import org.openntf.conferenceapp.authentication.ConferenceAuthenticationService;
-import org.openntf.conferenceapp.authentication.LoginScreen;
-import org.openntf.conferenceapp.authentication.LoginScreen.LoginListener;
+import org.openntf.conferenceapp.authentication.BasicAccessControlService;
+import org.openntf.conferenceapp.authentication.ConferenceMembershipService;
 import org.openntf.conferenceapp.ui.pages.MainScreen;
 import org.openntf.conferenceapp.ui.pages.TraditionalView;
+import org.openntf.conferenceapp.ui.pages.login.LoginScreen;
+import org.openntf.conferenceapp.ui.pages.login.LoginScreen.LoginListener;
 import org.openntf.conferenceapp.ui.pages.profile.ProfileCreationScreen;
+import org.openntf.conferenceapp.ui.pages.profile.ProfileView;
 
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.Viewport;
@@ -25,9 +28,12 @@ import com.vaadin.ui.themes.ValoTheme;
 @Theme("conferenceApp")
 public class ConferenceUI extends UI {
 
+	private static Logger log = Logger.getLogger(ConferenceUI.class.getName());
+	
 	public static SimpleDateFormat TIME_FORMAT = new SimpleDateFormat("hh:mm");
-	private AccessControl accessControl = new BasicAccessControl();
-	private ConferenceAuthenticationService authenticationService = new ConferenceAuthenticationService();
+	private AccessControl accessControlService = new BasicAccessControlService();
+
+	private ProfileView profileView;
 		
 	@Override
 	protected void init(VaadinRequest request) {
@@ -36,8 +42,9 @@ public class ConferenceUI extends UI {
 		getPage().setTitle("[OpenNTF] Engage.ug 2015");
 
 		if (request.getParameter("logout") != null) {
-			accessControl.logout();
+			accessControlService.logout();
 		}
+		
 		/*
 		 * When I get an access token I try to validate it,
 		 * if valid I extract the user identity and lookup the attendee profile.
@@ -47,33 +54,52 @@ public class ConferenceUI extends UI {
 		 *  
 		 */
 		
-		if (!accessControl.isUserSignedIn()) {
+		if (!accessControlService.isUserSignedIn()) {
 			// User not logged in
 			// check if has access token
+			
 			String accessToken = null;
+			String attendeeEmail = null;
+				
+			// Check for an access token in the URL
 			if ((accessToken = request.getParameter("accesstoken")) != null) {
-				System.out.println("Getting an access token: " + accessToken);
-				// Check if profile exists or goto profile creatin view
-				String attendeeKey = authenticationService.getAttendeeKeyFromAccesTokenAccessToken(accessToken);
-				System.out.println("UserIdentity: " + attendeeKey);
-				setContent(new ProfileCreationScreen(attendeeKey));
+				
+				log.info("Access token is available on URL: " + accessToken);
+				attendeeEmail = ConferenceMembershipService.getAttendeeEmailFromAccesTokenAccessToken(accessToken);
+				
+				Attendee attendee = ConferenceMembershipService.findUserProfileByEmail(attendeeEmail);
+				
+				if (attendee == null) {
+					setContent(new ProfileCreationScreen(this,attendeeEmail));
+				} else {
+					accessControlService.signIn(attendeeEmail);
+					setupProfileView();
+					showMainView();
+				}
+				
 			} else {
-				String attendeeKey = null; 
-				// otherwise check if has cookie
+				
+				// otherwise check if has cookie, in case setup login
 				for (Cookie cookie : request.getCookies()) {
 					if (cookie.getName().equals("conference-uid")) {
-						attendeeKey = authenticationService.getAttendeeKeyFromAccesTokenAccessToken(cookie.getValue());
-						System.out.println("Attende identified by cookie: " + attendeeKey); 
+						attendeeEmail = ConferenceMembershipService.getAttendeeEmailFromAccesTokenAccessToken(cookie.getValue());
+						log.info("Performing loing based on cookie identity " + attendeeEmail);
+						accessControlService.signIn(attendeeEmail);
+						setupProfileView();
+						showMainView();
 					}
 				}
 				
-				// otherwise goto loginscreen
-				setContent(new LoginScreen(accessControl, new LoginListener() {
-					@Override
-					public void loginSuccessful() {
-						showMainView();
-					}
-				}));
+				if (attendeeEmail == null) {
+					// otherwise goto loginscreen
+					setContent(new LoginScreen(accessControlService, new LoginListener() {
+						@Override
+						public void loginSuccessful() {
+							setupProfileView();
+							showMainView();
+						}
+					}));
+				}
 			}
 		} else {
 			// if loggedin goto mainview
@@ -82,12 +108,16 @@ public class ConferenceUI extends UI {
 
 	}
 
-	protected void showMainView() {
+	private void setupProfileView() {
+		profileView = new ProfileView(this);		
+	}
+
+	public void showMainView() {
 		
 		addStyleName(ValoTheme.UI_WITH_MENU);
 		
 		// Load mainScreen and restore state
-		setContent(new MainScreen(ConferenceUI.this));
+		setContent(new MainScreen(this));
 		
 		if ("".equals(getNavigator().getState())) {
 			getNavigator().navigateTo(TraditionalView.VIEW_NAME);
@@ -101,7 +131,7 @@ public class ConferenceUI extends UI {
 	}
 
 	public AccessControl getAccessControl() {
-		return accessControl;
+		return accessControlService;
 	}
 
 }

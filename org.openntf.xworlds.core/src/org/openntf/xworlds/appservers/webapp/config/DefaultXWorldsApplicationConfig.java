@@ -42,7 +42,14 @@ public class DefaultXWorldsApplicationConfig extends BaseXWorldsApplicationConfi
 	private String _defaultDevelopmentUserName = null;
 	private String _appSignerFullName = null;
 
-	private static ThreadLocal<String> dominoFullName = new ThreadLocal<String>() {};
+	private static ThreadLocal<String> dominoFullName = new ThreadLocal<String>() {
+
+		@Override
+		protected String initialValue() {
+			return "Anonymous";
+		}
+		
+	};
 	
 	enum IdentityLocator {
 		SIGNER,
@@ -78,6 +85,7 @@ public class DefaultXWorldsApplicationConfig extends BaseXWorldsApplicationConfi
 
 		@Override
 		public Session createSession(String username) {
+			System.out.println("Username: " + username);
 			try {
 				
 				final long userHandle = NotesUtil.createUserNameList(username);

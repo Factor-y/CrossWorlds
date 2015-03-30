@@ -1,8 +1,14 @@
 package org.openntf.conferenceapp.ui.pages.profile;
 
+import org.openntf.conferenceapp.ui.ConferenceUI;
+import org.openntf.conferenceapp.ui.pages.ErrorView;
+
+import com.vaadin.navigator.Navigator;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.ui.CustomComponent;
+import com.vaadin.ui.Label;
+import com.vaadin.ui.Panel;
 
 /**
  * @author daniele.vistalli
@@ -19,12 +25,24 @@ public class ProfileView extends CustomComponent implements View {
 	// Name
 	// Lastname
 	
+	private static final String VIEW_NAME = "myprofile";
+
 	@Override
 	public void enter(ViewChangeEvent event) {
 		
 	}
 	
-	public ProfileView() {
+	public ProfileView(ConferenceUI conferenceUI) {
+		
+		Panel viewContainer = new Panel();
+		viewContainer.addStyleName("valo-content");
+		viewContainer.setSizeFull();
+
+		Navigator navigator = new Navigator(conferenceUI, viewContainer);
+		navigator.setErrorView(ErrorView.class);
+		navigator.addView(ProfileView.VIEW_NAME, this);
+
+		viewContainer.setContent(new Label("Hello World"));
 		
 	}
 
