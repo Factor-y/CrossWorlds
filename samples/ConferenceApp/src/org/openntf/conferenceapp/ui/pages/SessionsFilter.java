@@ -39,28 +39,34 @@ public class SessionsFilter extends VerticalLayout implements View {
 	private PresentationsContainer presentations;
 	private VerticalLayout details;
 	private VerticalLayout main = new VerticalLayout();
+	MenuBar menubar = new MenuBar();
+	MenuItem tracks;
+	MenuItem locations;
+	MenuItem days;
 
 	public SessionsFilter() {
 		main.setSpacing(true);
 
-		MenuBar menubar = new MenuBar();
 		menubar.setStyleName(ValoTheme.MENU_SUBTITLE);
 		menubar.setWidth(100, Unit.PERCENTAGE);
 		menubar.addItem("Sessions By...", null);
-		MenuItem tracks = menubar.addItem("Filter by Track", null, null);
-		tracks.addItem("All", trackFilterCommand);
+		tracks = menubar.addItem("Filter by Track", null, null);
+		MenuItem allTracks = tracks.addItem("All", trackFilterCommand);
+		allTracks.setStyleName("highlight");
 		for (Track track : TrackFactory.getTracksSortedByProperty("")) {
 			MenuItem t = tracks.addItem(track.getDescription(), getIcon(track.getTitle()), trackFilterCommand);
 		}
-		MenuItem locations = menubar.addItem("Filter by Location", null, null);
-		locations.addItem("All", locationFilterCommand);
+		locations = menubar.addItem("Filter by Location", null, null);
+		MenuItem allLocs = locations.addItem("All", locationFilterCommand);
+		allLocs.setStyleName("highlight");
 		for (Location loc : LocationFactory.getLocationsSortedByProperty("")) {
 			MenuItem l = locations.addItem(loc.getName(), locationFilterCommand);
 		}
-		MenuItem days = menubar.addItem("Filter by Date", null);
-		days.addItem("All", dayFilterCommand);
-		days.addItem("March 30, 2015", dayFilterCommand);
-		days.addItem("March 31, 2015", dayFilterCommand);
+		days = menubar.addItem("Filter by Date", null);
+		MenuItem allDays = days.addItem("All", dayFilterCommand);
+		allDays.setStyleName("highlight");
+		days.addItem("30 Mar", dayFilterCommand);
+		days.addItem("31 Mar", dayFilterCommand);
 
 		addComponent(menubar);
 
@@ -152,6 +158,9 @@ public class SessionsFilter extends VerticalLayout implements View {
 		} else if ("Dev".equals(trackCode)) {
 			iconCode = "<span class=\"v-icon\" style=\"font-family: " + FontAwesome.STACK_OVERFLOW.getFontFamily()
 					+ ";font-size:20px;color:#FFEB9C\">&#x" + Integer.toHexString(FontAwesome.STACK_OVERFLOW.getCodepoint()) + ";</span>";
+		} else if ("Comm".equals(trackCode)) {
+			iconCode = "<span class=\"v-icon\" style=\"font-family: " + FontAwesome.EURO.getFontFamily() + ";font-size:20px;color:#FFEB9C\">&#x"
+					+ Integer.toHexString(FontAwesome.EURO.getCodepoint()) + ";</span>";
 		} else {
 			iconCode = "<span class=\"v-icon\" style=\"font-family: " + FontAwesome.CIRCLE.getFontFamily() + ";font-size:20px;color:#FFFFFF\">&#x"
 					+ Integer.toHexString(FontAwesome.CIRCLE.getCodepoint()) + ";</span>";
@@ -171,6 +180,8 @@ public class SessionsFilter extends VerticalLayout implements View {
 			iconCode = FontAwesome.TERMINAL;
 		} else if ("Dev".equals(trackCode)) {
 			iconCode = FontAwesome.STACK_OVERFLOW;
+		} else if ("Comm".equals(trackCode)) {
+			iconCode = FontAwesome.EURO;
 		} else {
 			iconCode = FontAwesome.CIRCLE;
 		}
@@ -178,28 +189,84 @@ public class SessionsFilter extends VerticalLayout implements View {
 	}
 
 	MenuBar.Command trackFilterCommand = new MenuBar.Command() {
-		public void menuSelected(MenuItem selectedItem) {
+		MenuItem previous = null;
 
+		public void menuSelected(MenuItem selectedItem) {
+			String trackCode = "All";
+			for (Track t : TrackFactory.getTracksSortedByProperty("")) {
+				if (selectedItem.getText().equals(t.getDescription())) {
+					trackCode = t.getTitle();
+				}
+			}
+
+			presentations.filterGrid("Track", trackCode);
+			main.removeComponent(details);
+			loadData();
+			main.addComponent(details);
+			main.setComponentAlignment(details, Alignment.TOP_CENTER);
+
+			if (previous == null) {
+				previous = locations.getChildren().get(0);
+			}
+
+			previous.setStyleName(null);
+			selectedItem.setStyleName("highlight");
+			previous = selectedItem;
+			if ("All".equals(selectedItem.getText())) {
+				menubar.getItems().get(1).setStyleName(null);
+			} else {
+				menubar.getItems().get(1).setStyleName("highlight");
+			}
 		}
 	};
 
 	MenuBar.Command locationFilterCommand = new MenuBar.Command() {
+		MenuItem previous = null;
+
 		public void menuSelected(MenuItem selectedItem) {
 			presentations.filterGrid("Location", selectedItem.getText());
 			main.removeComponent(details);
 			loadData();
 			main.addComponent(details);
 			main.setComponentAlignment(details, Alignment.TOP_CENTER);
+
+			if (previous == null) {
+				previous = locations.getChildren().get(0);
+			}
+
+			previous.setStyleName(null);
+			selectedItem.setStyleName("highlight");
+			previous = selectedItem;
+			if ("All".equals(selectedItem.getText())) {
+				menubar.getItems().get(2).setStyleName(null);
+			} else {
+				menubar.getItems().get(2).setStyleName("highlight");
+			}
 		}
 	};
 
 	MenuBar.Command dayFilterCommand = new MenuBar.Command() {
+		MenuItem previous = null;
+
 		public void menuSelected(MenuItem selectedItem) {
-			presentations.filterGrid("Location", selectedItem.getText());
+			presentations.filterGrid("Day", selectedItem.getText());
 			main.removeComponent(details);
 			loadData();
 			main.addComponent(details);
 			main.setComponentAlignment(details, Alignment.TOP_CENTER);
+
+			if (previous == null) {
+				previous = locations.getChildren().get(0);
+			}
+
+			previous.setStyleName(null);
+			selectedItem.setStyleName("highlight");
+			previous = selectedItem;
+			if ("All".equals(selectedItem.getText())) {
+				menubar.getItems().get(3).setStyleName(null);
+			} else {
+				menubar.getItems().get(3).setStyleName("highlight");
+			}
 		}
 	};
 
