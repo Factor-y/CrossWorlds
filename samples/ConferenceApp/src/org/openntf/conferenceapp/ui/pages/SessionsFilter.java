@@ -38,41 +38,41 @@ public class SessionsFilter extends VerticalLayout implements View {
 	public static final String VIEW_DESC = "Sessions By...";
 	private PresentationsContainer presentations;
 	private VerticalLayout details;
+	private VerticalLayout main = new VerticalLayout();
 
 	public SessionsFilter() {
+		main.setSpacing(true);
+
+		MenuBar menubar = new MenuBar();
+		menubar.setStyleName(ValoTheme.MENU_SUBTITLE);
+		menubar.setWidth(100, Unit.PERCENTAGE);
+		menubar.addItem("Sessions By...", null);
+		MenuItem tracks = menubar.addItem("Filter by Track", null, null);
+		tracks.addItem("All", trackFilterCommand);
+		for (Track track : TrackFactory.getTracksSortedByProperty("")) {
+			MenuItem t = tracks.addItem(track.getDescription(), getIcon(track.getTitle()), trackFilterCommand);
+		}
+		MenuItem locations = menubar.addItem("Filter by Location", null, null);
+		locations.addItem("All", locationFilterCommand);
+		for (Location loc : LocationFactory.getLocationsSortedByProperty("")) {
+			MenuItem l = locations.addItem(loc.getName(), locationFilterCommand);
+		}
+		MenuItem days = menubar.addItem("Filter by Date", null);
+		days.addItem("All", dayFilterCommand);
+		days.addItem("March 30, 2015", dayFilterCommand);
+		days.addItem("March 31, 2015", dayFilterCommand);
+
+		addComponent(menubar);
 
 	}
 
 	public void loadContent() {
 		try {
 
-			VerticalLayout main = new VerticalLayout();
-			main.setSpacing(true);
-
-			MenuBar menubar = new MenuBar();
-			menubar.setStyleName(ValoTheme.MENU_SUBTITLE);
-			menubar.setWidth(100, Unit.PERCENTAGE);
-			menubar.addItem("Sessions By...", null);
-			MenuItem tracks = menubar.addItem("Filter by Track", null, null);
-			tracks.addItem("All", trackFilterCommand);
-			for (Track track : TrackFactory.getTracksSortedByProperty("")) {
-				MenuItem t = tracks.addItem(track.getDescription(), getIcon(track.getTitle()), trackFilterCommand);
-			}
-			MenuItem locations = menubar.addItem("Filter by Location", null, null);
-			locations.addItem("All", locationFilterCommand);
-			for (Location loc : LocationFactory.getLocationsSortedByProperty("")) {
-				MenuItem l = locations.addItem(loc.getName(), locationFilterCommand);
-			}
-			MenuItem days = menubar.addItem("Filter by Date", null);
-			days.addItem("All", dayFilterCommand);
-			days.addItem("March 30, 2015", dayFilterCommand);
-			days.addItem("March 31, 2015", dayFilterCommand);
-
 			presentations = new PresentationsContainer();
 
-			addComponent(menubar);
-
 			loadData();
+
 			main.addComponent(details);
 			main.setComponentAlignment(details, Alignment.TOP_CENTER);
 			addComponent(main);
@@ -81,12 +81,14 @@ public class SessionsFilter extends VerticalLayout implements View {
 		}
 	}
 
-	public VerticalLayout loadData() {
+	public void loadData() {
 		String catLabel = "";
 		DateFormatSymbols s = new DateFormatSymbols(UI.getCurrent().getLocale());
 		String[] days = s.getShortWeekdays();
 
 		details = new VerticalLayout();
+		// details.removeAllComponents();
+
 		details.setWidth(95, Unit.PERCENTAGE);
 		IndexedContainer table = presentations.getContainer();
 		table.sort(new Object[] { "StartTime" }, new boolean[] { true });
@@ -131,7 +133,6 @@ public class SessionsFilter extends VerticalLayout implements View {
 			details.addComponent(sessionDetails);
 		}
 
-		return details;
 	}
 
 	public String getTrackHtml(String trackCode) {
@@ -184,13 +185,21 @@ public class SessionsFilter extends VerticalLayout implements View {
 
 	MenuBar.Command locationFilterCommand = new MenuBar.Command() {
 		public void menuSelected(MenuItem selectedItem) {
-			System.out.println(selectedItem.getText());
+			presentations.filterGrid("Location", selectedItem.getText());
+			main.removeComponent(details);
+			loadData();
+			main.addComponent(details);
+			main.setComponentAlignment(details, Alignment.TOP_CENTER);
 		}
 	};
 
 	MenuBar.Command dayFilterCommand = new MenuBar.Command() {
 		public void menuSelected(MenuItem selectedItem) {
-			System.out.println(selectedItem.getText());
+			presentations.filterGrid("Location", selectedItem.getText());
+			main.removeComponent(details);
+			loadData();
+			main.addComponent(details);
+			main.setComponentAlignment(details, Alignment.TOP_CENTER);
 		}
 	};
 

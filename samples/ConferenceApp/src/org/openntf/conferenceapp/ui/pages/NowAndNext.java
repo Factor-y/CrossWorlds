@@ -29,7 +29,7 @@ import com.vaadin.ui.themes.ValoTheme;
 public class NowAndNext extends CssLayout implements View {
 
 	private static final long serialVersionUID = 1L;
-	private boolean RUN_SIMULATED = true;
+	private boolean RUN_SIMULATED = false;
 	public static final String VIEW_NAME = "NowAndNext";
 	public static final String VIEW_DESC = "Now and Next";
 	List<TimeSlot> times;

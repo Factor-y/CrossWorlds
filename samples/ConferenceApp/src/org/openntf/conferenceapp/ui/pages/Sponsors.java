@@ -28,6 +28,8 @@ public class Sponsors extends CssLayout implements View {
 	public static final String VIEW_NAME = "Sponsors";
 	public static final String VIEW_DESC = "Sponsors";
 	private List<VerticalLayout> panels = new ArrayList<VerticalLayout>();
+	boolean contentLoaded = false;
+	MenuBar menubar = new MenuBar();
 
 	public Sponsors() {
 
@@ -35,19 +37,21 @@ public class Sponsors extends CssLayout implements View {
 
 	@Override
 	public void enter(ViewChangeEvent event) {
-		loadContent();
+		if (!contentLoaded) {
+			loadContent();
+		}
+		contentLoaded = true;
 	}
 
 	public void loadContent() {
 		try {
-
 			VerticalLayout main = new VerticalLayout();
 			main.setSpacing(true);
 
-			MenuBar menubar = new MenuBar();
 			menubar.addStyleName(ValoTheme.MENU_SUBTITLE);
 			menubar.setWidth(100, Unit.PERCENTAGE);
-			menubar.addItem(Level.STRATEGIC.name(), filterSponsorsCommand);
+			MenuItem item = menubar.addItem(Level.STRATEGIC.name(), filterSponsorsCommand);
+			item.setStyleName("highlight");
 			menubar.addItem(Level.PLATINUM.name(), filterSponsorsCommand);
 			menubar.addItem(Level.GOLD.name(), filterSponsorsCommand);
 			menubar.addItem(Level.SILVER.name(), filterSponsorsCommand);
@@ -87,7 +91,17 @@ public class Sponsors extends CssLayout implements View {
 	}
 
 	MenuBar.Command filterSponsorsCommand = new MenuBar.Command() {
+		MenuItem previous = null;
+
 		public void menuSelected(MenuItem selectedItem) {
+			if (previous == null) {
+				previous = menubar.getItems().get(0);
+			}
+
+			previous.setStyleName(null);
+			selectedItem.setStyleName("highlight");
+			previous = selectedItem;
+
 			for (VerticalLayout l : panels) {
 				if (l.getDescription().equals(selectedItem.getText())) {
 					l.setVisible(true);
