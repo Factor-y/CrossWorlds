@@ -367,8 +367,9 @@ $v-layout-spacing-horizontal: round($v-unit-size / 1.8) !default;
 	color: #9b9fa3;
 }
 
-.v-menubar-menuitem-highlight {
-	background: none repeat scroll 0 0 #34373a;
+.v-menubar .v-menubar-menuitem-highlight {
+	background-color: #9b9fa3;
+	color: #3b3f42;
 }
 
 .valo-menu-subtitle {
@@ -379,5 +380,7 @@ $v-layout-spacing-horizontal: round($v-unit-size / 1.8) !default;
 	background-image: none;
 	box-shadow: none;
 }
+
+
 
 }
