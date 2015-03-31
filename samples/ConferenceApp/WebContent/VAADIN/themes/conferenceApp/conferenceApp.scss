@@ -372,6 +372,17 @@ $v-layout-spacing-horizontal: round($v-unit-size / 1.8) !default;
 	color: #3b3f42;
 }
 
+.v-menubar-popup .v-menubar-menuitem {
+	background-color: #3b3f42;
+	background-image: linear-gradient(to left, #313537 0%, #3b3f42 8px);
+	color: #9b9fa3;
+}
+
+.v-menubar-popup .v-menubar-menuitem-highlight {
+	background-color: #9b9fa3;
+	color: #3b3f42;
+}
+
 .valo-menu-subtitle {
 	margin: 0px;
 	box-sizing: none;

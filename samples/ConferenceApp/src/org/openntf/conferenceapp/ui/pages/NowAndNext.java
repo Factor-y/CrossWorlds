@@ -171,6 +171,9 @@ public class NowAndNext extends CssLayout implements View {
 		} else if ("Dev".equals(trackCode)) {
 			iconCode = "<span class=\"v-icon\" style=\"font-family: " + FontAwesome.STACK_OVERFLOW.getFontFamily()
 					+ ";font-size:20px;color:#FFEB9C\">&#x" + Integer.toHexString(FontAwesome.STACK_OVERFLOW.getCodepoint()) + ";</span>";
+		} else if ("Comm".equals(trackCode)) {
+			iconCode = "<span class=\"v-icon\" style=\"font-family: " + FontAwesome.EURO.getFontFamily() + ";font-size:20px;color:#FFEB9C\">&#x"
+					+ Integer.toHexString(FontAwesome.EURO.getCodepoint()) + ";</span>";
 		} else {
 			iconCode = "<span class=\"v-icon\" style=\"font-family: " + FontAwesome.CIRCLE.getFontFamily() + ";font-size:20px;color:#FFFFFF\">&#x"
 					+ Integer.toHexString(FontAwesome.CIRCLE.getCodepoint()) + ";</span>";
