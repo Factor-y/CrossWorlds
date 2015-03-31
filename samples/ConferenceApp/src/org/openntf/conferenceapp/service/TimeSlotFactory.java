@@ -80,7 +80,11 @@ public class TimeSlotFactory {
 	public static List<TimeSlot> getNowAndNext() {
 		List<TimeSlot> retVal_ = new ArrayList<TimeSlot>();
 
-		retVal_ = getSimulatedNowAndNext(new Date());
+		// TODO: UK TIME
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(new Date());
+		cal.add(Calendar.HOUR, 1);
+		retVal_ = getSimulatedNowAndNext(cal.getTime());
 
 		return retVal_;
 	}
