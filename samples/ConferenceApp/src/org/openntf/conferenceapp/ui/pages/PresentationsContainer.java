@@ -17,10 +17,25 @@ public class PresentationsContainer {
 
 	// Create the container
 	public IndexedContainer container;
+	public Boolean removeDesc = true;
 
 	public PresentationsContainer() {
 
 		loadData();
+	}
+
+	public PresentationsContainer(boolean removeDesc) {
+
+		setRemoveDesc(false);
+		loadData();
+	}
+
+	private Boolean getRemoveDesc() {
+		return removeDesc;
+	}
+
+	private void setRemoveDesc(Boolean removeDesc) {
+		this.removeDesc = removeDesc;
 	}
 
 	private void loadData() {
@@ -34,6 +49,7 @@ public class PresentationsContainer {
 		container.addContainerProperty("StartTime", Date.class, "");
 		container.addContainerProperty("EndTime", Date.class, "");
 		container.addContainerProperty("Location", String.class, "");
+		container.addContainerProperty("Description", String.class, "");
 
 		FramedGraph graph = ConferenceGraphFactory.getGraph("engage");
 		Iterable<Presentation> presentations = graph.getVertices(null, null, Presentation.class);
@@ -59,6 +75,11 @@ public class PresentationsContainer {
 			newItem.getItemProperty("EndTime").setValue(ts.getEndTime().getTime());
 			Location loc = pres.getLocations().iterator().next();
 			newItem.getItemProperty("Location").setValue(loc.getName());
+			newItem.getItemProperty("Description").setValue(pres.getDescription());
+		}
+
+		if (getRemoveDesc()) {
+			container.removeContainerProperty("Description");
 		}
 	}
 
