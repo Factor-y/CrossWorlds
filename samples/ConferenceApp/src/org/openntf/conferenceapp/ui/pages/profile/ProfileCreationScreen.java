@@ -66,7 +66,7 @@ public class ProfileCreationScreen extends CustomComponent implements View {
 		country.setNullSelectionAllowed(false);
 		country.setFilteringMode(FilteringMode.STARTSWITH);
 
-		email.setWidth(30, Unit.EM);
+		email.setWidth(40, Unit.EM);
 		email.setRequired(true);
 		email.setReadOnly(true);
 		

@@ -73,7 +73,6 @@ public class ConferenceUI extends UI {
 					setContent(new ProfileCreationScreen(this,attendeeEmail));
 				} else {
 					accessControlService.signIn(attendeeEmail);
-					setupProfileView();
 					showMainView();
 				}
 				
@@ -85,7 +84,6 @@ public class ConferenceUI extends UI {
 						attendeeEmail = ConferenceMembershipService.getAttendeeEmailFromAccesTokenAccessToken(cookie.getValue());
 						log.info("Performing loing based on cookie identity " + attendeeEmail);
 						accessControlService.signIn(attendeeEmail);
-						setupProfileView();
 						showMainView();
 					}
 				}
@@ -95,7 +93,6 @@ public class ConferenceUI extends UI {
 					setContent(new LoginScreen(accessControlService, new LoginListener() {
 						@Override
 						public void loginSuccessful() {
-							setupProfileView();
 							showMainView();
 						}
 					}));
@@ -106,10 +103,6 @@ public class ConferenceUI extends UI {
 			showMainView();
 		}
 
-	}
-
-	private void setupProfileView() {
-		profileView = new ProfileView(this);		
 	}
 
 	public void showMainView() {
