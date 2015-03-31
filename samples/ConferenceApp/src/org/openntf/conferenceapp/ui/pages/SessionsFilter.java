@@ -206,7 +206,7 @@ public class SessionsFilter extends VerticalLayout implements View {
 			main.setComponentAlignment(details, Alignment.TOP_CENTER);
 
 			if (previous == null) {
-				previous = locations.getChildren().get(0);
+				previous = tracks.getChildren().get(0);
 			}
 
 			previous.setStyleName(null);
@@ -256,7 +256,7 @@ public class SessionsFilter extends VerticalLayout implements View {
 			main.setComponentAlignment(details, Alignment.TOP_CENTER);
 
 			if (previous == null) {
-				previous = locations.getChildren().get(0);
+				previous = days.getChildren().get(0);
 			}
 
 			previous.setStyleName(null);
