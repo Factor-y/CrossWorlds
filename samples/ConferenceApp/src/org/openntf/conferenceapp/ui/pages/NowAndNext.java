@@ -37,6 +37,7 @@ public class NowAndNext extends CssLayout implements View {
 	public static final String VIEW_NAME = "NowAndNext";
 	public static final String VIEW_DESC = "Now and Next";
 	List<TimeSlot> times;
+	public boolean isLoaded = false;
 
 	public NowAndNext() {
 
@@ -44,12 +45,15 @@ public class NowAndNext extends CssLayout implements View {
 
 	@Override
 	public void enter(ViewChangeEvent event) {
-		if (RUN_SIMULATED) {
-			loadSimulatedNowAndNext();
-		} else {
-			loadNowAndNext();
+		if (!isLoaded) {
+			if (RUN_SIMULATED) {
+				loadSimulatedNowAndNext();
+			} else {
+				loadNowAndNext();
+			}
+			loadContent();
+			isLoaded = true;
 		}
-		loadContent();
 	}
 
 	public List<TimeSlot> getTimes() {
