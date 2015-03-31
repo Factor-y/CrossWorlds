@@ -9,8 +9,12 @@ import javolution.util.FastSet;
 import org.openntf.conference.graph.Attendee;
 import org.openntf.conference.graph.Presentation;
 import org.openntf.conference.graph.Track;
+import org.openntf.domino.Session;
 import org.openntf.domino.graph2.DGraph;
+import org.openntf.domino.utils.Factory;
+import org.openntf.domino.utils.Factory.SessionType;
 import org.openntf.domino.utils.Strings;
+import org.openntf.xworlds.appservers.webapp.security.SecurityManager;
 
 import com.google.common.collect.Lists;
 import com.tinkerpop.frames.FramedGraph;
@@ -18,6 +22,18 @@ import com.tinkerpop.frames.FramedTransactionalGraph;
 
 public class AttendeeFactory {
 
+	public static Attendee getAttendeeByEmail(String email) {
+		
+		FramedTransactionalGraph<DGraph> framedGraph = (FramedTransactionalGraph<DGraph>) ConferenceGraphFactory.getGraph("engage");
+		
+		Iterable<Attendee> vs = framedGraph.getVertices("Email", email, Attendee.class);
+		if (vs.iterator().hasNext()) {
+			return vs.iterator().next();
+		} else {
+			return null;
+		}
+	}
+	
 	public static Attendee addAttendee(Map<String, Object> props) {
 		Attendee retVal_ = null;
 		try {
@@ -43,6 +59,8 @@ public class AttendeeFactory {
 			att.setFirstName((String) props.get("Firstname"));
 			att.setLastName((String) props.get("Lastname"));
 			updateAttendeeProps(props, att);
+			
+			framedGraph.commit();
 
 		} catch (Exception e) {
 			e.printStackTrace();
