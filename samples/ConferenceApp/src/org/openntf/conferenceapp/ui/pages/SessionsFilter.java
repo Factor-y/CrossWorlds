@@ -18,6 +18,9 @@ import com.vaadin.server.FontAwesome;
 import com.vaadin.server.Resource;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.Alignment;
+import com.vaadin.ui.Button;
+import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.MenuBar;
@@ -75,7 +78,7 @@ public class SessionsFilter extends VerticalLayout implements View {
 	public void loadContent() {
 		try {
 
-			presentations = new PresentationsContainer();
+			presentations = new PresentationsContainer(false);
 
 			loadData();
 
@@ -105,7 +108,7 @@ public class SessionsFilter extends VerticalLayout implements View {
 			int iid = (Integer) i.next();
 
 			// Now get the actual item from the
-			Item item = table.getItem(iid);
+			final Item item = table.getItem(iid);
 
 			Date sTime = (Date) item.getItemProperty("StartTime").getValue();
 			Date eTime = (Date) item.getItemProperty("EndTime").getValue();
@@ -130,11 +133,27 @@ public class SessionsFilter extends VerticalLayout implements View {
 
 			VerticalLayout sessionSummary = new VerticalLayout();
 			sessionSummary.setWidth(100, Unit.PERCENTAGE);
-			Label title = new Label(item.getItemProperty("SessionID").getValue() + " - " + item.getItemProperty("Title").getValue());
+			Button title = new Button(item.getItemProperty("SessionID").getValue() + " - " + item.getItemProperty("Title").getValue());
+			title.setStyleName(ValoTheme.BUTTON_LINK);
+			title.addClickListener(new ClickListener() {
+
+				@Override
+				public void buttonClick(ClickEvent event) {
+					SessionDetailsDialog sub = new SessionDetailsDialog();
+					sub.setSessionTitle((String) item.getItemProperty("Title").getValue());
+					sub.setSessionDesc((String) item.getItemProperty("Description").getValue());
+					sub.setSpeakers((String) item.getItemProperty("Speakers").getValue());
+					sub.loadContent();
+
+					// Add it to the root component
+					UI.getCurrent().addWindow(sub);
+				}
+			});
 			sessionSummary.addComponent(title);
 			sessionSummary.addComponent(new Label(item.getItemProperty("Speakers").getValue() + " (" + item.getItemProperty("Location").getValue()
 					+ ")"));
 			sessionDetails.addComponent(sessionSummary);
+
 			sessionDetails.setExpandRatio(sessionSummary, 1);
 			details.addComponent(sessionDetails);
 		}
@@ -206,7 +225,7 @@ public class SessionsFilter extends VerticalLayout implements View {
 			main.setComponentAlignment(details, Alignment.TOP_CENTER);
 
 			if (previous == null) {
-				previous = locations.getChildren().get(0);
+				previous = tracks.getChildren().get(0);
 			}
 
 			previous.setStyleName(null);
@@ -256,7 +275,7 @@ public class SessionsFilter extends VerticalLayout implements View {
 			main.setComponentAlignment(details, Alignment.TOP_CENTER);
 
 			if (previous == null) {
-				previous = locations.getChildren().get(0);
+				previous = days.getChildren().get(0);
 			}
 
 			previous.setStyleName(null);
@@ -278,5 +297,4 @@ public class SessionsFilter extends VerticalLayout implements View {
 	public void enter(ViewChangeEvent event) {
 		loadContent();
 	}
-
 }

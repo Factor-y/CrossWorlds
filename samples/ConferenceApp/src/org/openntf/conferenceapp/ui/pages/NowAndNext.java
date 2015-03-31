@@ -5,6 +5,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import org.openntf.conference.graph.Attendee;
 import org.openntf.conference.graph.Location;
 import org.openntf.conference.graph.Presentation;
 import org.openntf.conference.graph.TimeSlot;
@@ -19,6 +20,9 @@ import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.Alignment;
+import com.vaadin.ui.Button;
+import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
@@ -123,7 +127,19 @@ public class NowAndNext extends CssLayout implements View {
 		top.addComponent(title);
 		addComponent(top);
 
-		for (Presentation pres : presentations) {
+		for (final Presentation pres : presentations) {
+			// Load speaker details
+			Iterable<Attendee> speakers = pres.getPresentingAttendees();
+			String speakerNames = "";
+			for (Attendee att : speakers) {
+				if ("".equals(speakerNames)) {
+					speakerNames = att.getFirstName() + " " + att.getLastName();
+				} else {
+					speakerNames += ", " + att.getFirstName() + " " + att.getLastName();
+				}
+			}
+			final String passedSpeakers = speakerNames;
+
 			HorizontalLayout sessionRow = new HorizontalLayout();
 			sessionRow.setWidth(100, Unit.PERCENTAGE);
 			Track track = pres.getIncludedInTracks().iterator().next();
@@ -136,7 +152,23 @@ public class NowAndNext extends CssLayout implements View {
 			sessionRow.setComponentAlignment(trackLabel, Alignment.MIDDLE_CENTER);
 			VerticalLayout sessionDetails = new VerticalLayout();
 			sessionDetails.setWidth(100, Unit.PERCENTAGE);
-			sessionDetails.addComponent(new Label(pres.getSessionId() + " - " + pres.getTitle()));
+			Button presTitle = new Button(pres.getSessionId() + " - " + pres.getTitle());
+			presTitle.setStyleName(ValoTheme.BUTTON_LINK);
+			presTitle.addClickListener(new ClickListener() {
+
+				@Override
+				public void buttonClick(ClickEvent event) {
+					SessionDetailsDialog sub = new SessionDetailsDialog();
+					sub.setSessionTitle(pres.getTitle());
+					sub.setSessionDesc(pres.getDescription());
+					sub.setSpeakers("Speakers: " + passedSpeakers);
+					sub.loadContent();
+
+					// Add it to the root component
+					UI.getCurrent().addWindow(sub);
+				}
+			});
+			sessionDetails.addComponent(presTitle);
 			DateFormatSymbols s = new DateFormatSymbols(UI.getCurrent().getLocale());
 			String[] days = s.getShortWeekdays();
 			String dayTime = days[ts.getStartTime().get(Calendar.DAY_OF_WEEK)] + ConferenceUI.TIME_FORMAT.format(ts.getStartTime().getTime()) + "-"
