@@ -40,7 +40,7 @@ public class SessionsFilter extends VerticalLayout implements View {
 	public static final String VIEW_NAME = "SessionsFilter";
 	public static final String VIEW_DESC = "Sessions By...";
 	private PresentationsContainer presentations;
-	private VerticalLayout details;
+	private VerticalLayout details = new VerticalLayout();
 	private VerticalLayout main = new VerticalLayout();
 	MenuBar menubar = new MenuBar();
 	MenuItem tracks;
@@ -95,11 +95,11 @@ public class SessionsFilter extends VerticalLayout implements View {
 		DateFormatSymbols s = new DateFormatSymbols(UI.getCurrent().getLocale());
 		String[] days = s.getShortWeekdays();
 
-		details = new VerticalLayout();
-		// details.removeAllComponents();
+		details.removeAllComponents();
 
 		details.setWidth(95, Unit.PERCENTAGE);
 		IndexedContainer table = presentations.getContainer();
+		System.out.println(table.size());
 		table.sort(new Object[] { "StartTime" }, new boolean[] { true });
 
 		// Iterate over the item identifiers of the table.
@@ -122,6 +122,7 @@ public class SessionsFilter extends VerticalLayout implements View {
 			}
 
 			HorizontalLayout sessionDetails = new HorizontalLayout();
+			sessionDetails.setWidth(100, Unit.PERCENTAGE);
 
 			// Add track
 			Label trackLabel = new Label();
@@ -218,8 +219,8 @@ public class SessionsFilter extends VerticalLayout implements View {
 				}
 			}
 
-			presentations.filterGrid("Track", trackCode);
 			main.removeComponent(details);
+			presentations.filterGrid("Track", trackCode);
 			loadData();
 			main.addComponent(details);
 			main.setComponentAlignment(details, Alignment.TOP_CENTER);
@@ -268,8 +269,8 @@ public class SessionsFilter extends VerticalLayout implements View {
 		MenuItem previous = null;
 
 		public void menuSelected(MenuItem selectedItem) {
-			presentations.filterGrid("Day", selectedItem.getText());
 			main.removeComponent(details);
+			presentations.filterGrid("Day", selectedItem.getText());
 			loadData();
 			main.addComponent(details);
 			main.setComponentAlignment(details, Alignment.TOP_CENTER);
