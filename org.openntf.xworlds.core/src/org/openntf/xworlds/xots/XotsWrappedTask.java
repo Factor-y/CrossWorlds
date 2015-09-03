@@ -1,15 +1,11 @@
 package org.openntf.xworlds.xots;
 
-import java.lang.reflect.Constructor;
-import java.security.AccessController;
-import java.security.PrivilegedAction;
 import java.util.concurrent.Callable;
 
 import org.openntf.domino.Session;
 import org.openntf.domino.session.INamedSessionFactory;
 import org.openntf.domino.session.ISessionFactory;
 import org.openntf.domino.thread.AbstractWrappedTask;
-import org.openntf.domino.types.Null;
 import org.openntf.domino.utils.DominoUtils;
 import org.openntf.domino.utils.Factory;
 import org.openntf.domino.utils.Factory.SessionType;
@@ -220,71 +216,5 @@ public class XotsWrappedTask extends AbstractWrappedTask {
 		}
 		if (sourceThreadConfig == null)
 			sourceThreadConfig = Factory.getThreadConfig();
-	}
-
-	/**
-	 * Changes the Classloader and returns the old one
-	 * 
-	 * @param codeModule
-	 * @return
-	 */
-	protected ClassLoader switchClassLoader(final ClassLoader newClassLoader) {
-		return AccessController.doPrivileged(new PrivilegedAction<ClassLoader>() {
-
-			@Override
-			public ClassLoader run() {
-				Thread thread = Thread.currentThread();
-				ClassLoader oldCl = thread.getContextClassLoader();
-				thread.setContextClassLoader(newClassLoader);
-				return oldCl;
-			}
-		});
-
-	}
-
-	/**
-	 * Finds the constructor for the given Tasklet
-	 * 
-	 * @param clazz
-	 * @param args
-	 * @return
-	 */
-	protected Constructor<?> findConstructor(final Class<?> clazz, final Object[] args) {
-		// sanity check if this is a public tasklet
-		Tasklet annot = clazz.getAnnotation(Tasklet.class);
-		if (annot == null) {
-			throw new IllegalStateException("Cannot run " + clazz.getName() + ", because it does not annotate @Tasklet.");
-		}
-
-		// if (!(Callable.class.isAssignableFrom(clazz)) &&
-		// !(Runnable.class.isAssignableFrom(clazz))) {
-		// throw new IllegalStateException("Cannot run " + clazz.getName() + ",
-		// because it is no Runnable or Callable.");
-		// }
-
-		// find the constructor
-		Class<?> ctorClasses[] = new Class<?>[args.length];
-		Object ctorArgs[] = new Object[args.length];
-		for (int i = 0; i < ctorClasses.length; i++) {
-			Object arg;
-			ctorArgs[i] = arg = args[i];
-			ctorClasses[i] = arg == null ? Null.class : arg.getClass();
-		}
-
-		Constructor<?> cTor = null;
-		try {
-			cTor = clazz.getConstructor(ctorClasses);
-		} catch (NoSuchMethodException nsme1) {
-			try {
-				cTor = clazz.getConstructor(new Class<?>[] { Object[].class });
-				ctorArgs = new Object[] { ctorArgs };
-			} catch (NoSuchMethodException nsme2) {
-
-			}
-		}
-		if (cTor == null) {
-			throw new IllegalStateException("Cannot run " + clazz.getName() + ", because it has no constructor for Arguments: " + ctorArgs);
-		}
-		return cTor;
 	}
 }
