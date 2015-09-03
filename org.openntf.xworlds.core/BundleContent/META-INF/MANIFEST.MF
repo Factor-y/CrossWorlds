@@ -10,7 +10,8 @@ Export-Package:
  org.openntf.xworlds.appservers.webapp.config,
  org.openntf.xworlds.appservers.webapp.security,
  org.openntf.xworlds.appservers.webapp.utils,
- org.openntf.xworlds.core
+ org.openntf.xworlds.core,
+ org.openntf.xworlds.xots
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Import-Package: Acme,
  Acme.JPM.Encoders,

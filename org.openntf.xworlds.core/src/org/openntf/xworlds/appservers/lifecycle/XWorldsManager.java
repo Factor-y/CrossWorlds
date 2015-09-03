@@ -7,9 +7,9 @@ import java.lang.Thread.State;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Logger;
 
-import org.openntf.domino.thread.DominoExecutor;
 import org.openntf.domino.utils.Factory;
 import org.openntf.domino.xots.Xots;
+import org.openntf.xworlds.xots.XotsDominoExecutor;
 
 import lotus.domino.NotesException;
 import lotus.domino.NotesFactory;
@@ -90,7 +90,7 @@ public class XWorldsManager {
 
 				Factory.startup();
 				log.info("XWorlds:Manager - Starting XOTS");
-				DominoExecutor executor = new DominoExecutor(xotsTasks);
+				XotsDominoExecutor executor = new XotsDominoExecutor(xotsTasks);
 				try {
 					Xots.start(executor);
 					log.info("XWorlds:Manager - XOTS started");
