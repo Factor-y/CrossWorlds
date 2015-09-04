@@ -61,7 +61,7 @@ public class XWorldsManagedThread {
 				Factory.initThread(Factory.STRICT_THREAD_CONFIG);
 				
 				// Override the default session factory.
-				Factory.setSessionFactory(  Factory.getSessionFactory(SessionType.NATIVE), SessionType.CURRENT);
+				Factory.setSessionFactory(Factory.getSessionFactory(SessionType.NATIVE), SessionType.CURRENT);
 				
 				NotesThread.sinitThread();
 				XWorldsThreadState.get().setReady(true);

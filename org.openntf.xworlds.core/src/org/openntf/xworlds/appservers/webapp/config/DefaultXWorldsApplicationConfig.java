@@ -1,7 +1,9 @@
 package org.openntf.xworlds.appservers.webapp.config;
 
+import java.util.Set;
 import java.util.logging.Logger;
 
+import javax.security.auth.Subject;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -18,7 +20,11 @@ import com.google.common.annotations.Beta;
 import com.ibm.domino.napi.NException;
 import com.ibm.domino.napi.c.NotesUtil;
 import com.ibm.domino.napi.c.xsp.XSPNative;
+import com.ibm.websphere.security.WSSecurityException;
 import com.ibm.websphere.security.WSSecurityHelper;
+import com.ibm.websphere.security.auth.CredentialDestroyedException;
+import com.ibm.websphere.security.auth.WSSubject;
+import com.ibm.websphere.security.cred.WSCredential;
 
 
 /**
@@ -85,7 +91,6 @@ public class DefaultXWorldsApplicationConfig extends BaseXWorldsApplicationConfi
 
 		@Override
 		public Session createSession(String username) {
-			System.out.println("Username: " + username);
 			try {
 				
 				final long userHandle = NotesUtil.createUserNameList(username);
@@ -169,10 +174,25 @@ public class DefaultXWorldsApplicationConfig extends BaseXWorldsApplicationConfi
 			}
 						
 			if (isDeveloperMode() && request.getSession(false) != null && request.getSession(false).getAttribute("xworlds.request.username") != null) {
+				// If in developer mode and we have a session attribute for overriding identity.. let's do it
 				setDominoFullName((String) request.getSession(false).getAttribute("xworlds.request.username"));
-			} else if (request.getSession(false) != null && request.getSession(false).getAttribute("xworlds.request.username") != null) {
-				// TODO - Need to specify a different behaviour for developer mode and production to provide better security and avoid bad developer behaviour 
-				setDominoFullName((String) request.getSession(false).getAttribute("xworlds.request.username"));
+			} else if (_isWASSecurityEnabled && request.getUserPrincipal() != null) {
+				try {
+					Subject s;
+					Set<WSCredential> creds = WSSubject.getCallerSubject().getPublicCredentials(WSCredential.class);
+					
+					if (creds.size() == 1) {
+						String dominoFullName = creds.iterator().next().getUniqueSecurityName();
+						dominoFullName = dominoFullName.replace(',', '/');
+						setDominoFullName(dominoFullName);
+					}
+				} catch (WSSecurityException e) {
+					e.printStackTrace();
+				} catch (CredentialDestroyedException e) {
+					e.printStackTrace();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 			} else if (isDeveloperMode()) {
 				// If developer mode is enabled and no other override applies we fallback to the default development user name
 				setDominoFullName(_defaultDevelopmentUserName);

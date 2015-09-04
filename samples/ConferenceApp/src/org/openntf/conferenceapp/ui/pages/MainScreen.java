@@ -25,6 +25,9 @@ public class MainScreen extends VerticalLayout {
 
 		setStyleName("main-screen");
 		
+//		
+//		Adding an header to the application, using a custom component
+//		
 		addComponent(new EngageHeaderComponent());
 
 		Panel viewContainer = new Panel();

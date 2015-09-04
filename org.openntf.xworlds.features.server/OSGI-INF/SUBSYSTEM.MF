@@ -279,6 +279,7 @@ IBM-API-Package: com.google.common.annotations,
  org.openntf.xworlds.appservers.webapp,
  org.openntf.xworlds.appservers.webapp.config,
  org.openntf.xworlds.appservers.webapp.utils,
- org.openntf.xworlds.core,
- org.openntf.xworlds.appservers.webapp.security
+ org.openntf.xworlds.appservers.webapp.security,
+ org.openntf.xworlds.core
+ 
 

@@ -18,3 +18,4 @@ org.openntf.xworlds.webapp.j2eeenabler/bin/META-INF/MANIFEST.MF
 org.openntf.xworlds.webapp.j2eeenabler/bin/META-INF/web-fragment.xml
 org.openntf.xworlds.core/.settings/org.eclipse.ltk.core.refactoring.prefs
 org.openntf.xworlds.oda/build-local.properties
+samples/ConferenceApp/src/rebel.xml

@@ -1,0 +1,9 @@
+
+org.openntf.domino.Database db = null;
+
+db.setSizeQuota(10*1024*1024*1024);
+db.setSizeWarning(9*1024*1024*1024);
+
+org.openntf.domino.Session s = null;
+
+s.isOnServer()

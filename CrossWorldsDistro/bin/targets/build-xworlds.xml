@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- ====================================================================== 
+     05/gen/2015 00:56:55                                                        
+
+     CrossWorlds by OpenNTF    
+     CrossWorlds application extensions for WebSphere Liberty / IBM Domino
+                   
+     Daniele Vistalli                                                                
+     ====================================================================== -->
+<project 
+	name="CrossWorlds by OpenNTF" 
+	default="xworlds-home" 
+	basedir="..\.." 
+	xmlns:wlp="antlib:com.ibm.websphere.wlp.ant"
+	>
+
+    <description>
+            CrossWorlds application extensions for WebSphere Liberty / IBM Domino
+    </description>
+
+	<property file="${basedir}/etc/xworlds-instance.properties" />
+	
+	<taskdef uri="antlib:com.ibm.websphere.wlp.ant"
+	              resource="com/ibm/websphere/wlp/ant/antlib.xml"
+	              classpath="${wlp.product.dir}/dev/tools/ant/wlp-anttasks.jar"/>
+	
+    <!-- ================================= 
+          target: default              
+         ================================= -->
+    <target name="xworlds-home" description="CrossWorlds application extensions for WebSphere Liberty / Domino">
+        
+    </target>
+    	
+	<target name="dev-cleanbuild" if="${dev.clean}">
+		<echo>Deleting the target directory content (${xworlds.install.root})</echo>
+		<delete dir="${xworlds.install.root}" includes="**" failonerror="false" >
+		</delete>
+	</target>
+	
+    <target name="dev-copybuild" 
+    	description="[DEVEL] Copies the development tree to a clean target location" 
+    	depends="dev-cleanbuild" >
+    	<echo>Copying XWorlds build to testing location: ${xworlds.install.root}</echo>
+    	<mkdir dir="${xworlds.install.root}" />
+    	<copy description="Copies the CrossWorlds image to a target destination"
+    		todir="${xworlds.install.root}">
+    		<fileset dir="${basedir}" includes="**">
+    			<exclude name=".project"/>
+    			<exclude name="*.launch"/>
+    			<exclude name="temp/**"/>
+    			<exclude name="etc/*.properties"/>
+    		</fileset>
+    	</copy>
+	</target>
+	
+	<target name="clean-proper" description="[MAINT] Cleans temporary data from CrossWorlds">
+		<echo>Cleaning up XWorlds</echo>
+		<delete dir="${xworlds.install.root}/temp" includes="**"></delete>
+	</target>
+	
+	<target name="xw-wlp-checkserver">
+		<wlp:server operation="status" installDir="${wlp.product.dir}"  serverName="${xworlds.server.name}" />
+	</target>
+
+	<target name="xw-wlp-startserver" >
+		<wlp:server operation="start" installDir="${wlp.product.dir}"  serverName="${xworlds.server.name}" />
+	</target>
+
+	<target name="xw-wlp-createserver">
+		<wlp:server operation="create" installDir="${wlp.product.dir}"  serverName="${xworlds.server.name}" />
+	</target>
+
+	<target name="xw-wlp-stopserver">
+		<wlp:server operation="stop" installDir="${wlp.product.dir}"  serverName="${xworlds.server.name}" />
+	</target>
+
+</project>

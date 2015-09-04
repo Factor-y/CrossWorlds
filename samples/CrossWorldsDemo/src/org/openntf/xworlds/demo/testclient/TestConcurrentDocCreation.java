@@ -50,8 +50,8 @@ public class TestConcurrentDocCreation {
 	private void perform() {
 		List<Thread> Ts = new ArrayList<Thread>();
 		
-		int threads = 5;
-		int docsPerThread = 1000;
+		int threads = 10;
+		int docsPerThread = 10000;
 		
 		for (int i = 0; i < threads; i++) {
 			Ts.add(new Thread(new Creator(docsPerThread)));

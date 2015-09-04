@@ -4,6 +4,14 @@
   <artifactId>j2eeenabler</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <name>The web-fragment you need to add to your CrossWorlds applications.</name>
+
+  <distributionManagement>
+        <snapshotRepository>
+            <id>crossworlds-snapshots</id>
+            <name>Snapshots</name>
+            <url>https://nexus.factor-y.com/nexus/content/repositories/CrossWorlds-snapshot/</url>
+        </snapshotRepository>
+  </distributionManagement>
   <dependencies>
     <dependency>
       <groupId>com.ibm.tools.target</groupId>

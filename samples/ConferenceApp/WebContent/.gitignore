@@ -3,3 +3,4 @@ client/bower_components/
 Thumbs.db
 node_modules/
 build/
+/META-INF/

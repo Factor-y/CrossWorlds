@@ -69,7 +69,7 @@ public class ConferenceMembershipService {
 			email.setFrom("engage2015@factor-y.com","Enage.ug 2015");
 			email.setSubject("Welcome to the conference app - ACTION REQUIRED [ODA Session]");
 			email.setMsg("Use this link to get access to the app and to setup your profile\n\n"
-					+ "http://engageapp.factor-y.com/ConferenceApp/app?accesstoken=" + token);
+					+ "http://engageapp.factor-y.com:9080/ConferenceApp/app?accesstoken=" + token);
 			email.addTo(emailAddress);
 			email.send();
 		} catch (EmailException e) {

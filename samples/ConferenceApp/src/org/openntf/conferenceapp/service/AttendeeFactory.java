@@ -34,6 +34,11 @@ public class AttendeeFactory {
 		}
 	}
 	
+	public static void commitGraph() {
+		FramedTransactionalGraph<DGraph> framedGraph = (FramedTransactionalGraph<DGraph>) ConferenceGraphFactory.getGraph("engage");
+		framedGraph.commit();
+	}
+	
 	public static Attendee addAttendee(Map<String, Object> props) {
 		Attendee retVal_ = null;
 		try {

@@ -42,6 +42,7 @@ public class XWorldsRequestsFilter implements Filter {
 		try {
 			
 			XWorldsManagedThread.setupAsDominoThread((HttpServletRequest) request);
+
 			XWorldsApplicationConfigurator configurator = (XWorldsApplicationConfigurator) request.getServletContext().getAttribute(XWorldsApplicationConfigurator.APPCONTEXT_ATTRS_CWAPPCONFIG);
 			if (configurator != null) {
 				configurator.setupRequest((HttpServletRequest)request, (HttpServletResponse)response);
