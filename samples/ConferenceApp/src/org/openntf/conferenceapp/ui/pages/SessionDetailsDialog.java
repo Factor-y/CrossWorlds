@@ -1,5 +1,8 @@
 package org.openntf.conferenceapp.ui.pages;
 
+import org.openntf.conference.graph.Attendee;
+import org.openntf.conferenceapp.components.AttendeeSummary;
+
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalLayout;
@@ -7,9 +10,10 @@ import com.vaadin.ui.Window;
 import com.vaadin.ui.themes.ValoTheme;
 
 public class SessionDetailsDialog extends Window {
+	private static final long serialVersionUID = 1L;
 	private String sessionTitle;
 	private String sessionDesc;
-	private String speakers;
+	private Iterable<Attendee> speakers;
 
 	public SessionDetailsDialog() {
 		super("Session Details"); // Set window caption
@@ -25,9 +29,11 @@ public class SessionDetailsDialog extends Window {
 		Label desc = new Label(getSessionDesc());
 		desc.setContentMode(ContentMode.HTML);
 		content.addComponent(desc);
-		Label speakers = new Label("Speakers: " + getSpeakers());
-		speakers.setStyleName(ValoTheme.LABEL_SMALL);
-		content.addComponent(speakers);
+		for (Attendee att : getSpeakers()) {
+			AttendeeSummary speakerArea = new AttendeeSummary();
+			speakerArea.loadAttendeeSummary(att, 9);
+			content.addComponent(speakerArea);
+		}
 
 		content.setMargin(true);
 		setContent(content);
@@ -49,11 +55,11 @@ public class SessionDetailsDialog extends Window {
 		this.sessionDesc = sessionDesc;
 	}
 
-	public String getSpeakers() {
+	public Iterable<Attendee> getSpeakers() {
 		return speakers;
 	}
 
-	public void setSpeakers(String speakers) {
+	public void setSpeakers(Iterable<Attendee> speakers) {
 		this.speakers = speakers;
 	}
 }

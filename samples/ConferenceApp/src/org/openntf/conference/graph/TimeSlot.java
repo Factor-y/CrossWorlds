@@ -19,6 +19,7 @@ import com.tinkerpop.frames.modules.typedgraph.TypeValue;
 public interface TimeSlot extends DVertexFrame {
 	public abstract static class TimeSlotImpl implements TimeSlot {
 		@Override
+		@JavaHandler
 		public Integer getDuration() {
 			Integer result = Integer.valueOf(0);
 			try {
@@ -33,6 +34,7 @@ public interface TimeSlot extends DVertexFrame {
 		}
 
 		@Override
+		@JavaHandler
 		public String getDay() {
 			String result = "";
 			try {

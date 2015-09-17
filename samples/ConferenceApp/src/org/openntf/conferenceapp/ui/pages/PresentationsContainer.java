@@ -1,5 +1,6 @@
 package org.openntf.conferenceapp.ui.pages;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import org.openntf.conference.graph.Attendee;
@@ -45,6 +46,10 @@ public class PresentationsContainer {
 		container.addContainerProperty("Title", String.class, "");
 		container.addContainerProperty("Track", String.class, "");
 		container.addContainerProperty("Speakers", String.class, "");
+		container.addContainerProperty("Speaker1", Attendee.class, null);
+		container.addContainerProperty("Speaker2", Attendee.class, null);
+		container.addContainerProperty("Speaker3", Attendee.class, null);
+		container.addContainerProperty("Speaker4", Attendee.class, null);
 		container.addContainerProperty("Day", String.class, "");
 		container.addContainerProperty("StartTime", Date.class, "");
 		container.addContainerProperty("EndTime", Date.class, "");
@@ -52,6 +57,7 @@ public class PresentationsContainer {
 		container.addContainerProperty("Description", String.class, "");
 
 		FramedGraph graph = ConferenceGraphFactory.getGraph("engage");
+		SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd MMM");
 		Iterable<Presentation> presentations = graph.getVertices(null, null, Presentation.class);
 		for (Presentation pres : presentations) {
 			Item newItem = container.getItem(container.addItem());
@@ -60,6 +66,7 @@ public class PresentationsContainer {
 			Track track = pres.getIncludedInTracks().iterator().next();
 			newItem.getItemProperty("Track").setValue(track.getTitle());
 			Iterable<Attendee> speakers = pres.getPresentingAttendees();
+			Integer x = 1;
 			String speakerNames = "";
 			for (Attendee att : speakers) {
 				if ("".equals(speakerNames)) {
@@ -67,10 +74,12 @@ public class PresentationsContainer {
 				} else {
 					speakerNames += ", " + att.getFirstName() + " " + att.getLastName();
 				}
+				newItem.getItemProperty("Speaker" + x.toString()).setValue(att);
+				x++;
 			}
 			newItem.getItemProperty("Speakers").setValue(speakerNames);
 			TimeSlot ts = pres.getTimes().iterator().next();
-			newItem.getItemProperty("Day").setValue(ts.getDay());
+			newItem.getItemProperty("Day").setValue(DATE_FORMAT.format(ts.getStartTime().getTime()));
 			newItem.getItemProperty("StartTime").setValue(ts.getStartTime().getTime());
 			newItem.getItemProperty("EndTime").setValue(ts.getEndTime().getTime());
 			Location loc = pres.getLocations().iterator().next();

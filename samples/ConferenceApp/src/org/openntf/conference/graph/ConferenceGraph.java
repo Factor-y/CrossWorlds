@@ -13,19 +13,26 @@ import org.openntf.domino.graph2.impl.DFramedTransactionalGraph;
 import org.openntf.domino.graph2.impl.DGraph;
 
 import com.google.common.collect.Lists;
-import com.tinkerpop.frames.modules.Module;
-import com.tinkerpop.frames.modules.javahandler.JavaHandlerModule;
 
 public class ConferenceGraph {
-	public static final String ATTENDEE_PATH = "conference/attendees.nsf";
-	public static final String GROUP_PATH = "conference/groups.nsf";
-	public static final String EVENT_PATH = "conference/events.nsf";
-	public static final String INVITE_PATH = "conference/invites.nsf";
-	public static final String TIMES_PATH = "conference/times.nsf";
-	public static final String LOCATION_PATH = "conference/locations.nsf";
-	public static final String COMMENTS_PATH = "conference/comments.nsf";
-	public static final String SOCIAL_PATH = "conference/social.nsf";
-	public static final String DEFAULT_PATH = "conference/default.nsf";
+	// public static final String ATTENDEE_PATH = "conference/attendees.nsf";
+	// public static final String GROUP_PATH = "conference/groups.nsf";
+	// public static final String EVENT_PATH = "conference/events.nsf";
+	// public static final String INVITE_PATH = "conference/invites.nsf";
+	// public static final String TIMES_PATH = "conference/times.nsf";
+	// public static final String LOCATION_PATH = "conference/locations.nsf";
+	// public static final String COMMENTS_PATH = "conference/comments.nsf";
+	// public static final String SOCIAL_PATH = "conference/social.nsf";
+	// public static final String DEFAULT_PATH = "conference/default.nsf";
+	public static final String ATTENDEE_PATH = "conference/iconUk/attendees.nsf";
+	public static final String GROUP_PATH = "conference/iconUk/groups.nsf";
+	public static final String EVENT_PATH = "conference/iconUk/events.nsf";
+	public static final String INVITE_PATH = "conference/iconUk/invites.nsf";
+	public static final String TIMES_PATH = "conference/iconUk/times.nsf";
+	public static final String LOCATION_PATH = "conference/iconUk/locations.nsf";
+	public static final String COMMENTS_PATH = "conference/iconUk/comments.nsf";
+	public static final String SOCIAL_PATH = "conference/iconUk/social.nsf";
+	public static final String DEFAULT_PATH = "conference/iconUk/default.nsf";
 
 	private DFramedTransactionalGraph<DGraph> framedGraph_;
 
@@ -79,9 +86,9 @@ public class ConferenceGraph {
 		config.addElementStore(defaultStore);
 		config.setDefaultElementStore(defaultStore.getStoreKey());
 
-		JavaHandlerModule jhm = new JavaHandlerModule();
-		Module module = config.getModule();
-		DFramedGraphFactory factory = new DFramedGraphFactory(module, jhm);
+		// JavaHandlerModule jhm = new JavaHandlerModule();
+		// Module module = config.getModule();
+		DFramedGraphFactory factory = new DFramedGraphFactory(config);
 		framedGraph_ = (DFramedTransactionalGraph) factory.create(graph);
 	}
 

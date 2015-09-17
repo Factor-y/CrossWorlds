@@ -1,9 +1,11 @@
 package org.openntf.conferenceapp.ui.pages;
 
 import java.text.DateFormatSymbols;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 
+import org.openntf.conference.graph.Attendee;
 import org.openntf.conference.graph.Location;
 import org.openntf.conference.graph.Track;
 import org.openntf.conferenceapp.service.LocationFactory;
@@ -68,8 +70,10 @@ public class SessionsFilter extends VerticalLayout implements View {
 		days = menubar.addItem("Filter by Date", null);
 		MenuItem allDays = days.addItem("All", dayFilterCommand);
 		allDays.setStyleName("highlight");
-		days.addItem("30 Mar", dayFilterCommand);
-		days.addItem("31 Mar", dayFilterCommand);
+		// days.addItem("30 Mar", dayFilterCommand);
+		// days.addItem("31 Mar", dayFilterCommand);
+		days.addItem("21 Sep", dayFilterCommand);
+		days.addItem("22 Sep", dayFilterCommand);
 
 		addComponent(menubar);
 
@@ -99,7 +103,6 @@ public class SessionsFilter extends VerticalLayout implements View {
 
 		details.setWidth(95, Unit.PERCENTAGE);
 		IndexedContainer table = presentations.getContainer();
-		System.out.println(table.size());
 		table.sort(new Object[] { "StartTime" }, new boolean[] { true });
 
 		// Iterate over the item identifiers of the table.
@@ -143,7 +146,13 @@ public class SessionsFilter extends VerticalLayout implements View {
 					SessionDetailsDialog sub = new SessionDetailsDialog();
 					sub.setSessionTitle((String) item.getItemProperty("Title").getValue());
 					sub.setSessionDesc((String) item.getItemProperty("Description").getValue());
-					sub.setSpeakers((String) item.getItemProperty("Speakers").getValue());
+					ArrayList<Attendee> speakers = new ArrayList<Attendee>();
+					for (Integer j = 1; j < 4; j++) {
+						if (null != item.getItemProperty("Speaker" + j.toString()).getValue()) {
+							speakers.add((Attendee) item.getItemProperty("Speaker" + j.toString()).getValue());
+						}
+					}
+					sub.setSpeakers(speakers);
 					sub.loadContent();
 
 					// Add it to the root component
@@ -151,8 +160,8 @@ public class SessionsFilter extends VerticalLayout implements View {
 				}
 			});
 			sessionSummary.addComponent(title);
-			sessionSummary.addComponent(new Label(item.getItemProperty("Speakers").getValue() + " (" + item.getItemProperty("Location").getValue()
-					+ ")"));
+			sessionSummary
+					.addComponent(new Label(item.getItemProperty("Speakers").getValue() + " (" + item.getItemProperty("Location").getValue() + ")"));
 			sessionDetails.addComponent(sessionSummary);
 
 			sessionDetails.setExpandRatio(sessionSummary, 1);
@@ -181,6 +190,21 @@ public class SessionsFilter extends VerticalLayout implements View {
 		} else if ("Comm".equals(trackCode)) {
 			iconCode = "<span class=\"v-icon\" style=\"font-family: " + FontAwesome.EURO.getFontFamily() + ";font-size:20px;color:#FFEB9C\">&#x"
 					+ Integer.toHexString(FontAwesome.EURO.getCodepoint()) + ";</span>";
+		} else if ("1".equals(trackCode)) {
+			iconCode = "<span class=\"v-icon\" style=\"font-family: " + FontAwesome.TERMINAL.getFontFamily() + ";font-size:20px;color:#C6EFCE\">&#x"
+					+ Integer.toHexString(FontAwesome.TERMINAL.getCodepoint()) + ";</span>";
+		} else if ("3".equals(trackCode)) {
+			iconCode = "<span class=\"v-icon\" style=\"font-family: " + FontAwesome.BOLT.getFontFamily() + ";font-size:20px;color:#C6EFCE\">&#x"
+					+ Integer.toHexString(FontAwesome.BOLT.getCodepoint()) + ";</span>";
+		} else if ("4".equals(trackCode)) {
+			iconCode = "<span class=\"v-icon\" style=\"font-family: " + FontAwesome.STACK_OVERFLOW.getFontFamily()
+					+ ";font-size:20px;color:#FFEB9C\">&#x" + Integer.toHexString(FontAwesome.STACK_OVERFLOW.getCodepoint()) + ";</span>";
+		} else if ("5".equals(trackCode)) {
+			iconCode = "<span class=\"v-icon\" style=\"font-family: " + FontAwesome.STAR.getFontFamily() + ";font-size:20px;color:#FFE118\">&#x"
+					+ Integer.toHexString(FontAwesome.STAR.getCodepoint()) + ";</span>";
+		} else if ("6".equals(trackCode)) {
+			iconCode = "<span class=\"v-icon\" style=\"font-family: " + FontAwesome.BRIEFCASE.getFontFamily() + ";font-size:20px;color:#B8CCE4\">&#x"
+					+ Integer.toHexString(FontAwesome.BRIEFCASE.getCodepoint()) + ";</span>";
 		} else {
 			iconCode = "<span class=\"v-icon\" style=\"font-family: " + FontAwesome.CIRCLE.getFontFamily() + ";font-size:20px;color:#FFFFFF\">&#x"
 					+ Integer.toHexString(FontAwesome.CIRCLE.getCodepoint()) + ";</span>";
@@ -202,6 +226,16 @@ public class SessionsFilter extends VerticalLayout implements View {
 			iconCode = FontAwesome.STACK_OVERFLOW;
 		} else if ("Comm".equals(trackCode)) {
 			iconCode = FontAwesome.EURO;
+		} else if ("1".equals(trackCode)) {
+			iconCode = FontAwesome.TERMINAL;
+		} else if ("3".equals(trackCode)) {
+			iconCode = FontAwesome.BOLT;
+		} else if ("4".equals(trackCode)) {
+			iconCode = FontAwesome.STACK_OVERFLOW;
+		} else if ("5".equals(trackCode)) {
+			iconCode = FontAwesome.STAR;
+		} else if ("6".equals(trackCode)) {
+			iconCode = FontAwesome.BRIEFCASE;
 		} else {
 			iconCode = FontAwesome.CIRCLE;
 		}

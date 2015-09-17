@@ -14,7 +14,7 @@ import com.factor_y.util.crypto.DesEncrypter.DesEncrypterException;
 public class ConferenceMembershipService {
 
 	static DesEncrypter crypter = null;
-	
+
 	static {
 		try {
 			crypter = new DesEncrypter(1L, "passowrd");
@@ -23,50 +23,49 @@ public class ConferenceMembershipService {
 			e.printStackTrace();
 		}
 	}
-	
-	
+
 	Logger log = Logger.getLogger(ConferenceMembershipService.class.getName());
-	
+
 	public static String generateAccessToken(String email) {
-		
+
 		String result = null;
-		
+
 		try {
 			result = crypter.encrypt(email);
 		} catch (DesEncrypterException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 		return email;
 	}
-	
+
 	/**
 	 * @param accessToken
 	 * @return the Attendee Key form an access token
 	 */
 	public static String getAttendeeEmailFromAccesTokenAccessToken(String accessToken) {
 		String result = null;
-		
-//		try {
-//			result = crypter.decrypt(accessToken);
-//		} catch (DesEncrypterException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-		
+
+		// try {
+		// result = crypter.decrypt(accessToken);
+		// } catch (DesEncrypterException e) {
+		// // TODO Auto-generated catch block
+		// e.printStackTrace();
+		// }
+
 		return accessToken;
 	}
-	
+
 	public static void sendInvitationEmail(String emailAddress, String token) {
 
 		System.out.println("Sending invitation to: " + emailAddress + " url: http://engageapp.factor-y.com/ConferenceApp/app?accesstoken=" + token);
-		
+
 		try {
 			Email email = new SimpleEmail();
 			email.setHostName("localhost");
 			email.setSmtpPort(25);
-			email.setFrom("engage2015@factor-y.com","Enage.ug 2015");
+			email.setFrom("engage2015@factor-y.com", "Enage.ug 2015");
 			email.setSubject("Welcome to the conference app - ACTION REQUIRED [ODA Session]");
 			email.setMsg("Use this link to get access to the app and to setup your profile\n\n"
 					+ "http://engageapp.factor-y.com/ConferenceApp/app?accesstoken=" + token);
@@ -76,9 +75,9 @@ public class ConferenceMembershipService {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public static Attendee findUserProfileByEmail(String email) {
 		return AttendeeFactory.getAttendeeByEmail(email);
 	}
-	
+
 }

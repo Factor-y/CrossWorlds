@@ -2,7 +2,7 @@ package org.openntf.conferenceapp.ui.pages;
 
 import java.util.HashMap;
 
-import org.openntf.conferenceapp.components.EngageHeaderComponent;
+import org.openntf.conferenceapp.components.IconHeaderComponent;
 import org.openntf.conferenceapp.ui.ConferenceUI;
 import org.openntf.conferenceapp.ui.pages.profile.ProfileView;
 
@@ -24,8 +24,8 @@ public class MainScreen extends VerticalLayout {
 	public MainScreen(ConferenceUI ui) {
 
 		setStyleName("main-screen");
-		
-		addComponent(new EngageHeaderComponent());
+
+		addComponent(new IconHeaderComponent());
 
 		Panel viewContainer = new Panel();
 		viewContainer.addStyleName("valo-content");
@@ -54,9 +54,12 @@ public class MainScreen extends VerticalLayout {
 		navigator.addView(CalendarView.VIEW_NAME, new CalendarView());
 		menu.addView(CalendarView.VIEW_NAME, CalendarView.VIEW_DESC, null);
 
+		navigator.addView(Speakers.VIEW_NAME, new Speakers());
+		menu.addView(Speakers.VIEW_NAME, Speakers.VIEW_DESC, null);
+
 		navigator.addView(ProfileView.VIEW_NAME, new ProfileView());
 		menu.addView(ProfileView.VIEW_NAME, ProfileView.VIEW_DESC, null);
-		
+
 		addComponent(viewContainer);
 		setExpandRatio(viewContainer, 1);
 		setSizeFull();
