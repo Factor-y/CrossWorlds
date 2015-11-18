@@ -10,7 +10,7 @@ import org.openntf.conferenceapp.authentication.AccessControl;
 import org.openntf.conferenceapp.authentication.BasicAccessControlService;
 import org.openntf.conferenceapp.authentication.ConferenceMembershipService;
 import org.openntf.conferenceapp.ui.pages.MainScreen;
-import org.openntf.conferenceapp.ui.pages.TraditionalView;
+import org.openntf.conferenceapp.ui.pages.SessionsFilter;
 import org.openntf.conferenceapp.ui.pages.login.LoginScreen;
 import org.openntf.conferenceapp.ui.pages.login.LoginScreen.LoginListener;
 import org.openntf.conferenceapp.ui.pages.profile.ProfileCreationScreen;
@@ -46,11 +46,9 @@ public class ConferenceUI extends UI {
 		}
 
 		/*
-		 * When I get an access token I try to validate it, if valid I extract
-		 * the user identity and lookup the attendee profile.
+		 * When I get an access token I try to validate it, if valid I extract the user identity and lookup the attendee profile.
 		 * 
-		 * If the profile exists I move to the common navigation otherwhise I
-		 * open the profile management view to create the Attendee profile
+		 * If the profile exists I move to the common navigation otherwhise I open the profile management view to create the Attendee profile
 		 * 
 		 */
 
@@ -82,7 +80,7 @@ public class ConferenceUI extends UI {
 				for (Cookie cookie : request.getCookies()) {
 					if (cookie.getName().equals("conference-uid")) {
 						attendeeEmail = ConferenceMembershipService.getAttendeeEmailFromAccesTokenAccessToken(cookie.getValue());
-						log.info("Performing loing based on cookie identity " + attendeeEmail);
+						log.info("Performing login based on cookie identity " + attendeeEmail);
 						accessControlService.signIn(attendeeEmail);
 						showMainView();
 					}
@@ -113,7 +111,7 @@ public class ConferenceUI extends UI {
 		setContent(new MainScreen(this));
 
 		if ("".equals(getNavigator().getState())) {
-			getNavigator().navigateTo(TraditionalView.VIEW_NAME);
+			getNavigator().navigateTo(SessionsFilter.VIEW_NAME);
 		} else {
 			getNavigator().navigateTo(getNavigator().getState());
 		}

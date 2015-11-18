@@ -14,6 +14,13 @@ import com.vaadin.ui.Notification.Type;
 import com.vaadin.ui.renderers.DateRenderer;
 import com.vaadin.ui.themes.ValoTheme;
 
+/**
+ * Sample for a Grid layout. Only used in demos for sessions, not recommended
+ * for actual applications. NOTE: Attendee column doesn't work correctly.
+ * 
+ * @author Paul Stephen Withers
+ *
+ */
 public class TraditionalView extends CssLayout implements View {
 
 	/**
