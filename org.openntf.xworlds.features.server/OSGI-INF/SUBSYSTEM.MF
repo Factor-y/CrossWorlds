@@ -1,16 +1,13 @@
 Manifest-Version: 1.0
 Subsystem-ManifestVersion: 1.0
 IBM-Feature-Version: 2
-IBM-ShortName: CrossWorlds-1.0
+IBM-ShortName: CrossWorlds
 Subsystem-Localization: OSGI-INF/l10n/xworlds
 Subsystem-SymbolicName: org.openntf.xworlds.server;visibility:=public
 Subsystem-Name: %name
 Subsystem-Description: %desc
-Subsystem-Version: 0.0.1.qualifier
+Subsystem-Version: 0.9.1.qualifier
 Subsystem-Type: osgi.subsystem.feature
-Subsystem-Content: org.openntf.xworlds.dominodeps;version=9.0.1,
- org.openntf.xworlds.core;version=1.0.0,
- org.openntf.xworlds.oda;version=2.0.1
 Subsystem-License: http://www.apache.org/licenses/LICENSE-2.0.html
 IBM-App-ForceRestart: install,uninstall
 IBM-API-Package: com.google.common.annotations,
@@ -282,4 +279,5 @@ IBM-API-Package: com.google.common.annotations,
  org.openntf.xworlds.core,
  org.openntf.xworlds.appservers.webapp.security,
  org.openntf.xworlds.xots
-
+Subsystem-Content: org.openntf.xworlds.dominodeps;version=2.0.1,
+ org.openntf.xworlds.oda;version=2.0.1

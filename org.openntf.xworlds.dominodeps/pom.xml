@@ -1,0 +1,116 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>org.openntf.xworlds.dominodeps</groupId>
+	<artifactId>org.openntf.xworlds.dominodeps</artifactId>
+	<packaging>bundle</packaging>
+	<dependencies>
+		<dependency>
+			<groupId>com.ibm.domino</groupId>
+			<artifactId>notes-api</artifactId>
+			<version>9.0.1</version>
+		</dependency>
+		<dependency>
+			<groupId>com.ibm.domino</groupId>
+			<artifactId>napi</artifactId>
+			<version>9.0.1</version>
+		</dependency>
+		<dependency>
+			<groupId>com.ibm.domino.build</groupId>
+			<artifactId>lwpd.commons</artifactId>
+			<version>9.0.1</version>
+		</dependency>
+		<dependency>
+			<groupId>com.ibm.domino.build</groupId>
+			<artifactId>com.ibm.icu</artifactId>
+			<version>9.0.1</version>
+		</dependency>
+		<dependency>
+			<groupId>com.ibm.domino.build</groupId>
+			<artifactId>com.ibm.icu.base</artifactId>
+			<version>9.0.1</version>
+		</dependency>
+	</dependencies>
+
+	<repositories>
+		<repository>
+			<id>ibm-maven-clone</id>
+			<url>http://nexus.factor-y.com/nexus/content/repositories/ibm-maven-clone</url>
+		</repository>
+		<repository>
+			<id>factor-y-nomaven</id>
+			<url>http://nexus.factor-y.com/nexus/content/repositories/factor-y-nomaven</url>
+		</repository>
+	</repositories>
+
+	<build>
+		<sourceDirectory>src/main/java</sourceDirectory>
+		<scriptSourceDirectory>src/main/script</scriptSourceDirectory>
+		<testSourceDirectory>src/test/java</testSourceDirectory>
+		<!-- <outputDirectory>target</outputDirectory> -->
+		<!-- <testOutputDirectory>target</testOutputDirectory> -->
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+			</resource>
+		</resources>
+		<testResources>
+			<testResource>
+				<directory>src/test/resources</directory>
+			</testResource>
+		</testResources>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.felix</groupId>
+				<artifactId>maven-bundle-plugin</artifactId>
+				<version>2.3.7</version>
+				<extensions>true</extensions>
+				<executions>
+					<execution>
+						<id>set_failok</id>
+						<goals>
+							<goal>manifest</goal>
+						</goals>
+						<configuration>
+							<instructions>
+								<_failok>true</_failok>
+							</instructions>
+						</configuration>
+					</execution>
+				</executions>
+				<configuration>
+					<manifestLocation>BundleContent/META-INF</manifestLocation>
+					<rebuildBundle>true</rebuildBundle>
+					<instructions>
+						<Bundle-SymbolicName>org.openntf.xworlds.dominodeps</Bundle-SymbolicName>
+						<Built-By>Daniele Vistalli</Built-By>
+						<Bundle-Name>org.openntf.xworlds.dominodeps</Bundle-Name>
+						<Bundle-Creator>Factor-y S.r.l.</Bundle-Creator>
+						<Bundle-Version>${project.version}</Bundle-Version>
+						<Bundle-Vendor>OpenNTF Org</Bundle-Vendor>
+						<Bundle-ManifestVersion>2</Bundle-ManifestVersion>
+						<Bundle-RequiredExecutionEnvironment>JavaSE-1.6</Bundle-RequiredExecutionEnvironment>
+						<Manifest-Version>1.0</Manifest-Version>
+						<Embed-Dependency>com.ibm.domino.*;scope=compile;inline=false</Embed-Dependency>
+						<!-- <Export-Package>*</Export-Package> -->
+						<_exportcontents>*</_exportcontents>
+					</instructions>
+				</configuration>
+			</plugin>
+			<plugin>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.0</version>
+				<configuration>
+					<source>1.6</source>
+					<target>1.6</target>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+	<parent>
+		<groupId>org.openntf.xworlds.feature</groupId>
+		<artifactId>org.openntf.xworlds.feature</artifactId>
+		<version>2.0.1-SNAPSHOT</version>
+		<relativePath>../org.openntf.xworlds.feature</relativePath>
+	</parent>
+</project>

@@ -3,7 +3,6 @@ package org.openntf.xworlds.appservers.webapp.config;
 import java.util.Set;
 import java.util.logging.Logger;
 
-import javax.security.auth.Subject;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -178,7 +177,7 @@ public class DefaultXWorldsApplicationConfig extends BaseXWorldsApplicationConfi
 				setDominoFullName((String) request.getSession(false).getAttribute("xworlds.request.username"));
 			} else if (_isWASSecurityEnabled && request.getUserPrincipal() != null) {
 				try {
-					Subject s;
+//					Subject s;
 					Set<WSCredential> creds = WSSubject.getCallerSubject().getPublicCredentials(WSCredential.class);
 					
 					if (creds.size() == 1) {
