@@ -2,15 +2,15 @@ package org.openntf.conferenceapp.ui.pages;
 
 import java.util.HashMap;
 
-import org.openntf.conferenceapp.components.EngageHeaderComponent;
+import org.openntf.conferenceapp.components.IconHeaderComponent;
 import org.openntf.conferenceapp.ui.ConferenceUI;
 import org.openntf.conferenceapp.ui.pages.profile.ProfileView;
 
 import com.vaadin.navigator.Navigator;
 import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.server.Resource;
+import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.MenuBar;
-import com.vaadin.ui.Panel;
 import com.vaadin.ui.VerticalLayout;
 
 /**
@@ -24,13 +24,10 @@ public class MainScreen extends VerticalLayout {
 	public MainScreen(ConferenceUI ui) {
 
 		setStyleName("main-screen");
-		
-//		
-//		Adding an header to the application, using a custom component
-//		
-		addComponent(new EngageHeaderComponent());
 
-		Panel viewContainer = new Panel();
+		addComponent(new IconHeaderComponent());
+
+		CssLayout viewContainer = new CssLayout();
 		viewContainer.addStyleName("valo-content");
 		viewContainer.setSizeFull();
 
@@ -42,14 +39,15 @@ public class MainScreen extends VerticalLayout {
 
 		navigator.addViewChangeListener(menu);
 
-		navigator.addView(TraditionalView.VIEW_NAME, new TraditionalView());
-		menu.addView(TraditionalView.VIEW_NAME, TraditionalView.VIEW_DESC, null);
-
-		navigator.addView(NowAndNext.VIEW_NAME, new NowAndNext());
-		menu.addView(NowAndNext.VIEW_NAME, NowAndNext.VIEW_DESC, null);
+		// Only used for demos, not a "modern" user experience!
+		// navigator.addView(TraditionalView.VIEW_NAME, new TraditionalView());
+		// menu.addView(TraditionalView.VIEW_NAME, TraditionalView.VIEW_DESC, null);
 
 		navigator.addView(SessionsFilter.VIEW_NAME, new SessionsFilter());
 		menu.addView(SessionsFilter.VIEW_NAME, SessionsFilter.VIEW_DESC, null);
+
+		navigator.addView(NowAndNext.VIEW_NAME, new NowAndNext());
+		menu.addView(NowAndNext.VIEW_NAME, NowAndNext.VIEW_DESC, null);
 
 		navigator.addView(Sponsors.VIEW_NAME, new Sponsors());
 		menu.addView(Sponsors.VIEW_NAME, Sponsors.VIEW_DESC, null);
@@ -57,9 +55,12 @@ public class MainScreen extends VerticalLayout {
 		navigator.addView(CalendarView.VIEW_NAME, new CalendarView());
 		menu.addView(CalendarView.VIEW_NAME, CalendarView.VIEW_DESC, null);
 
+		navigator.addView(Speakers.VIEW_NAME, new Speakers());
+		menu.addView(Speakers.VIEW_NAME, Speakers.VIEW_DESC, null);
+
 		navigator.addView(ProfileView.VIEW_NAME, new ProfileView());
 		menu.addView(ProfileView.VIEW_NAME, ProfileView.VIEW_DESC, null);
-		
+
 		addComponent(viewContainer);
 		setExpandRatio(viewContainer, 1);
 		setSizeFull();

@@ -10,7 +10,7 @@ import org.openntf.conferenceapp.authentication.AccessControl;
 import org.openntf.conferenceapp.authentication.BasicAccessControlService;
 import org.openntf.conferenceapp.authentication.ConferenceMembershipService;
 import org.openntf.conferenceapp.ui.pages.MainScreen;
-import org.openntf.conferenceapp.ui.pages.TraditionalView;
+import org.openntf.conferenceapp.ui.pages.SessionsFilter;
 import org.openntf.conferenceapp.ui.pages.login.LoginScreen;
 import org.openntf.conferenceapp.ui.pages.login.LoginScreen.LoginListener;
 import org.openntf.conferenceapp.ui.pages.profile.ProfileCreationScreen;
@@ -29,65 +29,63 @@ import com.vaadin.ui.themes.ValoTheme;
 public class ConferenceUI extends UI {
 
 	private static Logger log = Logger.getLogger(ConferenceUI.class.getName());
-	
+
 	public static SimpleDateFormat TIME_FORMAT = new SimpleDateFormat("hh:mm");
 	private AccessControl accessControlService = new BasicAccessControlService();
 
 	private ProfileView profileView;
-		
+
 	@Override
 	protected void init(VaadinRequest request) {
 		Responsive.makeResponsive(this);
 
-		getPage().setTitle("[OpenNTF] Engage.ug 2015");
+		getPage().setTitle("[OpenNTF] ICON UK 2015");
 
 		if (request.getParameter("logout") != null) {
 			accessControlService.logout();
 		}
-		
+
 		/*
-		 * When I get an access token I try to validate it,
-		 * if valid I extract the user identity and lookup the attendee profile.
+		 * When I get an access token I try to validate it, if valid I extract the user identity and lookup the attendee profile.
 		 * 
-		 * If the profile exists I move to the common navigation otherwhise I
-		 * open the profile management view to create the Attendee profile
-		 *  
+		 * If the profile exists I move to the common navigation otherwhise I open the profile management view to create the Attendee profile
+		 * 
 		 */
-		
+
 		if (!accessControlService.isUserSignedIn()) {
 			// User not logged in
 			// check if has access token
-			
+
 			String accessToken = null;
 			String attendeeEmail = null;
-				
+
 			// Check for an access token in the URL
 			if ((accessToken = request.getParameter("accesstoken")) != null) {
-				
+
 				log.info("Access token is available on URL: " + accessToken);
 				attendeeEmail = ConferenceMembershipService.getAttendeeEmailFromAccesTokenAccessToken(accessToken);
-				
+
 				Attendee attendee = ConferenceMembershipService.findUserProfileByEmail(attendeeEmail);
-				
+
 				if (attendee == null) {
-					setContent(new ProfileCreationScreen(this,attendeeEmail));
+					setContent(new ProfileCreationScreen(this, attendeeEmail));
 				} else {
 					accessControlService.signIn(attendeeEmail);
 					showMainView();
 				}
-				
+
 			} else {
-				
+
 				// otherwise check if has cookie, in case setup login
 				for (Cookie cookie : request.getCookies()) {
 					if (cookie.getName().equals("conference-uid")) {
 						attendeeEmail = ConferenceMembershipService.getAttendeeEmailFromAccesTokenAccessToken(cookie.getValue());
-						log.info("Performing loing based on cookie identity " + attendeeEmail);
+						log.info("Performing login based on cookie identity " + attendeeEmail);
 						accessControlService.signIn(attendeeEmail);
 						showMainView();
 					}
 				}
-				
+
 				if (attendeeEmail == null) {
 					// otherwise goto loginscreen
 					setContent(new LoginScreen(accessControlService, new LoginListener() {
@@ -106,14 +104,14 @@ public class ConferenceUI extends UI {
 	}
 
 	public void showMainView() {
-		
+
 		addStyleName(ValoTheme.UI_WITH_MENU);
-		
+
 		// Load mainScreen and restore state
 		setContent(new MainScreen(this));
-		
+
 		if ("".equals(getNavigator().getState())) {
-			getNavigator().navigateTo(TraditionalView.VIEW_NAME);
+			getNavigator().navigateTo(SessionsFilter.VIEW_NAME);
 		} else {
 			getNavigator().navigateTo(getNavigator().getState());
 		}

@@ -4,28 +4,38 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import javolution.util.FastSet;
-
 import org.openntf.conference.graph.Attendee;
 import org.openntf.conference.graph.Presentation;
 import org.openntf.conference.graph.Track;
-import org.openntf.domino.Session;
 import org.openntf.domino.graph2.DGraph;
-import org.openntf.domino.utils.Factory;
-import org.openntf.domino.utils.Factory.SessionType;
 import org.openntf.domino.utils.Strings;
-import org.openntf.xworlds.appservers.webapp.security.SecurityManager;
 
 import com.google.common.collect.Lists;
 import com.tinkerpop.frames.FramedGraph;
 import com.tinkerpop.frames.FramedTransactionalGraph;
 
+import javolution.util.FastSet;
+
+/**
+ * Factory class for access to Attendees / Speakers
+ * 
+ * @author Paul Stephen Withers
+ * 
+ */
 public class AttendeeFactory {
 
+	/**
+	 * Retrieves a specific Attendee based on email address
+	 * 
+	 * @param email
+	 *            String primary email of the user
+	 * @return Attendee corresponding to the email
+	 */
+	@SuppressWarnings("unchecked")
 	public static Attendee getAttendeeByEmail(String email) {
-		
+
 		FramedTransactionalGraph<DGraph> framedGraph = (FramedTransactionalGraph<DGraph>) ConferenceGraphFactory.getGraph("engage");
-		
+
 		Iterable<Attendee> vs = framedGraph.getVertices("Email", email, Attendee.class);
 		if (vs.iterator().hasNext()) {
 			return vs.iterator().next();
@@ -33,12 +43,16 @@ public class AttendeeFactory {
 			return null;
 		}
 	}
-	
-	public static void commitGraph() {
-		FramedTransactionalGraph<DGraph> framedGraph = (FramedTransactionalGraph<DGraph>) ConferenceGraphFactory.getGraph("engage");
-		framedGraph.commit();
-	}
-	
+
+	/**
+	 * Adds an attendee using a Map of properties, validating before attempting
+	 * an insertion
+	 * 
+	 * @param props
+	 *            Map<String, Object> of properties
+	 * @return Attendee successfully entered or String of errors
+	 */
+	@SuppressWarnings("unchecked")
 	public static Attendee addAttendee(Map<String, Object> props) {
 		Attendee retVal_ = null;
 		try {
@@ -64,7 +78,7 @@ public class AttendeeFactory {
 			att.setFirstName((String) props.get("Firstname"));
 			att.setLastName((String) props.get("Lastname"));
 			updateAttendeeProps(props, att);
-			
+
 			framedGraph.commit();
 
 		} catch (Exception e) {
@@ -73,6 +87,14 @@ public class AttendeeFactory {
 		return retVal_;
 	}
 
+	/**
+	 * Updates properties for the relevant Attendee
+	 * 
+	 * @param props
+	 *            Map<String, Object> of properties and values to update
+	 * @param att
+	 *            Attendee to update
+	 */
 	private static void updateAttendeeProps(Map<String, Object> props, Attendee att) {
 		if (props.containsKey("Email")) {
 			att.setEmail((String) props.get("Email"));
@@ -100,19 +122,36 @@ public class AttendeeFactory {
 		}
 	}
 
+	/**
+	 * Validates a given property have been supplied
+	 * 
+	 * @param props
+	 *            Map of properties to validate against
+	 * @param missingProps
+	 *            ArrayList of properties not supplied
+	 * @param check
+	 *            String property to check for
+	 */
 	private static void validateProperties(Map<String, Object> props, ArrayList<String> missingProps, String check) {
 		if (!props.containsKey(check)) {
 			missingProps.add(check);
 		}
 	}
 
+	/**
+	 * Gets a FastSet of Speaker Attendee objects for the relevant Track
+	 * 
+	 * @param trackKey
+	 *            String key for the Trackk to check
+	 * @return FastSet<Attendee> Speakers for the given track
+	 */
+	@SuppressWarnings("unchecked")
 	public static FastSet<Attendee> getSpeakers(String trackKey) {
 		FastSet<Attendee> retVal_ = null;
 		try {
-			FramedGraph graph = ConferenceGraphFactory.getGraph("engage");
+			FramedGraph<DGraph> graph = ConferenceGraphFactory.getGraph("engage");
 			List<Presentation> presentations = new ArrayList<Presentation>();
 			FastSet<Attendee> speakers = new FastSet<Attendee>();
-			int count = 0;
 			if (Strings.isBlankString(trackKey)) {
 				presentations = Lists.newArrayList(graph.getVertices(null, null, Presentation.class));
 			} else {

@@ -3,8 +3,6 @@ package org.openntf.conferenceapp.ui.pages;
 import java.util.Date;
 import java.util.List;
 
-import javax.swing.event.DocumentEvent.EventType;
-
 import org.openntf.conference.graph.Presentation;
 import org.openntf.conference.graph.TimeSlot;
 import org.openntf.conferenceapp.service.EventFactory;
@@ -13,7 +11,6 @@ import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.ui.Calendar;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.Component.Event;
 import com.vaadin.ui.components.calendar.event.CalendarEvent;
 
 public class CalendarView extends VerticalLayout implements View {
@@ -26,27 +23,27 @@ public class CalendarView extends VerticalLayout implements View {
 		// TODO Auto-generated method stub
 
 	}
-	
+
 	public CalendarView() {
-		
+
 		Calendar cal = new Calendar();
 
-		cal.setStartDate(new Date(115,2,30));
-		cal.setEndDate(new Date(115,2,31));
-		
-		cal.setFirstVisibleHourOfDay(8);
-		cal.setLastVisibleHourOfDay(20);
+		cal.setStartDate(new Date(115, 8, 21));
+		cal.setEndDate(new Date(115, 8, 22));
+
+		cal.setFirstVisibleHourOfDay(7);
+		cal.setLastVisibleHourOfDay(23);
 		cal.setReadOnly(true);
-		
+
 		List<Presentation> presentationsList = EventFactory.getPresentationsSortedByProperty("");
-		
+
 		for (Presentation presentation : presentationsList) {
-			
+
 			final Presentation presF = presentation;
 			Iterable<TimeSlot> slots = presentation.getTimes();
-			
+
 			for (TimeSlot timeSlot : slots) {
-				
+
 				final TimeSlot slotF = timeSlot;
 				cal.addEvent(new CalendarEvent() {
 
@@ -83,15 +80,15 @@ public class CalendarView extends VerticalLayout implements View {
 						// TODO Auto-generated method stub
 						return false;
 					}
-					
+
 				});
 			}
 		}
-		
+
 		cal.setSizeFull();
-		
+
 		addComponent(cal);
-		setSizeFull();
+		setWidth(100, Unit.PERCENTAGE);
 	}
 
 }

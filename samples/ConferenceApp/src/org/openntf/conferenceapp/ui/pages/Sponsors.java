@@ -9,14 +9,12 @@ import org.openntf.conferenceapp.service.SponsorFactory;
 
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
-import com.vaadin.server.ExternalResource;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.Link;
 import com.vaadin.ui.MenuBar;
 import com.vaadin.ui.MenuBar.MenuItem;
 import com.vaadin.ui.VerticalLayout;
@@ -50,21 +48,21 @@ public class Sponsors extends CssLayout implements View {
 
 			menubar.addStyleName(ValoTheme.MENU_SUBTITLE);
 			menubar.setWidth(100, Unit.PERCENTAGE);
-			MenuItem item = menubar.addItem(Level.STRATEGIC.name(), filterSponsorsCommand);
+			MenuItem item = menubar.addItem(Level.PLATINUM.name(), filterSponsorsCommand);
 			item.setStyleName("highlight");
-			menubar.addItem(Level.PLATINUM.name(), filterSponsorsCommand);
+			// menubar.addItem(Level.PLATINUM.name(), filterSponsorsCommand);
 			menubar.addItem(Level.GOLD.name(), filterSponsorsCommand);
 			menubar.addItem(Level.SILVER.name(), filterSponsorsCommand);
 			menubar.addItem(Level.BRONZE.name(), filterSponsorsCommand);
 			addComponent(menubar);
 
 			// Get time and number of sessions occurring then
-			VerticalLayout stratDetails = loadSponsorsForLevel(Level.STRATEGIC, main);
-			stratDetails.setDescription(Level.STRATEGIC.name());
-			main.addComponent(stratDetails);
-			panels.add(stratDetails);
+			// VerticalLayout stratDetails =
+			// loadSponsorsForLevel(Level.STRATEGIC, main);
+			// stratDetails.setDescription(Level.STRATEGIC.name());
+			// main.addComponent(stratDetails);
+			// panels.add(stratDetails);
 			VerticalLayout platDetails = loadSponsorsForLevel(Level.PLATINUM, main);
-			platDetails.setVisible(false);
 			platDetails.setDescription(Level.PLATINUM.name());
 			main.addComponent(platDetails);
 			panels.add(platDetails);
@@ -125,13 +123,13 @@ public class Sponsors extends CssLayout implements View {
 		top.addComponent(title);
 		retVal_.addComponent(top);
 
-		for (Sponsor s : sponsors) {
+		for (final Sponsor s : sponsors) {
 			HorizontalLayout sessionRow = new HorizontalLayout();
 			sessionRow.setWidth(95, Unit.PERCENTAGE);
-			Link url = new Link("", new ExternalResource(s.getUrl()));
-			url.setIcon(new ExternalResource(s.getPhotoUrl()));
-			url.setTargetName("_blank");
-			sessionRow.addComponent(url);
+			Label label1 = new Label("<a href=\"" + s.getUrl() + "\"><img src=\"" + s.getPhotoUrl() + "\" style=\"width:200px;\"></img></a>");
+			label1.setContentMode(ContentMode.HTML);
+			sessionRow.setDefaultComponentAlignment(Alignment.MIDDLE_CENTER);
+			sessionRow.addComponent(label1);
 			VerticalLayout sponsorDetails = new VerticalLayout();
 			sponsorDetails.setWidth(100, Unit.PERCENTAGE);
 			Label sponsorName = new Label(s.getName());
@@ -139,7 +137,7 @@ public class Sponsors extends CssLayout implements View {
 			sponsorDetails.addComponent(sponsorName);
 			sponsorDetails.addComponent(new Label(s.getProfile()));
 			sessionRow.addComponent(sponsorDetails);
-			sessionRow.setExpandRatio(url, 1);
+			sessionRow.setExpandRatio(label1, 1);
 			sessionRow.setExpandRatio(sponsorDetails, 4);
 			retVal_.addComponent(sessionRow);
 			retVal_.setComponentAlignment(sessionRow, Alignment.TOP_CENTER);

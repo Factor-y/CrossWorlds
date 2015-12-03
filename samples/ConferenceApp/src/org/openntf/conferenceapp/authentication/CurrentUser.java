@@ -18,12 +18,11 @@ public final class CurrentUser {
 	public static final String CURRENT_USER_SESSION_ATTRIBUTE_KEY = CurrentUser.class.getCanonicalName();
 
 	private static String getUserFullName(String userEmail) {
-		return "CN=" + userEmail + "/OU=Engage2015/O=ConferenceApp";	
+		return "CN=" + userEmail + "/OU=ICONUK2015/O=ConferenceApp";
 	}
 
 	/**
-	 * Returns the name of the current user stored in the current session, or an
-	 * empty string if no user name is stored.
+	 * Returns the name of the current user stored in the current session, or an empty string if no user name is stored.
 	 * 
 	 * @throws IllegalStateException
 	 *             if the current session cannot be accessed.
@@ -38,14 +37,14 @@ public final class CurrentUser {
 	}
 
 	/**
-	 * Sets the name of the current user and stores it in the current session.
-	 * Using a {@code null} username will remove the username from the session.
+	 * Sets the name of the current user and stores it in the current session. Using a {@code null} username will remove the username from the
+	 * session.
 	 * 
 	 * @throws IllegalStateException
 	 *             if the current session cannot be accessed.
 	 */
 	public static void set(String currentUserEmail) {
-		
+
 		if (currentUserEmail == null) {
 			getCurrentRequest().getWrappedSession().removeAttribute(CURRENT_USER_SESSION_ATTRIBUTE_KEY);
 			// Set domino application identity

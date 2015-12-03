@@ -77,7 +77,7 @@ Session s = Factory.getSession(SessionType.CURRENT);
 out.println(s.getUserName());
 out.println(s.getEffectiveUserName());
 
-return s.getUserName();
+return s.getEffectiveUserName();
 
 </textarea>
 				</div>

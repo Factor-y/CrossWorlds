@@ -1,6 +1,5 @@
 package org.openntf.conferenceapp.service;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,25 +14,25 @@ public class ConferenceGraphFactory {
 
 	private static Map<String, ConferenceGraph> registeredGraphs = new HashMap<String, ConferenceGraph>();
 	public static String ENGAGE_KEY = "engage";
-	
+
 	static void registerConference(String conferenceKey, ConferenceGraph graph) {
-		Preconditions.checkNotNull(conferenceKey,"The conference name/key cannot be null");
-		Preconditions.checkNotNull(graph,"The conference graph cannot be null");
-		
+		Preconditions.checkNotNull(conferenceKey, "The conference name/key cannot be null");
+		Preconditions.checkNotNull(graph, "The conference graph cannot be null");
+
 		registeredGraphs.put(conferenceKey, graph);
 	}
-	
+
 	/**
 	 * @return a list of available Conference graphs
 	 */
 	static List<String> getAvailableConferences() {
 		return Lists.newArrayList(registeredGraphs.keySet());
 	}
-	
+
 	static ConferenceManager getConferenceManager(String conferenceName) {
 		return null;
 	}
-	
+
 	public static ConferenceGraph getConference(final String key) {
 		ConferenceGraph retVal_ = null;
 		try {
@@ -48,13 +47,14 @@ public class ConferenceGraphFactory {
 		}
 		return retVal_;
 	}
-	
+
 	public static FramedGraph getGraph(final String confName) {
 		return getConference(confName).getFramedGraph();
 	}
-	
+
 	/**
-	 * Gets FramedGraph for graph with key "engage", else creates new ConferenceGraph
+	 * Gets FramedGraph for graph with key "engage", else creates new
+	 * ConferenceGraph
 	 * 
 	 * @return FramedGraph for Engage
 	 */

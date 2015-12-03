@@ -33,7 +33,7 @@ import com.vaadin.ui.themes.ValoTheme;
 public class NowAndNext extends CssLayout implements View {
 
 	private static final long serialVersionUID = 1L;
-	private boolean RUN_SIMULATED = false;
+	private boolean RUN_SIMULATED = true;
 	public static final String VIEW_NAME = "NowAndNext";
 	public static final String VIEW_DESC = "Now and Next";
 	List<TimeSlot> times;
@@ -133,7 +133,7 @@ public class NowAndNext extends CssLayout implements View {
 
 		for (final Presentation pres : presentations) {
 			// Load speaker details
-			Iterable<Attendee> speakers = pres.getPresentingAttendees();
+			final Iterable<Attendee> speakers = pres.getPresentingAttendees();
 			String speakerNames = "";
 			for (Attendee att : speakers) {
 				if ("".equals(speakerNames)) {
@@ -165,7 +165,7 @@ public class NowAndNext extends CssLayout implements View {
 					SessionDetailsDialog sub = new SessionDetailsDialog();
 					sub.setSessionTitle(pres.getTitle());
 					sub.setSessionDesc(pres.getDescription());
-					sub.setSpeakers("Speakers: " + passedSpeakers);
+					sub.setSpeakers(speakers);
 					sub.loadContent();
 
 					// Add it to the root component
@@ -175,8 +175,8 @@ public class NowAndNext extends CssLayout implements View {
 			sessionDetails.addComponent(presTitle);
 			DateFormatSymbols s = new DateFormatSymbols(UI.getCurrent().getLocale());
 			String[] days = s.getShortWeekdays();
-			String dayTime = days[ts.getStartTime().get(Calendar.DAY_OF_WEEK)] + ConferenceUI.TIME_FORMAT.format(ts.getStartTime().getTime()) + "-"
-					+ ConferenceUI.TIME_FORMAT.format(ts.getEndTime().getTime());
+			String dayTime = days[ts.getStartTime().get(Calendar.DAY_OF_WEEK)] + " " + ConferenceUI.TIME_FORMAT.format(ts.getStartTime().getTime())
+					+ "-" + ConferenceUI.TIME_FORMAT.format(ts.getEndTime().getTime());
 			Location loc = pres.getLocations().iterator().next();
 			sessionDetails.addComponent(new Label(dayTime + "|" + loc.getName()));
 			sessionRow.addComponent(sessionDetails);

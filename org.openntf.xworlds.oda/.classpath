@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry exported="true" kind="lib" path="BundleContent/"/>
+	<classpathentry exported="true" kind="lib" path="BundleContent/com.google.guava_18.0.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="BundleContent/com.tinkerpop_2.6.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="BundleContent/javassist_3.18.2.jar"/>
+	<classpathentry exported="true" kind="lib" path="BundleContent/javolution_6.1.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="BundleContent/jsr305_1.0.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="BundleContent/org.openntf.domino_2.0.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="BundleContent/org.openntf.domino.xsp_2.0.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="BundleContent/org.openntf.formula_2.0.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="BundleContent/org.openntf.junit4xpages_4.11.0.jar"/>
+	<classpathentry exported="true" kind="con" path="com.ibm.osgi.container"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6">
+		<attributes>
+			<attribute name="owner.project.facets" value="java"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
