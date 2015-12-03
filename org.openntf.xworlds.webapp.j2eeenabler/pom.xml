@@ -1,17 +1,9 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.openntf.xworlds.webapp</groupId>
-  <artifactId>j2eeenabler</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
+  <artifactId>org.openntf.xworlds.webapp.j2eeenabler</artifactId>
   <name>The web-fragment you need to add to your CrossWorlds applications.</name>
 
-  <distributionManagement>
-        <snapshotRepository>
-            <id>crossworlds-snapshots</id>
-            <name>Snapshots</name>
-            <url>https://nexus.factor-y.com/nexus/content/repositories/CrossWorlds-snapshot/</url>
-        </snapshotRepository>
-  </distributionManagement>
   <dependencies>
     <dependency>
       <groupId>com.ibm.tools.target</groupId>
@@ -46,4 +38,10 @@
       </plugin>
     </plugins>
   </build>
+  <parent>
+  	<groupId>org.openntf.xworlds.feature</groupId>
+  	<artifactId>org.openntf.xworlds.feature</artifactId>
+  	<version>0.0.1-SNAPSHOT</version>
+  	<relativePath>../org.openntf.xworlds.feature</relativePath>
+  </parent>
 </project>
