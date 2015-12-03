@@ -18,5 +18,8 @@ org.openntf.xworlds.oda/build-local.properties
 samples/ConferenceApp/src/rebel.xml
 **/.project
 **/.classpath
-**/.settings/
+**/.settings/*
 **/.factorypath
+org.openntf.xworlds.core/src/main/resources/META-INF/MANIFEST.MF
+org.openntf.xworlds.dominodeps/BundleContent/META-INF/MANIFEST.MF
+org.openntf.xworlds.oda/BundleContent/META-INF/MANIFEST.MF
