@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app id="WebApp_ID" version="3.0" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd">
+	<display-name>CrossWorldsDemo</display-name>
+	<servlet>
+		<description>
+		JAX-RS Tools Generated - Do not modify</description>
+		<servlet-name>JAX-RS Servlet</servlet-name>
+		<servlet-class>com.ibm.websphere.jaxrs.server.IBMRestServlet</servlet-class>
+		<load-on-startup>1</load-on-startup>
+		<enabled>true</enabled>
+		<async-supported>false</async-supported>
+	</servlet>
+	
+	<welcome-file-list>
+		<welcome-file>index.html</welcome-file>
+		<welcome-file>index.htm</welcome-file>
+		<welcome-file>index.jsp</welcome-file>
+		<welcome-file>default.html</welcome-file>
+		<welcome-file>default.htm</welcome-file>
+		<welcome-file>default.jsp</welcome-file>
+	</welcome-file-list>
+	<servlet>
+		<description>
+			This is the description for the sample servlet
+		</description>
+		<display-name>Domino Rest Application</display-name>
+		<icon>
+			<small-icon>icons/small.gif</small-icon>
+			<large-icon>icons/small.gif</large-icon>
+		</icon>
+		<servlet-name>org.openntf.xworlds.demo.CrossWorldsRestSampleApplication</servlet-name>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>
+			org.openntf.xworlds.demo.CrossWorldsRestSampleApplication
+		</servlet-name>
+		<url-pattern>/domrest/*</url-pattern>
+		<url-pattern>/demo/*</url-pattern>
+	</servlet-mapping>
+	<context-param>
+		<param-name>org.openntf.crossworlds.appsignername</param-name>
+		<param-value>CN=CrossWorlds/O=OpenNTF.org</param-value>
+	</context-param>
+</web-app>

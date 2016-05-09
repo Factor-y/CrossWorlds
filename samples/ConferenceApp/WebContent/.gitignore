@@ -1,0 +1,6 @@
+client/bower_components/
+._.DS_Store
+Thumbs.db
+node_modules/
+build/
+/META-INF/

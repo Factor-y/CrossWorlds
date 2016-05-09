@@ -1,0 +1,35 @@
+<div class="row no-gutter">
+
+	<div class="col-sm-12 no-gutter sessions">
+
+		<div ng-show="isLoading" class="list-group-item">
+			<div><i class="fa fa-spin fa-refresh"></i>Loading...</div>
+		</div>
+
+		<div ng-show="!isLoading && sessions.length == 0" class="list-group-item">{{noDocsFound}}</div>
+
+		<div ng-show="!isLoading && sessions.length > 0">
+
+			<div ng-show="allowSearch">
+				<input class="form-control" ng-model="searchField" placeholder="Search..." />
+			</div>
+
+			<a ng-repeat="session in sessions | orderBy : 'startTime' | filter : searchField track by session['@unid']" 
+				class="list-group-item" 	
+				ui-sref="sessionDetails({ sessionId : session.unid })">
+
+				<div class="marker" ng-class="getBackgroundClass(session.track)"></div>
+
+				<i class="pull-right no-text fa " ng-class="isFavorite(session) ? 'fa-star' : 'fa-angle-right'"></i>
+
+				<h4 class="list-group-item-heading">{{::session.title}}</h4>
+				<!-- <p class="list-group-item-text">{{::session.sessionId}}</p> -->
+				<p class="list-group-item-text">{{::session.startTimeDesc}} - {{::session.endTimeDesc}} | {{::session.room}} | {{::session.sessionId}}</p>
+
+			</a>
+			
+		</div>
+
+	</div>
+
+</div>

@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<deployment id="OpenNTF CrossWorlds server">
+    <runtime id="WebSphere Application Server Liberty Profile"/>
+    <runtime id="WebSphere Application Server V8.5 Liberty Profile"/>
+</deployment>
